@@ -11,7 +11,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-//import frc.robot.Constants;
+import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
@@ -19,7 +19,7 @@ public class Intake extends SubsystemBase {
   private TalonFXConfiguration intakeMotorConfigs;
   private DutyCycleOut percentOutControlRequest;
   public Intake() {
-    //intakeMotor = new TalonFX(Constants.Intake.intakeMotorID, "CanBus2");
+    intakeMotor = new TalonFX(Constants.Intake.intakeMotorID, "CanBus2");
     intakeMotorConfigs = new TalonFXConfiguration();
 
     intakeMotorConfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
