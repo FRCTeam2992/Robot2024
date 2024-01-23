@@ -7,12 +7,21 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Commands.DriveSticks;
+import frc.robot.Subsystems.Drivetrain;
 
 public class RobotContainer {
+
+  public final Drivetrain mDrivetrain;
+
 
   private final CommandXboxController controller0 = new CommandXboxController(0);
 
   public RobotContainer() {
+    
+    mDrivetrain = new Drivetrain();
+    mDrivetrain.setDefaultCommand(new DriveSticks(mDrivetrain));
+
     configureBindings();
   }
 
