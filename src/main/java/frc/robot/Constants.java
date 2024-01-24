@@ -9,11 +9,10 @@ public class Constants {
 
     public static class Shooter{
         public static class DeviceIDs{
-            public static int rightShooterMotorID = 0;
-            public static int leftShooterMotorID = 0;
+            public static int shooterMotorID = 0;
         }
 
-        public static class RightShooterPIDConstants{
+        public static class ShooterPIDConstants{
             public static double P = 0.0;
             public static double I = 0.0;
             public static double D = 0.0;
@@ -22,13 +21,5 @@ public class Constants {
             public static double cruiseVelocity = 0.0;
         }
 
-        public static class LeftShooterPIDConstants{
-            public static double P = 0.0;
-            public static double I = 0.0;
-            public static double D = 0.0;
-            public static double V = 0.0;
-            public static double acceleration = 0.0;
-            public static double cruiseVelocity = 0.0;
-        }
     }
 }

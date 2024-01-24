@@ -2,13 +2,17 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.Commands;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Shooter;
 
 public class StopShooter extends Command {
+  private Shooter mShooter;
   /** Creates a new StopShooter. */
-  public StopShooter() {
+  public StopShooter(Shooter subsystem) {
+    mShooter = subsystem;
+    addRequirements(mShooter);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -18,7 +22,9 @@ public class StopShooter extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    mShooter.setShooterSpeed(0.0);
+  }
 
   // Called once the command ends or is interrupted.
   @Override

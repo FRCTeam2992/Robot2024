@@ -6,9 +6,16 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.Shooter;
 
 public class RobotContainer {
+
+  public final Shooter mShooter;
+
   public RobotContainer() {
+
+    mShooter = new Shooter();
+
     configureBindings();
   }
 
