@@ -21,8 +21,8 @@ public class elevator extends SubsystemBase {
   private PIDController PIDController;
 
   public elevator() {
-    leadMotor = new CANSparkMax(15, MotorType.kBrushless);
-    followMotor1 = new CANSparkMax(14, MotorType.kBrushless);
+    leadMotor = new CANSparkMax(11, MotorType.kBrushless);
+    followMotor1 = new CANSparkMax(10, MotorType.kBrushless);
     followMotor2 = new CANSparkMax(13, MotorType.kBrushless);
     followMotor3 = new CANSparkMax(12, MotorType.kBrushless);
 
