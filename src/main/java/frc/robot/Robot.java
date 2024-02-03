@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -49,8 +49,8 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_autonomousCommand = mRobotContainer.getAutonomousCommand();
 
-    mRobotContainer.mDrivetrain.setDriveNeutralMode("Brake");
-        mRobotContainer.mDrivetrain.setTurnNeutralMode("Brake");
+    mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralModeValue.Brake);
+        mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralModeValue.Brake);
 
         // Set the Drive Motors Current Limit
     mRobotContainer.mDrivetrain.setDriveCurrentLimit(60.0, 60.0);
@@ -78,8 +78,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
 
-    mRobotContainer.mDrivetrain.setDriveNeutralMode("Brake");
-        mRobotContainer.mDrivetrain.setTurnNeutralMode("Brake");
+    mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralModeValue.Brake);
+        mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralModeValue.Brake);
 
     mRobotContainer.mDrivetrain.setDriveCurrentLimit(40.0, 40.0);
         mRobotContainer.mDrivetrain.setDriveRampRate(0.25);

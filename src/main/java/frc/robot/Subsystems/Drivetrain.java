@@ -225,8 +225,8 @@ public class Drivetrain extends SubsystemBase {
         initCANCoder(rearLeftEncoder,AbsoluteSensorRangeValue.Signed_PlusMinusHalf, SensorDirectionValue.Clockwise_Positive);
 
 
-        setDriveNeutralMode("Coast");
-        setTurnNeutralMode("Brake");
+        setDriveNeutralMode(NeutralModeValue.Coast);
+        setTurnNeutralMode(NeutralModeValue.Brake);
 
         setDriveCurrentLimit(40.0, 40.0);
         setTurnCurrentLimit(60.0); // potentially unused
@@ -535,8 +535,8 @@ public class Drivetrain extends SubsystemBase {
         return CoordinateSpace.Blue;
     }
 
-    public void setDriveNeutralMode(String mode) {
-        driveMotorConfigs.MotorOutput.NeutralMode = NeutralModeValue.valueOf(mode);
+    public void setDriveNeutralMode(NeutralModeValue mode) {
+        driveMotorConfigs.MotorOutput.NeutralMode = mode;
         
         frontLeftDrive.getConfigurator().apply(driveMotorConfigs);
         frontRightDrive.getConfigurator().apply(driveMotorConfigs);
@@ -545,8 +545,8 @@ public class Drivetrain extends SubsystemBase {
 
     }
 
-    public void setTurnNeutralMode(String mode) {
-        turnMotorConfigs.MotorOutput.NeutralMode = NeutralModeValue.valueOf(mode);
+    public void setTurnNeutralMode(NeutralModeValue mode) {
+        turnMotorConfigs.MotorOutput.NeutralMode = mode;
         
         frontLeftTurn.getConfigurator().apply(driveMotorConfigs);
         frontRightTurn.getConfigurator().apply(driveMotorConfigs);
@@ -701,8 +701,8 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void onDisable() {
-        setDriveNeutralMode("Brake");
-        setTurnNeutralMode("Brake");
+        setDriveNeutralMode(NeutralModeValue.Coast);
+        setTurnNeutralMode(NeutralModeValue.Coast);
         stopDrive();
     }
 
