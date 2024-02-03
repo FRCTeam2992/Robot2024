@@ -175,49 +175,54 @@ public class Drivetrain extends SubsystemBase {
 
     public Drivetrain() {
 
-        // Motor Inits
-        frontLeftDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontLeftDrive);
-        initTalonFX(frontLeftDrive, driveMotorConfigs, "CounterClockwise_Positive");
-
-        frontLeftTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontLeftTurn);
-        initTalonFX(frontLeftTurn, turnMotorConfigs, "Clockwise_Positive");
-
-        frontRightDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontRightDrive);
-        initTalonFX(frontRightDrive, driveMotorConfigs,"CounterClockwise_Positive");
-
-        frontRightTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontRightTurn);
-        initTalonFX(frontRightTurn, turnMotorConfigs, "Clockwise_Positive");
-
-        rearRightDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearRightDrive);
-        initTalonFX(rearRightDrive, driveMotorConfigs,"CounterClockwise_Positive");
-
-        rearRightTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearRightTurn);
-        initTalonFX(rearRightTurn, turnMotorConfigs,"Clockwise_Positive");
-
-        rearLeftDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearLeftDrive);
-        initTalonFX(rearLeftDrive, driveMotorConfigs,"CounterClockwise_Positive");
-
-        rearLeftTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearLeftTurn);
-        initTalonFX(rearLeftTurn, turnMotorConfigs,"Clockwise_Positive");
-
         driveMotorConfigs = new TalonFXConfiguration();
         turnMotorConfigs = new TalonFXConfiguration();
+
+        encoderConfigs = new CANcoderConfiguration();
+
+        // Controll Requests
+        percentControlRequest = new DutyCycleOut(0.0);
+        velocityControlRequest = new VelocityDutyCycle(0.0);
+
+        // Motor Inits
+        frontLeftDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontLeftDrive);
+        initTalonFX(frontLeftDrive, driveMotorConfigs, InvertedValue.CounterClockwise_Positive);
+
+        frontLeftTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontLeftTurn);
+        initTalonFX(frontLeftTurn, turnMotorConfigs, InvertedValue.Clockwise_Positive);
+
+        frontRightDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontRightDrive);
+        initTalonFX(frontRightDrive, driveMotorConfigs,InvertedValue.CounterClockwise_Positive);
+
+        frontRightTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontRightTurn);
+        initTalonFX(frontRightTurn, turnMotorConfigs, InvertedValue.Clockwise_Positive);
+
+        rearRightDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearRightDrive);
+        initTalonFX(rearRightDrive, driveMotorConfigs,InvertedValue.CounterClockwise_Positive);
+
+        rearRightTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearRightTurn);
+        initTalonFX(rearRightTurn, turnMotorConfigs,InvertedValue.Clockwise_Positive);
+
+        rearLeftDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearLeftDrive);
+        initTalonFX(rearLeftDrive, driveMotorConfigs,InvertedValue.CounterClockwise_Positive);
+
+        rearLeftTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearLeftTurn);
+        initTalonFX(rearLeftTurn, turnMotorConfigs,InvertedValue.Clockwise_Positive);
+
 
 
         frontRightEncoder = new CANcoder(Constants.DrivetrainConstants.CanIDs.frontRightEncoder);
         // initCANCoder(frontRightEncoder, AbsoluteSensorRange.Signed_PlusMinus180, true);
-        initCANCoder(frontRightEncoder, "Signed_PlusMinusHalf", "Clockwise_Positive");
+        initCANCoder(frontRightEncoder, AbsoluteSensorRangeValue.Signed_PlusMinusHalf, SensorDirectionValue.Clockwise_Positive);
 
         frontLeftEncoder = new CANcoder(Constants.DrivetrainConstants.CanIDs.frontLeftEncoder);
-        initCANCoder(frontLeftEncoder, "Signed_PlusMinusHalf", "Clockwise_Positive");
+        initCANCoder(frontLeftEncoder, AbsoluteSensorRangeValue.Signed_PlusMinusHalf, SensorDirectionValue.Clockwise_Positive);
 
         rearRightEncoder = new CANcoder(Constants.DrivetrainConstants.CanIDs.rearRightEncoder);
-        initCANCoder(rearRightEncoder, "Signed_PlusMinusHalf", "Clockwise_Positive");
+        initCANCoder(rearRightEncoder, AbsoluteSensorRangeValue.Signed_PlusMinusHalf, SensorDirectionValue.Clockwise_Positive);
 
         rearLeftEncoder = new CANcoder(Constants.DrivetrainConstants.CanIDs.rearLeftEncoder);
-        initCANCoder(rearLeftEncoder,"Signed_PlusMinusHalf", "Clockwise_Positive");
-
-        encoderConfigs = new CANcoderConfiguration();
+        initCANCoder(rearLeftEncoder,AbsoluteSensorRangeValue.Signed_PlusMinusHalf, SensorDirectionValue.Clockwise_Positive);
 
 
         setDriveNeutralMode("Coast");
@@ -331,9 +336,6 @@ public class Drivetrain extends SubsystemBase {
             llRightTargetIDLog = new IntegerLogEntry(mDataLog, "/ll/twelve/target_id");
             llLeftTargetIDLog = new IntegerLogEntry(mDataLog, "/ll/thirteen/target_id");
 
-            // Controll Requests
-            percentControlRequest = new DutyCycleOut(0.0);
-            velocityControlRequest = new VelocityDutyCycle(0.0);
 
         }
 
@@ -365,14 +367,14 @@ public class Drivetrain extends SubsystemBase {
                 new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, .9999));
     }
 
-    private void initTalonFX(TalonFX motorContollerName, TalonFXConfiguration configs, String motorDirection) {
-        configs.MotorOutput.Inverted = InvertedValue.valueOf(motorDirection);
+    private void initTalonFX(TalonFX motorContollerName, TalonFXConfiguration configs, InvertedValue motorDirection) {
+        configs.MotorOutput.Inverted = motorDirection;
         motorContollerName.getConfigurator().apply(configs);
     }
 
-    private void initCANCoder(CANcoder CANCoderName, String sensorRange, String sensorDirection) {
-        encoderConfigs.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.valueOf(sensorRange);
-        encoderConfigs.MagnetSensor.SensorDirection = SensorDirectionValue.valueOf(sensorDirection);
+    private void initCANCoder(CANcoder CANCoderName, AbsoluteSensorRangeValue sensorRange, SensorDirectionValue sensorDirection) {
+        encoderConfigs.MagnetSensor.AbsoluteSensorRange = sensorRange;
+        encoderConfigs.MagnetSensor.SensorDirection = sensorDirection;
         CANCoderName.getConfigurator().apply(encoderConfigs);
     }
 
