@@ -22,10 +22,10 @@ public class elevator extends SubsystemBase {
   private PIDController PIDController;
 
   public elevator() {
-    leadMotor = new CANSparkMax(11, MotorType.kBrushless);
-    followMotor1 = new CANSparkMax(10, MotorType.kBrushless);
-    followMotor2 = new CANSparkMax(13, MotorType.kBrushless);
-    followMotor3 = new CANSparkMax(12, MotorType.kBrushless);
+    leadMotor = new CANSparkMax(Constants.Elevator.leadMotorID, MotorType.kBrushless);
+    followMotor1 = new CANSparkMax(Constants.Elevator.followMotor1ID, MotorType.kBrushless);
+    followMotor2 = new CANSparkMax(Constants.Elevator.followMotor2ID, MotorType.kBrushless);
+    followMotor3 = new CANSparkMax(Constants.Elevator.followMotor3ID, MotorType.kBrushless);
 
     leadMotor.setIdleMode(IdleMode.kBrake);
     followMotor1.setIdleMode(IdleMode.kBrake);
