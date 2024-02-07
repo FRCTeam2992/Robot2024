@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.Constants;
 
 public class elevator extends SubsystemBase {
   /** Creates a new elevator. */
@@ -40,10 +41,10 @@ public class elevator extends SubsystemBase {
     followMotor2.follow(leadMotor);
     followMotor3.follow(leadMotor);
 
-    PIDController = new PIDController(0.0, 0.0, 0.0); //0.0s are placeholder values
-    PIDController.setTolerance(0.0); //placeholder
+    PIDController = new PIDController(Constants.Elevator.PIDControllerP, Constants.Elevator.PIDControllerI, Constants.Elevator.PIDControllerD);
+    PIDController.setTolerance(Constants.Elevator.positionTolerance);
     PIDController.disableContinuousInput();
-    PIDController.setIntegratorRange(-0.2, 0.2); //placeholder (copied from Rodrigue's code)
+    PIDController.setIntegratorRange(Constants.Elevator.integratorRangeMin, Constants.Elevator.integratorRangeMax);
   }
 
   @Override
@@ -65,7 +66,7 @@ public class elevator extends SubsystemBase {
   }
 
   public double encoderRotationsToInches(double rotations) {
-    return rotations * 0.0; //Constants.Elevator.encoderElevatorToInches;
+    return rotations * Constants.Elevator.encoderElevatorToInches;
   }
 
   public void zeroElevatorEncoders() {
