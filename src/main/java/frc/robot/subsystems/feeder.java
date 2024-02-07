@@ -9,6 +9,7 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import frc.robot.Constants;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -21,7 +22,7 @@ public class feeder extends SubsystemBase {
   private boolean isLimited = false; //in preparation for limit sensor
 
   public feeder() {
-    feedMotor = new TalonFX(4, "CanBus2");
+    feedMotor = new TalonFX(Constants.Feeder.feederMotorID, "CanBus2");
     feedMotorConfigs = new TalonFXConfiguration();
 
     feedMotorConfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
