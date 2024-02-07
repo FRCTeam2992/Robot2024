@@ -7,7 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Commands.DisableFieldOreintToggle;
 import frc.robot.Commands.DriveSticks;
+import frc.robot.Commands.ResetGyro;
 import frc.robot.Subsystems.Drivetrain;
 
 public class RobotContainer {
@@ -15,7 +17,7 @@ public class RobotContainer {
   public final Drivetrain mDrivetrain;
 
 
-  private final CommandXboxController controller0 = new CommandXboxController(0);
+  public final CommandXboxController controller0 = new CommandXboxController(0);
 
   public RobotContainer() {
     
@@ -25,7 +27,13 @@ public class RobotContainer {
     configureBindings();
   }
 
-  private void configureBindings() {}
+  private void configureBindings() {
+
+    controller0.start().onTrue(new ResetGyro(mDrivetrain));
+
+    // controller0.rightBumper().whileTrue(new DisableFieldOreintToggle(mDrivetrain));
+
+  }
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");

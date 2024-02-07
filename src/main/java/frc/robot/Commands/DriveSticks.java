@@ -130,7 +130,7 @@ public class DriveSticks extends Command {
 
         // Lock Rotation to 0 for scoring
 
-        // Check for Movement or autoDrieMode
+        // Check for Movement or autoDriveMode
         if (Math.abs(x1) > 0.0 || Math.abs(y1) > 0.0 || Math.abs(x2) > 0.0 || mDriveTrain.isScoringMode()
                 || mDriveTrain.isLoadingMode()) {
 

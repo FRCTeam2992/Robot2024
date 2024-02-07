@@ -186,28 +186,28 @@ public class Drivetrain extends SubsystemBase {
 
         // Motor Inits
         frontLeftDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontLeftDrive);
-        initTalonFX(frontLeftDrive, driveMotorConfigs, InvertedValue.CounterClockwise_Positive);
+        initTalonFX(frontLeftDrive, driveMotorConfigs, InvertedValue.Clockwise_Positive);
 
         frontLeftTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontLeftTurn);
-        initTalonFX(frontLeftTurn, turnMotorConfigs, InvertedValue.Clockwise_Positive);
+        initTalonFX(frontLeftTurn, turnMotorConfigs, InvertedValue.CounterClockwise_Positive);
 
         frontRightDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontRightDrive);
-        initTalonFX(frontRightDrive, driveMotorConfigs,InvertedValue.CounterClockwise_Positive);
+        initTalonFX(frontRightDrive, driveMotorConfigs,InvertedValue.Clockwise_Positive);
 
         frontRightTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontRightTurn);
-        initTalonFX(frontRightTurn, turnMotorConfigs, InvertedValue.Clockwise_Positive);
+        initTalonFX(frontRightTurn, turnMotorConfigs, InvertedValue.CounterClockwise_Positive);
 
         rearRightDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearRightDrive);
-        initTalonFX(rearRightDrive, driveMotorConfigs,InvertedValue.CounterClockwise_Positive);
+        initTalonFX(rearRightDrive, driveMotorConfigs,InvertedValue.Clockwise_Positive);
 
         rearRightTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearRightTurn);
-        initTalonFX(rearRightTurn, turnMotorConfigs,InvertedValue.Clockwise_Positive);
+        initTalonFX(rearRightTurn, turnMotorConfigs,InvertedValue.CounterClockwise_Positive);
 
         rearLeftDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearLeftDrive);
-        initTalonFX(rearLeftDrive, driveMotorConfigs,InvertedValue.CounterClockwise_Positive);
+        initTalonFX(rearLeftDrive, driveMotorConfigs,InvertedValue.Clockwise_Positive);
 
         rearLeftTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearLeftTurn);
-        initTalonFX(rearLeftTurn, turnMotorConfigs,InvertedValue.Clockwise_Positive);
+        initTalonFX(rearLeftTurn, turnMotorConfigs,InvertedValue.CounterClockwise_Positive);
 
 
 
@@ -548,10 +548,10 @@ public class Drivetrain extends SubsystemBase {
     public void setTurnNeutralMode(NeutralModeValue mode) {
         turnMotorConfigs.MotorOutput.NeutralMode = mode;
         
-        frontLeftTurn.getConfigurator().apply(driveMotorConfigs);
-        frontRightTurn.getConfigurator().apply(driveMotorConfigs);
-        rearLeftTurn.getConfigurator().apply(driveMotorConfigs);
-        rearRightTurn.getConfigurator().apply(driveMotorConfigs);
+        frontLeftTurn.getConfigurator().apply(turnMotorConfigs);
+        frontRightTurn.getConfigurator().apply(turnMotorConfigs);
+        rearLeftTurn.getConfigurator().apply(turnMotorConfigs);
+        rearRightTurn.getConfigurator().apply(turnMotorConfigs);
     }
 
     public void setDriveCurrentLimit(double currentLimit, double triggerCurrent) {
@@ -601,15 +601,15 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void setTurnCurrentLimit(double current) {
-        driveMotorConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
-        driveMotorConfigs.CurrentLimits.SupplyCurrentLimit = current;
-        driveMotorConfigs.CurrentLimits.SupplyCurrentThreshold = current;
-        driveMotorConfigs.CurrentLimits.SupplyTimeThreshold = 0;
+        turnMotorConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
+        turnMotorConfigs.CurrentLimits.SupplyCurrentLimit = current;
+        turnMotorConfigs.CurrentLimits.SupplyCurrentThreshold = current;
+        turnMotorConfigs.CurrentLimits.SupplyTimeThreshold = 0;
 
-        frontLeftTurn.getConfigurator().apply(driveMotorConfigs);
-        frontRightTurn.getConfigurator().apply(driveMotorConfigs);
-        rearLeftTurn.getConfigurator().apply(driveMotorConfigs);
-        rearRightTurn.getConfigurator().apply(driveMotorConfigs);
+        frontLeftTurn.getConfigurator().apply(turnMotorConfigs);
+        frontRightTurn.getConfigurator().apply(turnMotorConfigs);
+        rearLeftTurn.getConfigurator().apply(turnMotorConfigs);
+        rearRightTurn.getConfigurator().apply(turnMotorConfigs);
 
         // frontLeftTurn.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, current, current, 0));
         // frontRightTurn.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, current, current, 0));
