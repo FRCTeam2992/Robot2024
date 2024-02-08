@@ -5,19 +5,18 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.Constants;
 import frc.robot.subsystems.Elevator;
 
-public class setElevatorPosition extends Command {
-  /** Creates a new setElevatorPosition. */
-  private Elevator mElevator;
-  private double mPosition;
+public class StopElevator extends Command {
 
-  public setElevatorPosition(Elevator subsystem, double position) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  private Elevator mElevator;
+  /** Creates a new StopElevator. */
+  public StopElevator(Elevator subsystem) {
+
     mElevator = subsystem;
-    mPosition = position;
+
     addRequirements(mElevator);
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -27,20 +26,16 @@ public class setElevatorPosition extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    mElevator.setElevatorPosition(mPosition);
+    mElevator.setElevatorSpeed(0.0);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    if (mPosition < Constants.Elevator.Limits.softStopBottom){
-      new moveElevator(mElevator, -0.05);
-    }
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return mElevator.atPosition();
+    return false;
   }
 }

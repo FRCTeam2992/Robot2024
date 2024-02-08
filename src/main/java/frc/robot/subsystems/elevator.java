@@ -11,8 +11,10 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.Constants;
+import frc.robot.commands.StopElevator;
+import frc.robot.commands.moveElevator;
 
-public class elevator extends SubsystemBase {
+public class Elevator extends SubsystemBase {
   /** Creates a new elevator. */
   private CANSparkMax leadMotor; //left
   private CANSparkMax followMotor1; //left
@@ -21,7 +23,10 @@ public class elevator extends SubsystemBase {
 
   private PIDController PIDController;
 
-  public elevator() {
+  private boolean holdPositionRecorded;
+  private double holdPosition;
+
+  public Elevator() {
     leadMotor = new CANSparkMax(11, MotorType.kBrushless);
     followMotor1 = new CANSparkMax(10, MotorType.kBrushless);
     followMotor2 = new CANSparkMax(13, MotorType.kBrushless);
@@ -49,6 +54,12 @@ public class elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
+
+    if (checkIfAtHardStop()){
+      zeroElevatorEncoders();
+      new StopElevator(this).schedule();
+    }
+
     // This method will be called once per scheduler run
   }
 
@@ -77,23 +88,49 @@ public class elevator extends SubsystemBase {
   }
 
   public void setElevatorSpeed(double speed) {
-    if (getElevatorInches() < 4.0 && speed < 0.0) { //4 inch leeway is temp
-      speed = Math.max(speed, -0.5); //limits to a slow speed of .5 or slower
+    holdPositionRecorded = false;
+
+    if (getElevatorInches() < Constants.Elevator.Limits.softStopBottom) {
+      speed = Math.max(-0.1, speed);
+    } else if (getElevatorInches() > Constants.Elevator.Limits.softStopTop) {
+      speed = 0.0;
     }
+
     leadMotor.set(speed);
-    followMotor1.set(speed);
-    followMotor2.set(speed);
-    followMotor3.set(speed);
   }
 
   public void setElevatorPosition(double position) {
-    if (position < 0.0) {
-      position = 0.0;
+    holdPositionRecorded = true;
+    
+    if (position < Constants.Elevator.Limits.softStopBottom) {
+      position = Constants.Elevator.Limits.softStopBottom;
+    } else if (position > Constants.Elevator.Limits.softStopTop) {
+      position = Constants.Elevator.Limits.softStopTop;
     }
 
+    holdPosition = position;
+
     leadMotor.getPIDController().setReference(position, CANSparkMax.ControlType.kPosition);
-    followMotor1.getPIDController().setReference(position, CANSparkMax.ControlType.kPosition);
-    followMotor2.getPIDController().setReference(position, CANSparkMax.ControlType.kPosition);
-    followMotor3.getPIDController().setReference(position, CANSparkMax.ControlType.kPosition);
+  }
+
+  public boolean checkIfAtHardStop(){
+    return (leadMotor.getOutputCurrent() > Constants.Elevator.Limits.hardStopCurrentLimit && leadMotor.getOutputCurrent() < 0.0);
+  }
+
+  public void holdElevator() {
+    if (!holdPositionRecorded) {
+      // We haven't recorded where we are yet, so get it
+      holdPosition = getElevatorInches();
+      holdPositionRecorded = true;
+
+      leadMotor.set(0.0);
+    } else {
+    leadMotor.getPIDController().setReference(holdPosition, CANSparkMax.ControlType.kPosition);
+    }
+
+  }
+
+  public boolean atPosition(){
+    return (Math.abs(holdPosition - getElevatorInches()) < Constants.Elevator.elevatorHeightToleranceInch);
   }
 }
