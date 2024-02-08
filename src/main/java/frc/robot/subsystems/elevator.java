@@ -10,9 +10,9 @@ import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.Constants;
+
 import frc.robot.commands.StopElevator;
-import frc.robot.commands.moveElevator;
+import frc.robot.Constants;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new elevator. */
@@ -27,10 +27,10 @@ public class Elevator extends SubsystemBase {
   private double holdPosition;
 
   public Elevator() {
-    leadMotor = new CANSparkMax(11, MotorType.kBrushless);
-    followMotor1 = new CANSparkMax(10, MotorType.kBrushless);
-    followMotor2 = new CANSparkMax(13, MotorType.kBrushless);
-    followMotor3 = new CANSparkMax(12, MotorType.kBrushless);
+    leadMotor = new CANSparkMax(Constants.Elevator.leadMotorID, MotorType.kBrushless);
+    followMotor1 = new CANSparkMax(Constants.Elevator.followMotor1ID, MotorType.kBrushless);
+    followMotor2 = new CANSparkMax(Constants.Elevator.followMotor2ID, MotorType.kBrushless);
+    followMotor3 = new CANSparkMax(Constants.Elevator.followMotor3ID, MotorType.kBrushless);
 
     leadMotor.setIdleMode(IdleMode.kBrake);
     followMotor1.setIdleMode(IdleMode.kBrake);
