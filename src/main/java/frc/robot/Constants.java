@@ -21,23 +21,23 @@ public class Constants {
         public static double joystickRotationSmoothFactor = 0.5;
         public static double joystickRotationInverseDeadband = 0.14;
 
-        // Length and Width of the Robot in Meters (Inches: 28 x 31.5)
-        public static final double swerveWidth = 0.578;
-        public static final double swerveLength = 0.667;
+        // Length and Width of the Robot in Meters (Inches: 28 x 31.5) 23.75 x 24.75
+        public static final double swerveWidth = 0.62865; //0.578;
+        public static final double swerveLength = 0.60325; //0.667;
 
         // Max Swerve Speed (Velocity Control)
         public static final double swerveMaxSpeed = 4.5; // (Meters per Second)(2 Slow, 4.5 normal)
 
         // Swerve Wheels and Gear Ratio
         public static final double driveGearRatio = 6.75;// 6.75:1
-        public static final double driveWheelDiameter = 0.098552;
+        public static final double driveWheelDiameter = 0.1016; //0.098552;
 
         // Analog Encoder Offsets (Degrees) - Opposite of Raw Reading - Bevel Gear to
         // Right
-        public static final double frontLeftOffset = 24.17; // 0.0; //-174.3;
-        public static final double frontRightOffset = 158.99; // 0.0; //95.0; //90.8
-        public static final double rearLeftOffset = -155.92; //0.0; //180.6;//170.6
-        public static final double rearRightOffset = -84.72; //0.0; //28.3;//31.0
+        public static final double frontLeftOffset =  26.2; //-174.3;
+        public static final double frontRightOffset =  159.7; //95.0; //90.8
+        public static final double rearLeftOffset = -161.4; //180.6;//170.6
+        public static final double rearRightOffset = -85.4; //28.3;//31.0
 
         public static class PIDConstants {
             // Swerve Drive PID (Velocity Control)

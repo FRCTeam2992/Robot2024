@@ -8,6 +8,9 @@ import java.util.ArrayList;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.StatusSignal.SignalMeasurement;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CANcoderConfigurator;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -173,6 +176,7 @@ public class Drivetrain extends SubsystemBase {
 
     private int dashboardCounter = 0;
 
+
     public Drivetrain() {
 
         driveMotorConfigs = new TalonFXConfiguration();
@@ -336,7 +340,6 @@ public class Drivetrain extends SubsystemBase {
             llRightTargetIDLog = new IntegerLogEntry(mDataLog, "/ll/twelve/target_id");
             llLeftTargetIDLog = new IntegerLogEntry(mDataLog, "/ll/thirteen/target_id");
 
-
         }
 
         // robot gyro initialization
@@ -381,6 +384,7 @@ public class Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
+        
         swerveDriveModulePositions[0] = frontLeftModule.getPosition();
         swerveDriveModulePositions[1] = frontRightModule.getPosition();
         swerveDriveModulePositions[2] = rearLeftModule.getPosition();
@@ -425,6 +429,17 @@ public class Drivetrain extends SubsystemBase {
                 SmartDashboard.putNumber("Odometry Y (in)", (latestSwervePose.getY() * (100 / 2.54)));
                 SmartDashboard.putNumber("Odometry X (m)", latestSwervePose.getX());
                 SmartDashboard.putNumber("Odometry Y (m)", latestSwervePose.getY());
+
+                SmartDashboard.putNumber("Front Left Wheel Pos", frontLeftModule.getWheelPositionMeters());
+                SmartDashboard.putNumber("Front Right Wheel Pos", frontRightModule.getWheelPositionMeters());
+                SmartDashboard.putNumber("Back Left Wheel Pos", rearLeftModule.getWheelPositionMeters());
+                SmartDashboard.putNumber("Back Right Wheel Pos", rearRightModule.getWheelPositionMeters());
+
+                SmartDashboard.putNumber("Front Left Encoder Angle", frontLeftModule.getEncoderAngle());
+                SmartDashboard.putNumber("Front Right Encoder Angle", frontRightModule.getEncoderAngle());
+                SmartDashboard.putNumber("Back Left Encoder Angle", rearLeftModule.getEncoderAngle());
+                SmartDashboard.putNumber("Back Right Encoder Angle", rearRightModule.getEncoderAngle());
+
             }
             SmartDashboard.putNumber("front left encoder", frontLeftModule.getEncoderAngle());
             SmartDashboard.putNumber("front right encoder", frontRightModule.getEncoderAngle());
@@ -434,6 +449,7 @@ public class Drivetrain extends SubsystemBase {
             SmartDashboard.putNumber("Gyro Yaw (raw deg)", navx.getYaw());
             SmartDashboard.putNumber("Gyro Yaw (adj deg)", getGyroYaw());
             SmartDashboard.putNumber("Robot Gyro Pitch (raw deg)", getRobotPitch()); // Navx Roll
+
 
             // if (limeLightCameraBack.getTargetID() > 0) {
             // if (Constants.debugDashboard) {
@@ -639,10 +655,10 @@ public class Drivetrain extends SubsystemBase {
 
     public double getGyroYaw() {
         double angle = navx.getYaw() + gyroOffset;
-        while (angle > 360) {
+        while (angle > 180) {
             angle -= 360;
         }
-        while (angle < 0) {
+        while (angle < -180) {
             angle += 360;
         }
         return angle;
