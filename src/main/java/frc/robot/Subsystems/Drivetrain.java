@@ -718,7 +718,7 @@ public class Drivetrain extends SubsystemBase {
 
     public void onDisable() {
         setDriveNeutralMode(NeutralModeValue.Coast);
-        setTurnNeutralMode(NeutralModeValue.Coast);
+        setTurnNeutralMode(NeutralModeValue.Brake);
         stopDrive();
     }
 

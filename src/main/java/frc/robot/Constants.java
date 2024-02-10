@@ -30,7 +30,7 @@ public class Constants {
 
         // Swerve Wheels and Gear Ratio
         public static final double driveGearRatio = 6.75;// 6.75:1
-        public static final double driveWheelDiameter = 0.1016; //0.098552;
+        public static final double driveWheelDiameter = 0.098552; //0.098552;
 
         // Analog Encoder Offsets (Degrees) - Opposite of Raw Reading - Bevel Gear to
         // Right

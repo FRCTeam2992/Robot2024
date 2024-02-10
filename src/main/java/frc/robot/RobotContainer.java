@@ -4,12 +4,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.DisableFieldOreintToggle;
 import frc.robot.Commands.DriveSticks;
 import frc.robot.Commands.ResetGyro;
+import frc.robot.Commands.SetSwerveAngle;
 import frc.robot.Subsystems.Drivetrain;
 
 public class RobotContainer {
@@ -30,6 +32,8 @@ public class RobotContainer {
   private void configureBindings() {
 
     controller0.start().onTrue(new ResetGyro(mDrivetrain));
+
+    SmartDashboard.putData(new SetSwerveAngle(mDrivetrain, 90.0, 90.0, 90.0, 90.0));
 
     // controller0.rightBumper().whileTrue(new DisableFieldOreintToggle(mDrivetrain));
 
