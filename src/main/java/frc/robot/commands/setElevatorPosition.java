@@ -34,7 +34,7 @@ public class setElevatorPosition extends Command {
   @Override
   public void end(boolean interrupted) {
     if (mPosition < Constants.Elevator.Limits.softStopBottom){
-      new moveElevator(mElevator, -0.05);
+      new moveElevator(mElevator, -0.05).schedule();;
     }
   }
 

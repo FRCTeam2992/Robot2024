@@ -7,8 +7,10 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.commands.StopElevator;
@@ -21,7 +23,7 @@ public class Elevator extends SubsystemBase {
   private CANSparkMax followMotor2; //right
   private CANSparkMax followMotor3; //right
 
-  private PIDController PIDController;
+  private SparkPIDController PIDController;
 
   private boolean holdPositionRecorded;
   private double holdPosition;
@@ -46,10 +48,21 @@ public class Elevator extends SubsystemBase {
     followMotor2.follow(leadMotor);
     followMotor3.follow(leadMotor);
 
-    PIDController = new PIDController(Constants.Elevator.PIDControllerP, Constants.Elevator.PIDControllerI, Constants.Elevator.PIDControllerD);
-    PIDController.setTolerance(Constants.Elevator.positionTolerance);
-    PIDController.disableContinuousInput();
-    PIDController.setIntegratorRange(Constants.Elevator.integratorRangeMin, Constants.Elevator.integratorRangeMax);
+    PIDController = leadMotor.getPIDController();
+    PIDController.setP(Constants.Elevator.PIDConstants.kP);
+    PIDController.setI(Constants.Elevator.PIDConstants.kI);
+    PIDController.setD(Constants.Elevator.PIDConstants.kD);
+    PIDController.setIZone(Constants.Elevator.PIDConstants.kIZone);
+    PIDController.setFF(Constants.Elevator.PIDConstants.kF);
+    PIDController.setOutputRange(Constants.Elevator.PIDConstants.kMinOutput, Constants.Elevator.PIDConstants.kMaxOutput);
+
+    PIDController.setSmartMotionMaxVelocity(Constants.Elevator.PIDConstants.SmartMotionMaxVel, 0);
+    PIDController.setSmartMotionMinOutputVelocity(Constants.Elevator.PIDConstants.SmartMotionMinVel, 0);
+    PIDController.setSmartMotionMaxAccel(Constants.Elevator.PIDConstants.SmartMotionMaxAcc, 0);
+    PIDController.setSmartMotionAllowedClosedLoopError(Constants.Elevator.PIDConstants.SmartMotionAllowedError, 0);
+
+
+
   }
 
   @Override
@@ -77,7 +90,11 @@ public class Elevator extends SubsystemBase {
   }
 
   public double encoderRotationsToInches(double rotations) {
-    return rotations * Constants.Elevator.encoderElevatorToInches;
+    return rotations * Constants.Elevator.encoderToInches;
+  }
+
+  public double inchesToEncoderRotations(double inches) {
+    return inches / Constants.Elevator.encoderToInches;
   }
 
   public void zeroElevatorEncoders() {
@@ -100,6 +117,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setElevatorPosition(double position) {
+    position = inchesToEncoderRotations(position);
     holdPositionRecorded = true;
     
     if (position < Constants.Elevator.Limits.softStopBottom) {
@@ -110,7 +128,8 @@ public class Elevator extends SubsystemBase {
 
     holdPosition = position;
 
-    leadMotor.getPIDController().setReference(position, CANSparkMax.ControlType.kPosition);
+    PIDController.setReference(position, CANSparkMax.ControlType.kSmartMotion);
+    // leadMotor.getPIDController().setReference(position, CANSparkMax.ControlType.kPosition);
   }
 
   public boolean checkIfAtHardStop(){
@@ -120,17 +139,17 @@ public class Elevator extends SubsystemBase {
   public void holdElevator() {
     if (!holdPositionRecorded) {
       // We haven't recorded where we are yet, so get it
-      holdPosition = getElevatorInches();
+      holdPosition = getElevatorPosition()[0];
       holdPositionRecorded = true;
 
       leadMotor.set(0.0);
     } else {
-    leadMotor.getPIDController().setReference(holdPosition, CANSparkMax.ControlType.kPosition);
+    PIDController.setReference(holdPosition, CANSparkMax.ControlType.kSmartMotion);
     }
 
   }
 
   public boolean atPosition(){
-    return (Math.abs(holdPosition - getElevatorInches()) < Constants.Elevator.elevatorHeightToleranceInch);
+    return (encoderRotationsToInches(Math.abs(holdPosition - getElevatorPosition()[0])) < Constants.Elevator.elevatorHeightToleranceInch);
   }
 }
