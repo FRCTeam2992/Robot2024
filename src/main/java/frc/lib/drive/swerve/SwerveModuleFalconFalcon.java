@@ -29,6 +29,8 @@ public class SwerveModuleFalconFalcon {
 
     private StatusSignal<Double> drivePositionSignal;
     private StatusSignal<Double> encoderPositionSignal;
+    private StatusSignal<Double> driveVelocitySignal;
+    private StatusSignal<Double> encoderVelocitySignal;
 
 
     public SwerveModuleFalconFalcon(com.ctre.phoenix6.hardware.TalonFX driveMotor, com.ctre.phoenix6.hardware.TalonFX turnMotor, CANcoder encoder,
@@ -49,7 +51,10 @@ public class SwerveModuleFalconFalcon {
         drivePositionSignal = driveMotor.getPosition();
         encoderPositionSignal = encoder.getAbsolutePosition();
 
-        BaseStatusSignal.setUpdateFrequencyForAll(100.0, drivePositionSignal, encoderPositionSignal);
+        driveVelocitySignal = driveMotor.getVelocity();
+        encoderVelocitySignal = encoder.getVelocity();
+
+        BaseStatusSignal.setUpdateFrequencyForAll(100.0, drivePositionSignal, encoderPositionSignal, driveVelocitySignal, encoderVelocitySignal);
     }
 
     public void setDriveSpeed(double speed) {
@@ -115,7 +120,9 @@ public class SwerveModuleFalconFalcon {
     }
 
     public double getEncoderAngle() {
-        double tempAngle = encoderPositionSignal.getValue() * 360 - encoderOffset;
+        encoderPositionSignal.refresh();
+        encoderVelocitySignal.refresh();
+        double tempAngle = BaseStatusSignal.getLatencyCompensatedValue(encoderPositionSignal, encoderVelocitySignal) * 360 - encoderOffset;
         // double tempAngle = encoderInput.getAbsolutePosition() - encoderOffset;
 
         // Not sure if -180 adjust needed. Not sure why this was here before
@@ -164,14 +171,15 @@ public class SwerveModuleFalconFalcon {
     }
 
     public double getWheelPositionMeters() {
-        double position = drivePositionSignal.getValue();
+        drivePositionSignal.refresh();
+        driveVelocitySignal.refresh();
+        double position = BaseStatusSignal.getLatencyCompensatedValue(drivePositionSignal, driveVelocitySignal);
         position = (position * wheelDiameter * Math.PI) / (wheelGearRatio);
 
         return position;
     }
 
     public SwerveModulePosition getPosition() {
-        StatusSignal.refreshAll(drivePositionSignal, encoderPositionSignal);
         return new SwerveModulePosition(getWheelPositionMeters(), Rotation2d.fromDegrees(getEncoderAngle()));
     }
 
