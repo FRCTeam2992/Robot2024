@@ -41,8 +41,8 @@ public class Elevator extends SubsystemBase {
 
     leadMotor.setInverted(true);
     followMotor1.setInverted(true);
-    followMotor2.setInverted(true);
-    followMotor3.setInverted(true);
+    followMotor2.setInverted(false);
+    followMotor3.setInverted(false);
 
     followMotor1.follow(leadMotor);
     followMotor2.follow(leadMotor);
@@ -72,6 +72,11 @@ public class Elevator extends SubsystemBase {
       zeroElevatorEncoders();
       new StopElevator(this).schedule();
     }
+
+    SmartDashboard.putNumber("Elevator Inches", getElevatorInches());
+    SmartDashboard.putNumber("Elevator Motor Position", getElevatorPosition()[0]);
+    SmartDashboard.putNumber("Elevator Current Out", leadMotor.getOutputCurrent());
+    SmartDashboard.putBoolean("At hard stop", checkIfAtHardStop());
 
     // This method will be called once per scheduler run
   }
@@ -133,7 +138,8 @@ public class Elevator extends SubsystemBase {
   }
 
   public boolean checkIfAtHardStop(){
-    return (leadMotor.getOutputCurrent() > Constants.Elevator.Limits.hardStopCurrentLimit && leadMotor.getOutputCurrent() < 0.0);
+    return false;
+    // return (leadMotor.getOutputCurrent() > Constants.Elevator.Limits.hardStopCurrentLimit && leadMotor.getOutputCurrent() < 0.0);
   }
 
   public void holdElevator() {
