@@ -2,8 +2,8 @@ package frc.robot;
 
 public class Constants {
     public static class Elevator {
-        public static final int leadMotorID = 11; //left
-        public static final int followMotor1ID = 10; //left
+        public static final int leadMotorID = 10; //left
+        public static final int followMotor1ID = 11; //left
         public static final int followMotor2ID = 13; //right
         public static final int followMotor3ID = 12; //right
 

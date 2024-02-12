@@ -8,12 +8,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Elevator;
 
-public class setElevatorPosition extends Command {
+public class SetElevatorPosition extends Command {
   /** Creates a new setElevatorPosition. */
   private Elevator mElevator;
   private double mPosition;
 
-  public setElevatorPosition(Elevator subsystem, double position) {
+  public SetElevatorPosition(Elevator subsystem, double position) {
     // Use addRequirements() here to declare subsystem dependencies.
     mElevator = subsystem;
     mPosition = position;
@@ -34,7 +34,7 @@ public class setElevatorPosition extends Command {
   @Override
   public void end(boolean interrupted) {
     if (mPosition < Constants.Elevator.Limits.softStopBottom){
-      new moveElevator(mElevator, -0.05).schedule();;
+      new MoveElevator(mElevator, -0.05).schedule();
     }
   }
 

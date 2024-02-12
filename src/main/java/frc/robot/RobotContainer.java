@@ -8,11 +8,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.HoldElevatorPosition;
 import frc.robot.commands.StopElevator;
 import frc.robot.commands.ZeroElevator;
-import frc.robot.commands.moveElevator;
-import frc.robot.commands.setElevatorPosition;
+import frc.robot.commands.MoveElevator;
+import frc.robot.commands.SetElevatorPosition;
 import frc.robot.subsystems.Elevator;
 
 public class RobotContainer {
@@ -36,13 +35,13 @@ public class RobotContainer {
 
   private void configureBindings() {
     
-    controller0.povUp().whileTrue(new moveElevator(mElevator, 0.2));
-    controller0.povDown().whileTrue(new moveElevator(mElevator, -0.2));
+    controller0.povUp().whileTrue(new MoveElevator(mElevator, 0.2));
+    controller0.povDown().whileTrue(new MoveElevator(mElevator, -0.2));
 
    }
 
   private void configureShuffleBoard(){
-    SmartDashboard.putData(new setElevatorPosition(mElevator, SmartDashboard.getNumber("Elevator Target Postion", 10)));
+    SmartDashboard.putData(new SetElevatorPosition(mElevator, SmartDashboard.getNumber("Elevator Target Postion", 10)));
     SmartDashboard.putData(new ZeroElevator(mElevator));
   }
 

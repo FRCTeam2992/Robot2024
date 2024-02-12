@@ -7,12 +7,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Elevator;
 
-public class moveElevator extends Command {
+public class MoveElevator extends Command {
   /** Creates a new moveElevator. */
   private Elevator mElevator;
   private double mSpeed;
 
-  public moveElevator(Elevator subsystem, double speed) {
+  public MoveElevator(Elevator subsystem, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
     mElevator = subsystem;
     mSpeed = speed;
