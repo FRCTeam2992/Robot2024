@@ -24,19 +24,21 @@ public class RobotContainer {
   public RobotContainer() {
 
     mElevator = new Elevator();
-    mElevator.setDefaultCommand(new StopElevator(mElevator));
+    // mElevator.setDefaultCommand(new StopElevator(mElevator));
 
     controller0 = new CommandXboxController(0);
 
 
     configureBindings();
     configureShuffleBoard();
+
+    SmartDashboard.putData(mElevator);
   }
 
   private void configureBindings() {
     
-    controller0.povUp().whileTrue(new MoveElevator(mElevator, 0.2));
-    controller0.povDown().whileTrue(new MoveElevator(mElevator, -0.2));
+    controller0.povUp().whileTrue(new MoveElevator(mElevator, -0.15));
+    controller0.povDown().whileTrue(new MoveElevator(mElevator, 0.15));
 
    }
 

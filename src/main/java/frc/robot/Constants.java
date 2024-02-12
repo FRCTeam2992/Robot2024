@@ -4,8 +4,8 @@ public class Constants {
     public static class Elevator {
         public static final int leadMotorID = 10; //left
         public static final int followMotor1ID = 11; //left
-        public static final int followMotor2ID = 13; //right
-        public static final int followMotor3ID = 12; //right
+        public static final int followMotor2ID = 12; //right
+        public static final int followMotor3ID = 13; //right
 
         public static final double gearRatio = (60.0/12.0) * (64.0/36.0); //
         public static final double sprocketPitchDiameter = 1.751; //inches
@@ -18,7 +18,7 @@ public class Constants {
             public static final double kIZone = 0.0; //placeholder
             public static final double kF = 0.0;
 
-            public static final double kMinOutput = 0.0; //placeholder
+            public static final double kMinOutput = -1.0; //placeholder
             public static final double kMaxOutput = 1.0; //placeholder
 
             public static final double SmartMotionMaxVel = 0.0; //placeholder

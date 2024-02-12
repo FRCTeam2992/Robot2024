@@ -33,19 +33,19 @@ public class Elevator extends SubsystemBase {
     followMotor2 = new CANSparkMax(Constants.Elevator.followMotor2ID, MotorType.kBrushless);
     followMotor3 = new CANSparkMax(Constants.Elevator.followMotor3ID, MotorType.kBrushless);
 
-    leadMotor.setIdleMode(IdleMode.kBrake);
-    followMotor1.setIdleMode(IdleMode.kBrake);
-    followMotor2.setIdleMode(IdleMode.kBrake);
-    followMotor3.setIdleMode(IdleMode.kBrake);
+    leadMotor.setIdleMode(IdleMode.kCoast);
+    followMotor1.setIdleMode(IdleMode.kCoast);
+    followMotor2.setIdleMode(IdleMode.kCoast);
+    followMotor3.setIdleMode(IdleMode.kCoast);
 
-    leadMotor.setInverted(true);
-    followMotor1.setInverted(true);
-    followMotor2.setInverted(false);
-    followMotor3.setInverted(false);
+    leadMotor.setInverted(false);
+    followMotor1.setInverted(false);
+    followMotor2.setInverted(true);
+    followMotor3.setInverted(true);
 
-    followMotor1.follow(leadMotor);
-    followMotor2.follow(leadMotor);
-    followMotor3.follow(leadMotor);
+    followMotor1.follow(leadMotor, false);
+    followMotor2.follow(leadMotor, true);
+    followMotor3.follow(leadMotor, true);
 
     PIDController = leadMotor.getPIDController();
     PIDController.setP(Constants.Elevator.PIDConstants.kP);
