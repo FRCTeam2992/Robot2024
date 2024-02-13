@@ -16,6 +16,7 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -341,7 +342,7 @@ public class Drivetrain extends SubsystemBase {
         }
 
         // robot gyro initialization
-        navx = new AHRS(SPI.Port.kMXP, (byte) 50);
+        navx = new AHRS(SPI.Port.kMXP, (byte) 200);
 
         swerveDriveModulePositions[0] = frontLeftModule.getPosition();
         swerveDriveModulePositions[1] = frontRightModule.getPosition();
@@ -382,16 +383,14 @@ public class Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        
-        swerveDriveModulePositions[0] = frontLeftModule.getPosition();
-        swerveDriveModulePositions[1] = frontRightModule.getPosition();
-        swerveDriveModulePositions[2] = rearLeftModule.getPosition();
-        swerveDriveModulePositions[3] = rearRightModule.getPosition();
+        if (!Constants.DrivetrainConstants.odometryThread) {
+            swerveDriveModulePositions[0] = frontLeftModule.getPosition();
+            swerveDriveModulePositions[1] = frontRightModule.getPosition();
+            swerveDriveModulePositions[2] = rearLeftModule.getPosition();
+            swerveDriveModulePositions[3] = rearRightModule.getPosition();
 
-        latestSwervePose = swerveDrivePoseEstimator.updateWithTime(
-                Timer.getFPGATimestamp(),
-                Rotation2d.fromDegrees(-getGyroYaw()),
-                swerveDriveModulePositions);
+            updateOdometryPose(swerveDriveModulePositions);
+        }
 
         // limelightBackBotPose =
         // limeLightCameraBack.getBotPose(getAllianceCoordinateSpace());
@@ -802,5 +801,22 @@ public class Drivetrain extends SubsystemBase {
 
     public void setLimeLightOdometryUpdates(boolean isUpdating){
         useLimelightOdometryUpdates = isUpdating;
+    }
+
+    public SwerveModuleFalconFalcon[] getSwerveModules() {
+        SwerveModuleFalconFalcon[] modules = {
+            frontLeftModule,
+            frontRightModule,
+            rearLeftModule,
+            rearRightModule
+        };
+        return modules;
+    }
+
+    public void updateOdometryPose(SwerveModulePosition[] modulePositions) {
+        this.latestSwervePose = this.swerveDrivePoseEstimator.updateWithTime(
+                Timer.getFPGATimestamp(),
+                Rotation2d.fromDegrees(-getGyroYaw()),
+                modulePositions);
     }
 }

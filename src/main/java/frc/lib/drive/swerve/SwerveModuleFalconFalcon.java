@@ -26,11 +26,11 @@ public class SwerveModuleFalconFalcon {
     private DutyCycleOut percentControlRequest;
     private VelocityDutyCycle velocityControlRequest;
 
-    private StatusSignal<Double> drivePositionSignal;
-    private StatusSignal<Double> encoderPositionSignal;
-    private StatusSignal<Double> driveVelocitySignal;
-    private StatusSignal<Double> encoderVelocitySignal;
-
+    public StatusSignal<Double> drivePositionSignal;
+    public StatusSignal<Double> encoderPositionSignal;
+    public StatusSignal<Double> driveVelocitySignal;
+    public StatusSignal<Double> encoderVelocitySignal;
+    public SwerveModulePosition swerveModulePosition;
 
     public SwerveModuleFalconFalcon(com.ctre.phoenix6.hardware.TalonFX driveMotor, com.ctre.phoenix6.hardware.TalonFX turnMotor, CANcoder encoder,
             double encoderOffset, PIDController turnPID, double wheelDiameter, double wheelGearRatio,
@@ -46,6 +46,7 @@ public class SwerveModuleFalconFalcon {
         this.maxDriveSpeed = maxDriveSpeed;
         this.percentControlRequest = percentOut;
         this.velocityControlRequest = velocityOut;
+        this.swerveModulePosition = new SwerveModulePosition();
 
         drivePositionSignal = driveMotor.getPosition();
         encoderPositionSignal = encoder.getAbsolutePosition();
@@ -53,7 +54,11 @@ public class SwerveModuleFalconFalcon {
         driveVelocitySignal = driveMotor.getVelocity();
         encoderVelocitySignal = encoder.getVelocity();
 
-        BaseStatusSignal.setUpdateFrequencyForAll(100.0, drivePositionSignal, encoderPositionSignal, driveVelocitySignal, encoderVelocitySignal);
+        BaseStatusSignal.setUpdateFrequencyForAll(200.0,
+            drivePositionSignal,
+            encoderPositionSignal,
+            driveVelocitySignal,
+            encoderVelocitySignal);
     }
 
     public void setDriveSpeed(double speed) {
@@ -179,7 +184,9 @@ public class SwerveModuleFalconFalcon {
     }
 
     public SwerveModulePosition getPosition() {
-        return new SwerveModulePosition(getWheelPositionMeters(), Rotation2d.fromDegrees(getEncoderAngle()));
+        this.swerveModulePosition.angle = Rotation2d.fromDegrees(getEncoderAngle());
+        this.swerveModulePosition.distanceMeters = getWheelPositionMeters();
+        return this.swerveModulePosition;
     }
 
 }
