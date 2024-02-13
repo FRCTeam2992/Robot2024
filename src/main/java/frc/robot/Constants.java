@@ -12,10 +12,15 @@ public class Constants {
         public static final int intakeMotorID = 0;
     }
 
+    public static class Feeder {
+        public static final int feederMotorID = 4;
+    }
+
     public static class Shooter{
+        
         public static class DeviceIDs{
             public static int shooterMotorID = 0;
-        }
+         }
 
         public static class ShooterPIDConstants{
             public static double P = 0.0;
