@@ -25,12 +25,11 @@ public class SwerveModuleFalconFalcon {
     private PIDController turnPID;
     private DutyCycleOut percentControlRequest;
     private VelocityDutyCycle velocityControlRequest;
-
-    public StatusSignal<Double> drivePositionSignal;
-    public StatusSignal<Double> encoderPositionSignal;
-    public StatusSignal<Double> driveVelocitySignal;
-    public StatusSignal<Double> encoderVelocitySignal;
-    public SwerveModulePosition swerveModulePosition;
+    private StatusSignal<Double> drivePositionSignal;
+    private StatusSignal<Double> encoderPositionSignal;
+    private StatusSignal<Double> driveVelocitySignal;
+    private StatusSignal<Double> encoderVelocitySignal;
+    private SwerveModulePosition swerveModulePosition;
 
     public SwerveModuleFalconFalcon(com.ctre.phoenix6.hardware.TalonFX driveMotor, com.ctre.phoenix6.hardware.TalonFX turnMotor, CANcoder encoder,
             double encoderOffset, PIDController turnPID, double wheelDiameter, double wheelGearRatio,
