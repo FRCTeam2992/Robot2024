@@ -21,6 +21,11 @@ public class Constants {
         public static double joystickRotationSmoothFactor = 0.5;
         public static double joystickRotationInverseDeadband = 0.14;
 
+        // Odometry variables
+        public static final boolean odometryThread = true;
+        public static final int odometryFastRefreshTimeoutMillis = 5;
+        public static final int odometrySlowRefreshTimeoutMillis = 100;
+
         // Length and Width of the Robot in Meters (Inches: 28 x 31.5) 23.75 x 24.75
         public static final double swerveWidth = 0.62865; //0.578;
         public static final double swerveLength = 0.60325; //0.667;

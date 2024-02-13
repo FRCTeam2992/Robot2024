@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.lib.drive.swerve.OdometryThread;
 import frc.robot.Commands.DisableFieldOreintToggle;
 import frc.robot.Commands.DriveSticks;
 import frc.robot.Commands.ResetGyro;
@@ -17,6 +18,7 @@ import frc.robot.Subsystems.Drivetrain;
 public class RobotContainer {
 
   public final Drivetrain mDrivetrain;
+  public OdometryThread mOdometryThread;
 
 
   public final CommandXboxController controller0 = new CommandXboxController(0);
@@ -24,6 +26,11 @@ public class RobotContainer {
   public RobotContainer() {
     
     mDrivetrain = new Drivetrain();
+    if (Constants.DrivetrainConstants.odometryThread) {
+      mOdometryThread = new OdometryThread(mDrivetrain.getSwerveModules());
+      mOdometryThread.setFastMode();
+      mOdometryThread.start();
+    }
     mDrivetrain.setDefaultCommand(new DriveSticks(mDrivetrain));
 
     configureBindings();
