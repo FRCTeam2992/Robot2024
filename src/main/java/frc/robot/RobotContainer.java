@@ -6,11 +6,24 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Commands.StopIntake;
+import frc.robot.Commands.StopShooter;
 import frc.robot.Subsystems.Intake;
+import frc.robot.Subsystems.Shooter;
 
 public class RobotContainer {
+
+  public final Shooter mShooter;
   private Intake mIntake;
+
   public RobotContainer() {
+
+    mShooter = new Shooter();
+    mShooter.setDefaultCommand(new StopShooter(mShooter));
+
+    mIntake = new Intake();
+    mIntake.setDefaultCommand(new StopIntake(mIntake));
+
     configureBindings();
   }
 
