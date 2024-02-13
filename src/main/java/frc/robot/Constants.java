@@ -25,6 +25,8 @@ public class Constants {
         public static final boolean odometryThread = true;
         public static final int odometryFastRefreshTimeoutMillis = 5;
         public static final int odometrySlowRefreshTimeoutMillis = 100;
+        public static final double sensorUpdateRateHz = 200.0;
+        public static final byte gyroUpdateRateHz = (byte) 200;
 
         // Length and Width of the Robot in Meters (Inches: 28 x 31.5) 23.75 x 24.75
         public static final double swerveWidth = 0.62865; //0.578;
