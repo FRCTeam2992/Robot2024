@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.Subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -13,7 +13,7 @@ import frc.robot.Constants;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class feeder extends SubsystemBase {
+public class Feeder extends SubsystemBase {
   /** Creates a new feeder. */
   private TalonFX feedMotor;
   private TalonFXConfiguration feedMotorConfigs;
@@ -21,7 +21,7 @@ public class feeder extends SubsystemBase {
 
   private boolean isLimited = false; //in preparation for limit sensor
 
-  public feeder() {
+  public Feeder() {
     feedMotor = new TalonFX(Constants.Feeder.feederMotorID, "CanBus2");
     feedMotorConfigs = new TalonFXConfiguration();
 
