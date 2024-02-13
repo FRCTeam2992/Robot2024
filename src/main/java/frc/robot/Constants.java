@@ -9,7 +9,7 @@ package frc.robot;
 public class Constants {
 
     public static class Intake{
-        public static final int intakeMotorID = 0;
+        public static final int intakeMotorID = 14;
     }
 
     public static class Feeder {
@@ -19,7 +19,7 @@ public class Constants {
     public static class Shooter{
         
         public static class DeviceIDs{
-            public static int shooterMotorID = 0;
+            public static int shooterMotorID = 15;
          }
 
         public static class ShooterPIDConstants{
@@ -34,7 +34,7 @@ public class Constants {
     }
 
     public static class ShooterPivot {
-        public static final int pivotMotorID = 3;
+        public static final int pivotMotorID = 16;
 
         public static final double pivotTargetedThreshold = 5.0;
 

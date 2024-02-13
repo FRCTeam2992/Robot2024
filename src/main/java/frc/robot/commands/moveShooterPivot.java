@@ -7,12 +7,12 @@ package frc.robot.Commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.ShooterPivot;
 
-public class moveShooterPivot extends Command {
+public class MoveShooterPivot extends Command {
   /** Creates a new moveShooterPivot. */
   private ShooterPivot mPivot;
   private double mSpeed;
 
-  public moveShooterPivot(ShooterPivot subsystem, double speed) {
+  public MoveShooterPivot(ShooterPivot subsystem, double speed) {
     mPivot = subsystem;
     mSpeed = speed;
     // Use addRequirements() here to declare subsystem dependencies.

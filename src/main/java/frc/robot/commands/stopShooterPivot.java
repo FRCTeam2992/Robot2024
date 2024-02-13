@@ -7,10 +7,10 @@ package frc.robot.Commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.ShooterPivot;
 
-public class stopShooterPivot extends Command {
+public class StopShooterPivot extends Command {
   /** Creates a new stopShooterPivot. */
   private ShooterPivot mPivot;
-  public stopShooterPivot(ShooterPivot subsystem) {
+  public StopShooterPivot(ShooterPivot subsystem) {
     mPivot = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(mPivot);

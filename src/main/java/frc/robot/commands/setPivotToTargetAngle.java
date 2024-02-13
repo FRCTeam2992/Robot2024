@@ -7,10 +7,10 @@ package frc.robot.Commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.ShooterPivot;
 
-public class setPivotToTargetAngle extends Command {
+public class SetPivotToTargetAngle extends Command {
   /** Creates a new setPivotToTargetAngle. */
   private ShooterPivot mPivot;
-  public setPivotToTargetAngle(ShooterPivot subsystem) {
+  public SetPivotToTargetAngle(ShooterPivot subsystem) {
     mPivot = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(mPivot);

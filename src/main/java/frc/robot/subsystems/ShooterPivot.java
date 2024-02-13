@@ -15,6 +15,7 @@ import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -55,6 +56,7 @@ public class ShooterPivot extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putData(this);
     // This method will be called once per scheduler run
   }
 
