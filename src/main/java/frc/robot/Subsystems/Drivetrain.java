@@ -366,9 +366,10 @@ public class Drivetrain extends SubsystemBase {
                 swerveDriveModulePositions,
                 new Pose2d(0.0, 0.0, new Rotation2d()),
                 // State measurement standard deviations. X, Y, theta.
-                new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01),
+                MatBuilder.fill(Nat.N3(), Nat.N1(), 0.02, 0.02, 0.01),
                 // Global measurement standard deviations. X, Y, and theta.
-                new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, .9999));
+                MatBuilder.fill(Nat.N3(), Nat.N1(), 0.1, 0.1, .9999)
+            );
     }
 
     private void initTalonFX(TalonFX motorContollerName, TalonFXConfiguration configs, InvertedValue motorDirection) {
