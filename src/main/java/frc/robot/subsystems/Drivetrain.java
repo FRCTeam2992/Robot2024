@@ -342,7 +342,7 @@ public class Drivetrain extends SubsystemBase {
         }
 
         // robot gyro initialization
-        navx = new AHRS(SPI.Port.kMXP, (byte) 200);
+        navx = new AHRS(SPI.Port.kMXP, Constants.DrivetrainConstants.gyroUpdateRateHz);
 
         swerveDriveModulePositions[0] = frontLeftModule.getPosition();
         swerveDriveModulePositions[1] = frontRightModule.getPosition();

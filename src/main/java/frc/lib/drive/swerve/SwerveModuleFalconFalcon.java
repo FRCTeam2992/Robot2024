@@ -11,6 +11,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.Constants;
 
 public class SwerveModuleFalconFalcon {
 
@@ -53,7 +54,8 @@ public class SwerveModuleFalconFalcon {
         driveVelocitySignal = driveMotor.getVelocity();
         encoderVelocitySignal = encoder.getVelocity();
 
-        BaseStatusSignal.setUpdateFrequencyForAll(200.0,
+        BaseStatusSignal.setUpdateFrequencyForAll(
+            Constants.DrivetrainConstants.sensorUpdateRateHz,
             drivePositionSignal,
             encoderPositionSignal,
             driveVelocitySignal,
