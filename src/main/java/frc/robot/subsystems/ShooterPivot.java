@@ -37,7 +37,7 @@ public class ShooterPivot extends SubsystemBase {
   /** Creates a new ShooterPivot. */
   public ShooterPivot() {
 
-    pivotMotor = new TalonFX(Constants.ShooterPivot.pivotMotorID, "CanBus2");
+    pivotMotor = new TalonFX(Constants.ShooterPivot.pivotMotorID);
     pivotMotorConfigs = new TalonFXConfiguration();
     pivotMotorConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     pivotMotorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;

@@ -22,7 +22,7 @@ public class Feeder extends SubsystemBase {
   private boolean isLimited = false; //in preparation for limit sensor
 
   public Feeder() {
-    feedMotor = new TalonFX(Constants.Feeder.feederMotorID, "CanBus2");
+    feedMotor = new TalonFX(Constants.Feeder.feederMotorID);
     feedMotorConfigs = new TalonFXConfiguration();
 
     feedMotorConfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;

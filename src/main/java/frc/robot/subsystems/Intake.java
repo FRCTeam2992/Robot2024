@@ -20,7 +20,7 @@ public class Intake extends SubsystemBase {
   private TalonFXConfiguration intakeMotorConfigs;
   private DutyCycleOut percentOutControlRequest;
   public Intake() {
-    intakeMotor = new TalonFX(Constants.Intake.intakeMotorID, "CanBus2");
+    intakeMotor = new TalonFX(Constants.Intake.intakeMotorID);
     intakeMotorConfigs = new TalonFXConfiguration();
 
     intakeMotorConfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
