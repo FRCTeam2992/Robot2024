@@ -29,6 +29,27 @@ public class Constants {
             public static double V = 0.0;
             public static double acceleration = 0.0;
             public static double cruiseVelocity = 0.0;
+
+        }
+    }
+
+    public static class ShooterPivot {
+        public static final int pivotMotorID = 3;
+
+        public static final double pivotTargetedThreshold = 5.0;
+
+        public static class PIDController {
+            public static final double P = 0.0;
+            public static final double I = 0.0;
+            public static final double D = 0.0;
+            public static final double F = 0.0;
+
+            public static final double pivotAngleTolerance = 0.0;
+        }
+
+        public static class Limits {
+            public static final double minPivotAngle = 0.0;
+            public static final double maxPivotAngle = 0.0;
         }
     }
 }
