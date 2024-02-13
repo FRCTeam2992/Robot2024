@@ -7,16 +7,16 @@ package frc.robot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Commands.MoveFeeder;
-import frc.robot.Commands.MoveIntake;
-import frc.robot.Commands.MoveShooterPivot;
-import frc.robot.Commands.StartShooter;
-import frc.robot.Commands.StopIntake;
-import frc.robot.Commands.StopShooter;
-import frc.robot.Subsystems.Feeder;
-import frc.robot.Subsystems.Intake;
-import frc.robot.Subsystems.Shooter;
-import frc.robot.Subsystems.ShooterPivot;
+import frc.robot.commands.MoveFeeder;
+import frc.robot.commands.MoveIntake;
+import frc.robot.commands.MoveShooterPivot;
+import frc.robot.commands.StartShooter;
+import frc.robot.commands.StopIntake;
+import frc.robot.commands.StopShooter;
+import frc.robot.subsystems.Feeder;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.ShooterPivot;
 
 public class RobotContainer {
 
