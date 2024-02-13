@@ -23,6 +23,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    SmartDashboard.putNumber("Elevator Current Out", m_robotContainer.mPDH.getCurrent(6));
+
   }
 
   @Override

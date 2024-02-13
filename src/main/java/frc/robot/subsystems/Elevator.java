@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.commands.StopElevator;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new elevator. */
@@ -33,10 +34,10 @@ public class Elevator extends SubsystemBase {
     followMotor2 = new CANSparkMax(Constants.Elevator.followMotor2ID, MotorType.kBrushless);
     followMotor3 = new CANSparkMax(Constants.Elevator.followMotor3ID, MotorType.kBrushless);
 
-    leadMotor.setIdleMode(IdleMode.kCoast);
-    followMotor1.setIdleMode(IdleMode.kCoast);
-    followMotor2.setIdleMode(IdleMode.kCoast);
-    followMotor3.setIdleMode(IdleMode.kCoast);
+    leadMotor.setIdleMode(IdleMode.kBrake);
+    followMotor1.setIdleMode(IdleMode.kBrake);
+    followMotor2.setIdleMode(IdleMode.kBrake);
+    followMotor3.setIdleMode(IdleMode.kBrake);
 
     leadMotor.setInverted(false);
     followMotor1.setInverted(false);
@@ -52,7 +53,6 @@ public class Elevator extends SubsystemBase {
     PIDController.setI(Constants.Elevator.PIDConstants.kI);
     PIDController.setD(Constants.Elevator.PIDConstants.kD);
     PIDController.setIZone(Constants.Elevator.PIDConstants.kIZone);
-    PIDController.setFF(Constants.Elevator.PIDConstants.kF);
     PIDController.setOutputRange(Constants.Elevator.PIDConstants.kMinOutput, Constants.Elevator.PIDConstants.kMaxOutput);
 
     PIDController.setSmartMotionMaxVelocity(Constants.Elevator.PIDConstants.SmartMotionMaxVel, 0);
@@ -68,15 +68,16 @@ public class Elevator extends SubsystemBase {
   public void periodic() {
 
     if (checkIfAtHardStop()){
-      zeroElevatorEncoders();
-      new StopElevator(this).schedule();
+      // zeroElevatorEncoders();
+      // new StopElevator(this).schedule();
     }
 
     SmartDashboard.putNumber("Elevator Inches", getElevatorInches());
     SmartDashboard.putNumber("Elevator Motor Position", getElevatorPosition()[0]);
-    SmartDashboard.putNumber("Elevator Current Out", leadMotor.getOutputCurrent());
     SmartDashboard.putBoolean("At hard stop", checkIfAtHardStop());
+    SmartDashboard.putData(this);
 
+    SmartDashboard.putNumber("Ele Velocity", getElevatorVelocity());
     // This method will be called once per scheduler run
   }
 
@@ -111,11 +112,11 @@ public class Elevator extends SubsystemBase {
   public void setElevatorSpeed(double speed) {
     holdPositionRecorded = false;
 
-    if (getElevatorInches() < Constants.Elevator.Limits.softStopBottom) {
-      speed = Math.max(-0.1, speed);
-    } else if (getElevatorInches() > Constants.Elevator.Limits.softStopTop) {
-      speed = 0.0;
-    }
+    // if (getElevatorInches() < Constants.Elevator.Limits.softStopBottom) {
+    //   speed = Math.max(0.0, speed);
+    // } else if (getElevatorInches() > Constants.Elevator.Limits.softStopTop) {
+    //   speed = 0.0;
+    // }
 
     leadMotor.set(speed);
   }
@@ -132,7 +133,7 @@ public class Elevator extends SubsystemBase {
 
     holdPosition = position;
 
-    PIDController.setReference(position, CANSparkMax.ControlType.kSmartMotion);
+    PIDController.setReference(position, CANSparkMax.ControlType.kPosition, 0, Constants.Elevator.PIDConstants.kF);
     // leadMotor.getPIDController().setReference(position, CANSparkMax.ControlType.kPosition);
   }
 
@@ -157,4 +158,9 @@ public class Elevator extends SubsystemBase {
   public boolean atPosition(){
     return (encoderRotationsToInches(Math.abs(holdPosition - getElevatorPosition()[0])) < Constants.Elevator.elevatorHeightToleranceInch);
   }
+
+  public double getElevatorVelocity(){
+    return leadMotor.getEncoder().getVelocity();
+  }
+
 }

@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -17,6 +18,7 @@ import frc.robot.subsystems.Elevator;
 public class RobotContainer {
 
   public final Elevator mElevator;
+  public final PowerDistribution mPDH;
 
   public CommandXboxController controller0;
 
@@ -24,7 +26,9 @@ public class RobotContainer {
   public RobotContainer() {
 
     mElevator = new Elevator();
-    // mElevator.setDefaultCommand(new StopElevator(mElevator));
+    mElevator.setDefaultCommand(new StopElevator(mElevator));
+
+    mPDH = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
 
     controller0 = new CommandXboxController(0);
 
@@ -37,14 +41,18 @@ public class RobotContainer {
 
   private void configureBindings() {
     
-    controller0.povUp().whileTrue(new MoveElevator(mElevator, -0.15));
-    controller0.povDown().whileTrue(new MoveElevator(mElevator, 0.15));
+    controller0.povUp().whileTrue(new MoveElevator(mElevator, 0.09));
+    controller0.povDown().whileTrue(new MoveElevator(mElevator, -0.05));
 
    }
 
   private void configureShuffleBoard(){
-    SmartDashboard.putData(new SetElevatorPosition(mElevator, SmartDashboard.getNumber("Elevator Target Postion", 10)));
+    SmartDashboard.putData("Ele 5 inch", new SetElevatorPosition(mElevator, 5.0));
+    SmartDashboard.putData("Ele 15 inch", new SetElevatorPosition(mElevator, 15.0));
+
+    // SmartDashboard.putNumber("Set Elevator Target Position", 0.0);
     SmartDashboard.putData(new ZeroElevator(mElevator));
+
   }
 
   public Command getAutonomousCommand() {
