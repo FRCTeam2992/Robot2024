@@ -8,7 +8,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 /** Add your docs here. */
 public class Constants {
-    public static final boolean dataLogging = false;
+    public static final boolean dataLogging = true;
     public static final boolean debugDashboard = true;
 
      public static class DrivetrainConstants {
@@ -41,10 +41,10 @@ public class Constants {
 
         // Analog Encoder Offsets (Degrees) - Opposite of Raw Reading - Bevel Gear to
         // Right
-        public static final double frontLeftOffset =  26.2; //-174.3;
-        public static final double frontRightOffset =  159.7; //95.0; //90.8
-        public static final double rearLeftOffset = -161.4; //180.6;//170.6
-        public static final double rearRightOffset = -85.4; //28.3;//31.0
+        public static final double frontLeftOffset =  27.3; //-174.3;
+        public static final double frontRightOffset =  159.6; //95.0; //90.8
+        public static final double rearLeftOffset = -160.5; //180.6;//170.6
+        public static final double rearRightOffset = 87.9; //28.3;//31.0
 
         public static class PIDConstants {
             // Swerve Drive PID (Velocity Control)

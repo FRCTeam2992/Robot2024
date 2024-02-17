@@ -27,7 +27,7 @@ public class RobotContainer {
     
     mDrivetrain = new Drivetrain();
     if (Constants.DrivetrainConstants.odometryThread) {
-      mOdometryThread = new OdometryThread(mDrivetrain.getSwerveModules());
+      mOdometryThread = new OdometryThread(mDrivetrain);
       mOdometryThread.setFastMode();
       mOdometryThread.start();
     }

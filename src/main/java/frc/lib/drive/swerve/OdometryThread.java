@@ -2,6 +2,7 @@ package frc.lib.drive.swerve;
 
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Subsystems.Drivetrain;
 
@@ -14,7 +15,7 @@ public class OdometryThread extends Thread {
     private boolean fastMode;
     private boolean cancelled;
     private double rioTimestamp;
-    private SwerveModulePosition[] modulePositions;
+    private SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
 
     /* @class
      * OdometryThread class: performs odometry updates on a fast or slow interval.
@@ -31,16 +32,20 @@ public class OdometryThread extends Thread {
      *     swerveDriveModulePositions[2] = rearLeftModule.getPosition();
      *     swerveDriveModulePositions[3] = rearRightModule.getPosition();
      */
-    public OdometryThread(SwerveModuleFalconFalcon[] swerveModules) {
+    public OdometryThread(Drivetrain subsystem) {
         super();
     
-        this.modules = swerveModules;
+        this.drivetrain = subsystem;
+        this.modules = this.drivetrain.getSwerveModules();
         this.rioTimestamp = Timer.getFPGATimestamp();
         this.fastMode = false;
         this.cancelled = false;
     }
 
     public void run() {
+
+        System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Odom Thread Started");
+
         int n;
 
         while (!this.cancelled) {
