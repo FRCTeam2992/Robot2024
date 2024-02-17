@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -16,17 +17,25 @@ import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
-  private TalonFX intakeMotor;
+  private TalonFX intakeLeadMotor;
+  private TalonFX intakeFollowMotor;
+
   private TalonFXConfiguration intakeMotorConfigs;
   private DutyCycleOut percentOutControlRequest;
+
   public Intake() {
-    intakeMotor = new TalonFX(Constants.Intake.intakeMotorID);
+    intakeLeadMotor = new TalonFX(Constants.Intake.intakeLeadMotorID);
+    intakeFollowMotor = new TalonFX(Constants.Intake.intakeFollowMotorID);
     intakeMotorConfigs = new TalonFXConfiguration();
 
     intakeMotorConfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     intakeMotorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
-    intakeMotor.getConfigurator().apply(intakeMotorConfigs);
+    intakeLeadMotor.getConfigurator().apply(intakeMotorConfigs);
+    intakeFollowMotor.getConfigurator().apply(intakeMotorConfigs);
+
+    intakeFollowMotor.setControl(new Follower(14, false));
+
 
     percentOutControlRequest = new DutyCycleOut(0.0);
   }
@@ -38,6 +47,6 @@ public class Intake extends SubsystemBase {
   }
 
   public void setIntakeSpeed(double speed) {
-    intakeMotor.setControl(percentOutControlRequest.withOutput(speed));
+    intakeLeadMotor.setControl(percentOutControlRequest.withOutput(speed));
   }
 }

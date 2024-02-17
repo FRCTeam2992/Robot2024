@@ -9,11 +9,12 @@ package frc.robot;
 public class Constants {
 
     public static class Intake{
-        public static final int intakeMotorID = 14;
+        public static final int intakeLeadMotorID = 14;
+        public static final int intakeFollowMotorID = 18;
     }
 
     public static class Feeder {
-        public static final int feederMotorID = 4;
+        public static final int feederMotorID = 17;
     }
 
     public static class Shooter{

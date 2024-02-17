@@ -34,6 +34,8 @@ public class Shooter extends SubsystemBase {
   /** Creates a new Shooter. */
   public Shooter() {
     shooterMotor = new TalonFX(Constants.Shooter.DeviceIDs.shooterMotorID);
+    shooterMotorConfigs = new TalonFXConfiguration();
+    
     shooterMotorConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     shooterMotorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     shooterMotorConfigs.Slot0.kP = Constants.Shooter.ShooterPIDConstants.P;
