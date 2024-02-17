@@ -132,6 +132,8 @@ public class Drivetrain extends SubsystemBase {
     private DoubleArrayLogEntry llBackBotposeRedLog;
     private DoubleArrayLogEntry llRightBotposeRedLog;
     private DoubleArrayLogEntry llLeftBotposeRedLog;
+    private DoubleArrayLogEntry navxLog;
+    private DoubleArrayLogEntry swerveCANCoderLog;
     private IntegerLogEntry llBackTargetIDLog;
     private IntegerLogEntry llRightTargetIDLog;
     private IntegerLogEntry llLeftTargetIDLog;
@@ -172,6 +174,8 @@ public class Drivetrain extends SubsystemBase {
     private boolean scoringMode = false;
     private boolean loadingMode = false;
     private boolean useLimelightOdometryUpdates;
+
+    private boolean odomReadingTesting = false;
 
     private int dashboardCounter = 0;
 
@@ -339,6 +343,10 @@ public class Drivetrain extends SubsystemBase {
             llRightTargetIDLog = new IntegerLogEntry(mDataLog, "/ll/twelve/target_id");
             llLeftTargetIDLog = new IntegerLogEntry(mDataLog, "/ll/thirteen/target_id");
 
+            navxLog = new DoubleArrayLogEntry(mDataLog, "/Drivetrain/navx/positions");
+            swerveCANCoderLog = new DoubleArrayLogEntry(mDataLog, "/Drivetrain/Swerve/CANCoders");
+
+
         }
 
         // robot gyro initialization
@@ -398,7 +406,7 @@ public class Drivetrain extends SubsystemBase {
         limelightRightBotPose = limeLightCameraRight.getBotPose(getAllianceCoordinateSpace());
         limelightLeftBotPose = limeLightCameraLeft.getBotPose(getAllianceCoordinateSpace());
 
-        if (Constants.dataLogging) {
+        if (Constants.dataLogging && DriverStation.isEnabled()) {
             // limelight11JsonLog.append(limeLightCamera11.getLimelightJson());
             // limelight12JsonLog.append(limeLightCamera12.getLimelightJson());
             // limelight13JsonLog.append(limeLightCamera13.getLimelightJson());
@@ -408,16 +416,25 @@ public class Drivetrain extends SubsystemBase {
             // ll13BotposeFieldSpaceLog.append(limeLightCamera13.getBotPose(CoordinateSpace.Field));
 
             // llBackBotposeBlueLog.append(limeLightCameraBack.getBotPose(CoordinateSpace.Blue));
-            llRightBotposeBlueLog.append(limeLightCameraRight.getBotPose(CoordinateSpace.Blue));
-            llLeftBotposeBlueLog.append(limeLightCameraLeft.getBotPose(CoordinateSpace.Blue));
+            // llRightBotposeBlueLog.append(limeLightCameraRight.getBotPose(CoordinateSpace.Blue));
+            // llLeftBotposeBlueLog.append(limeLightCameraLeft.getBotPose(CoordinateSpace.Blue));
 
-            // llBackBotposeRedLog.append(limeLightCameraBack.getBotPose(CoordinateSpace.Red));
-            llRightBotposeRedLog.append(limeLightCameraRight.getBotPose(CoordinateSpace.Red));
-            llLeftBotposeRedLog.append(limeLightCameraLeft.getBotPose(CoordinateSpace.Red));
+            // // llBackBotposeRedLog.append(limeLightCameraBack.getBotPose(CoordinateSpace.Red));
+            // llRightBotposeRedLog.append(limeLightCameraRight.getBotPose(CoordinateSpace.Red));
+            // llLeftBotposeRedLog.append(limeLightCameraLeft.getBotPose(CoordinateSpace.Red));
 
             // llBackTargetIDLog.append(limeLightCameraBack.getTargetID());
-            llRightTargetIDLog.append(limeLightCameraRight.getTargetID());
-            llLeftTargetIDLog.append(limeLightCameraLeft.getTargetID());
+            // llRightTargetIDLog.append(limeLightCameraRight.getTargetID());
+            // llLeftTargetIDLog.append(limeLightCameraLeft.getTargetID());
+            // // llBackTargetIDLog.append(limeLightCameraBack.getTargetID());
+            // llRightTargetIDLog.append(limeLightCameraRight.getTargetID());
+            // llLeftTargetIDLog.append(limeLightCameraLeft.getTargetID());
+            
+            double[] navxReading = {navx.getYaw(), navx.getPitch(), navx.getRoll()};
+            navxLog.append(navxReading);
+
+            double[] canReadings = {frontLeftModule.getEncoderAngle(), frontRightModule.getEncoderAngle(), rearLeftModule.getEncoderAngle(), rearRightModule.getEncoderAngle()};
+            swerveCANCoderLog.append(canReadings);
         }
 
         if (dashboardCounter++ >= 5) {
@@ -427,6 +444,8 @@ public class Drivetrain extends SubsystemBase {
                 SmartDashboard.putNumber("Odometry Y (in)", (latestSwervePose.getY() * (100 / 2.54)));
                 SmartDashboard.putNumber("Odometry X (m)", latestSwervePose.getX());
                 SmartDashboard.putNumber("Odometry Y (m)", latestSwervePose.getY());
+                SmartDashboard.putBoolean("Is reading Odom", odomReadingTesting);
+
 
                 SmartDashboard.putNumber("Front Left Wheel Pos", frontLeftModule.getWheelPositionMeters());
                 SmartDashboard.putNumber("Front Right Wheel Pos", frontRightModule.getWheelPositionMeters());
@@ -815,6 +834,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void updateOdometryPose(SwerveModulePosition[] modulePositions) {
+        odomReadingTesting = true;
         this.latestSwervePose = this.swerveDrivePoseEstimator.updateWithTime(
                 Timer.getFPGATimestamp(),
                 Rotation2d.fromDegrees(-getGyroYaw()),
