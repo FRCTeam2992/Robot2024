@@ -52,8 +52,10 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.FloatArrayEntry;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.IntegerLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -134,6 +136,12 @@ public class Drivetrain extends SubsystemBase {
     private DoubleArrayLogEntry llBackBotposeRedLog;
     private DoubleArrayLogEntry llRightBotposeRedLog;
     private DoubleArrayLogEntry llLeftBotposeRedLog;
+    private DoubleArrayLogEntry navxLog;
+    private DoubleLogEntry frontLeftCANCoderLog;
+    private DoubleLogEntry frontRightCANCoderLog;
+    private DoubleLogEntry rearLeftCANCoderLog;
+    private DoubleLogEntry rearRightCANCoderLog;
+
     private IntegerLogEntry llBackTargetIDLog;
     private IntegerLogEntry llRightTargetIDLog;
     private IntegerLogEntry llLeftTargetIDLog;
@@ -385,6 +393,8 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
+
+
         // This method will be called once per scheduler run
         if (!Constants.DrivetrainConstants.odometryThread) {
             swerveDriveModulePositions[0] = frontLeftModule.getPosition();
@@ -420,6 +430,14 @@ public class Drivetrain extends SubsystemBase {
             // llBackTargetIDLog.append(limeLightCameraBack.getTargetID());
             llRightTargetIDLog.append(limeLightCameraRight.getTargetID());
             llLeftTargetIDLog.append(limeLightCameraLeft.getTargetID());
+            
+            double[] navxReading = {navx.getYaw(), navx.getPitch(), navx.getRoll()};
+            navxLog.append(navxReading);
+
+            frontLeftCANCoderLog.append(frontLeftModule.getEncoderAngle());
+            frontRightCANCoderLog.append(frontRightModule.getEncoderAngle());
+            rearLeftCANCoderLog.append(rearLeftModule.getEncoderAngle());
+            rearRightCANCoderLog.append(rearRightModule.getEncoderAngle());
         }
 
         if (dashboardCounter++ >= 5) {
