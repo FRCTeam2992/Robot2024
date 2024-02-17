@@ -4,15 +4,22 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.MoveElevator;
 import frc.robot.commands.MoveFeeder;
 import frc.robot.commands.MoveIntake;
 import frc.robot.commands.MoveShooterPivot;
+import frc.robot.commands.SetElevatorPosition;
 import frc.robot.commands.StartShooter;
+import frc.robot.commands.StopElevator;
 import frc.robot.commands.StopIntake;
 import frc.robot.commands.StopShooter;
+import frc.robot.commands.ZeroElevator;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -24,6 +31,10 @@ public class RobotContainer {
   private Intake mIntake;
   private Feeder mFeeder;
   private ShooterPivot mShooterPivot;
+  public final Elevator mElevator;
+  public final PowerDistribution mPDH;
+
+  public CommandXboxController controller0;
 
   public RobotContainer() {
 
@@ -37,13 +48,35 @@ public class RobotContainer {
     mFeeder.setDefaultCommand(new MoveFeeder(mFeeder, 0.0));
 
     mShooterPivot = new ShooterPivot();
+
+    mElevator = new Elevator();
+    mElevator.setDefaultCommand(new StopElevator(mElevator));
+
+    mPDH = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
+
+    controller0 = new CommandXboxController(0);
     // mShooterPivot.setDefaultCommand(getAutonomousCommand());
 
     configureBindings();
     configureSmartDashboard();
+
   }
 
-  private void configureBindings() {}
+  private void configureBindings() {
+    
+    controller0.povUp().whileTrue(new MoveElevator(mElevator, 0.09));
+    controller0.povDown().whileTrue(new MoveElevator(mElevator, -0.05));
+
+   }
+
+  private void configureShuffleBoard(){
+    SmartDashboard.putData("Ele 5 inch", new SetElevatorPosition(mElevator, 5.0));
+    SmartDashboard.putData("Ele 15 inch", new SetElevatorPosition(mElevator, 15.0));
+
+    // SmartDashboard.putNumber("Set Elevator Target Position", 0.0);
+    SmartDashboard.putData(new ZeroElevator(mElevator));
+
+  }
 
   private void configureSmartDashboard(){
   SmartDashboard.putNumber("Set Shooter RPM", 0.0);
