@@ -13,7 +13,7 @@ import frc.robot.commands.MoveElevator;
 import frc.robot.commands.MoveFeeder;
 import frc.robot.commands.MoveIntake;
 import frc.robot.commands.MoveShooterPivot;
-import frc.robot.commands.SetElevatorPosition;
+import frc.robot.commands.SetElevatorTargetPosition;
 import frc.robot.commands.StartShooter;
 import frc.robot.commands.StopElevator;
 import frc.robot.commands.StopIntake;
@@ -45,7 +45,7 @@ public class RobotContainer {
     mIntake.setDefaultCommand(new StopIntake(mIntake));
 
     mFeeder = new Feeder();
-    mFeeder.setDefaultCommand(new MoveFeeder(mFeeder, 0.0));
+    mFeeder.setDefaultCommand(new MoveFeeder(mFeeder, 0.0, false));
 
     mShooterPivot = new ShooterPivot();
 
@@ -70,8 +70,8 @@ public class RobotContainer {
    }
 
   private void configureShuffleBoard(){
-    SmartDashboard.putData("Ele 5 inch", new SetElevatorPosition(mElevator, 5.0));
-    SmartDashboard.putData("Ele 15 inch", new SetElevatorPosition(mElevator, 15.0));
+    SmartDashboard.putData("Ele 5 inch", new SetElevatorTargetPosition(mElevator, 5.0));
+    SmartDashboard.putData("Ele 15 inch", new SetElevatorTargetPosition(mElevator, 15.0));
 
     // SmartDashboard.putNumber("Set Elevator Target Position", 0.0);
     SmartDashboard.putData(new ZeroElevator(mElevator));
@@ -85,8 +85,8 @@ public class RobotContainer {
   SmartDashboard.putData("Intake Foward", new MoveIntake(mIntake, 0.40));
   SmartDashboard.putData("Intake Reverse", new MoveIntake(mIntake, -0.40));
   
-  SmartDashboard.putData("Feeder Foward", new MoveFeeder(mFeeder, 0.05));
-  SmartDashboard.putData("Feeder Reverse", new MoveFeeder(mFeeder, -0.05));
+  SmartDashboard.putData("Feeder Foward", new MoveFeeder(mFeeder, 0.05, false));
+  SmartDashboard.putData("Feeder Reverse", new MoveFeeder(mFeeder, -0.05, false));
 
   SmartDashboard.putData("Pivot Foward", new MoveShooterPivot(mShooterPivot, 0.05));
   SmartDashboard.putData("Pivot Reverse", new MoveShooterPivot(mShooterPivot, -0.05));

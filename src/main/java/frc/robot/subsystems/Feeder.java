@@ -26,8 +26,6 @@ public class Feeder extends SubsystemBase {
 
   private StatusSignal<Enum> limitStateEnum;
 
-  private boolean isLimited = false; //in preparation for limit sensor
-
   public Feeder() {
     feedMotor = new TalonFX(Constants.Feeder.feederMotorID);
     feedMotorConfigs = new TalonFXConfiguration();
@@ -53,9 +51,7 @@ public class Feeder extends SubsystemBase {
   }
 
   public void setFeederSpeed(double speed) {
-    if (!isLimited) {
       feedMotor.setControl(percentOutControlRequest.withOutput(speed));
-    }
   }
 
   public boolean getBeamBreakTriggered() {
@@ -67,8 +63,9 @@ public class Feeder extends SubsystemBase {
     
 }
 
-public void disableBeamBreak(){
-
+public void setBeamBreakControl(boolean isBeamEnabled){
+  feedMotorConfigs.HardwareLimitSwitch.ForwardLimitEnable = isBeamEnabled;
+  feedMotor.getConfigurator().apply(feedMotorConfigs);
 }
   
 }

@@ -52,6 +52,10 @@ public class Constants {
             public static final double minPivotAngle = 0.0;
             public static final double maxPivotAngle = 0.0;
         }
+
+        public static class Positions {
+            public static final double intakingPiece = 0.0; //Place holder
+        }
     }
 
     public static class Elevator {
@@ -86,7 +90,7 @@ public class Constants {
             public static final double integratorRangeMax = .2;
         }
 
-        public static final double elevatorHeightToleranceInch = 1.75;
+        public static final double elevatorHeightToleranceInch = 0.5;
 
         public static class Limits {
             public static final double softStopBottom = 3.0; //bottom soft stop (in)
@@ -94,6 +98,10 @@ public class Constants {
             public static final double hardStopTop = 23.0; //bottom soft stop (in)
 
             public static final double hardStopCurrentLimit = 10.0; // Place Holder
+        }
+
+        public static class Positions {
+            public static final double intakingPiece = 0.0;
         }
     }
 }

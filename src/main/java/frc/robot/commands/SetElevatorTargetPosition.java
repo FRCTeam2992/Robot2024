@@ -5,44 +5,41 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Feeder;
+import frc.robot.Constants;
+import frc.robot.subsystems.Elevator;
 
-public class MoveFeeder extends Command {
-  /** Creates a new moveFeeder. */
-  private Feeder mFeeder;
-  private double mSpeed;
-  private boolean mIsBeamBreakLimited;
+public class SetElevatorTargetPosition extends Command {
+  /** Creates a new setElevatorPosition. */
+  private Elevator mElevator;
+  private double mPosition;
 
-  public MoveFeeder(Feeder subsystem, double speed, boolean isBeamBreakLimited) {
+  public SetElevatorTargetPosition(Elevator subsystem, double position) {
     // Use addRequirements() here to declare subsystem dependencies.
-    mFeeder = subsystem;
-    mSpeed = speed;
-    mIsBeamBreakLimited = isBeamBreakLimited;
-    addRequirements(mFeeder);
+    mElevator = subsystem;
+    mPosition = position;
+    addRequirements(mElevator);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    mFeeder.setBeamBreakControl(mIsBeamBreakLimited);
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    mFeeder.setFeederSpeed(mSpeed);
+    mElevator.setElevatorTargetPosition(mPosition);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (mIsBeamBreakLimited){
-      return mFeeder.getBeamBreakTriggered();
-    }
-    return false;
+    // return mElevator.atPosition();
+    return true;
   }
 }

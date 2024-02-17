@@ -25,6 +25,7 @@ public class Elevator extends SubsystemBase {
 
   private SparkPIDController PIDController;
 
+  private double targetPosition;
   private boolean holdPositionRecorded;
   private double holdPosition;
 
@@ -121,9 +122,7 @@ public class Elevator extends SubsystemBase {
     leadMotor.set(speed);
   }
 
-  public void setElevatorPosition(double position) {
-    position = inchesToEncoderRotations(position);
-    holdPositionRecorded = true;
+  public void setElevatorTargetPosition(double position) {
     
     if (position < Constants.Elevator.Limits.softStopBottom) {
       position = Constants.Elevator.Limits.softStopBottom;
@@ -131,9 +130,17 @@ public class Elevator extends SubsystemBase {
       position = Constants.Elevator.Limits.softStopTop;
     }
 
-    holdPosition = position;
+    targetPosition = inchesToEncoderRotations(position);
 
-    PIDController.setReference(position, CANSparkMax.ControlType.kPosition, 0, Constants.Elevator.PIDConstants.kF);
+    // leadMotor.getPIDController().setReference(position, CANSparkMax.ControlType.kPosition);
+  }
+
+  public void moveElevatorToTargetPosition() {
+    holdPositionRecorded = true;
+
+    holdPosition = targetPosition;
+
+    PIDController.setReference(targetPosition, CANSparkMax.ControlType.kPosition, 0, Constants.Elevator.PIDConstants.kF);
     // leadMotor.getPIDController().setReference(position, CANSparkMax.ControlType.kPosition);
   }
 
@@ -156,11 +163,15 @@ public class Elevator extends SubsystemBase {
   }
 
   public boolean atPosition(){
-    return (encoderRotationsToInches(Math.abs(holdPosition - getElevatorPosition()[0])) < Constants.Elevator.elevatorHeightToleranceInch);
+    return (encoderRotationsToInches(Math.abs(targetPosition - getElevatorPosition()[0])) < Constants.Elevator.elevatorHeightToleranceInch);
   }
 
   public double getElevatorVelocity(){
     return leadMotor.getEncoder().getVelocity();
+  }
+
+  public double getTargetPosition(){
+    return targetPosition;
   }
 
 }
