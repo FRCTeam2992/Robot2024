@@ -29,15 +29,15 @@ public class Constants {
         public static final double swerveMaxSpeed = 4.5; // (Meters per Second)(2 Slow, 4.5 normal)
 
         // Swerve Wheels and Gear Ratio
-        public static final double driveGearRatio = 6.75;// 6.75:1
-        public static final double driveWheelDiameter = 0.098552; //0.098552;
+        public static final double driveGearRatio = 6.12;// 6.12:1
+        public static final double driveWheelDiameter =  0.1016; //0.098552 (Tread)  0.1016 (Colson)
 
         // Analog Encoder Offsets (Degrees) - Opposite of Raw Reading - Bevel Gear to
         // Right
-        public static final double frontLeftOffset =  26.2; //-174.3;
-        public static final double frontRightOffset =  159.7; //95.0; //90.8
-        public static final double rearLeftOffset = -161.4; //180.6;//170.6
-        public static final double rearRightOffset = -85.4; //28.3;//31.0
+        public static final double frontLeftOffset =  27.3; //-174.3;
+        public static final double frontRightOffset =  159.6; //95.0; //90.8
+        public static final double rearLeftOffset = -160.5; //180.6;//170.6
+        public static final double rearRightOffset = 87.9; //28.3;//31.0
 
         public static class PIDConstants {
             // Swerve Drive PID (Velocity Control)

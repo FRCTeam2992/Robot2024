@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.Subsystems;
+package frc.robot.subsystems;
 
 import java.util.ArrayList;
 
@@ -64,7 +64,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Commands.SetSwerveAngle;
+import frc.robot.commands.SetSwerveAngle;
 
 public class Drivetrain extends SubsystemBase {
     /** Creates a new Drivetrain. */
@@ -718,7 +718,7 @@ public class Drivetrain extends SubsystemBase {
 
     public void onDisable() {
         setDriveNeutralMode(NeutralModeValue.Coast);
-        setTurnNeutralMode(NeutralModeValue.Brake);
+        setTurnNeutralMode(NeutralModeValue.Coast);
         stopDrive();
     }
 
@@ -733,7 +733,7 @@ public class Drivetrain extends SubsystemBase {
 
     public Command XWheels() {
         // return new SetSwerveAngle(this, 45, -45, -45, 45);
-        return new frc.robot.Commands.SetSwerveAngle(this, 45, -45, -45, 45);
+        return new frc.robot.commands.SetSwerveAngle(this, 45, -45, -45, 45);
     }
 
     public Command ResetOdometry() {
