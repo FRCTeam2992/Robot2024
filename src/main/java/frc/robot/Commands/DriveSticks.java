@@ -65,7 +65,7 @@ public class DriveSticks extends Command {
 
         if (isLeftStrafe) {
             x1 = -Robot.mRobotContainer.getController0().getLeftX();
-            y1 = -Robot.mRobotContainer.getController0().getLeftY();
+            y1 = 0.0;//-Robot.mRobotContainer.getController0().getLeftY();
             x2 = -Robot.mRobotContainer.getController0().getRightX();
         } else {
             x1 = -Robot.mRobotContainer.getController0().getRightX();
