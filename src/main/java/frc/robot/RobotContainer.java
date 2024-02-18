@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.MoveElevator;
 import frc.robot.commands.MoveFeeder;
 import frc.robot.commands.MoveIntake;
+import frc.robot.commands.MoveShooter;
 import frc.robot.commands.MoveShooterPivot;
 import frc.robot.commands.SetElevatorTargetPosition;
 import frc.robot.commands.StartShooter;
@@ -80,16 +81,21 @@ public class RobotContainer {
 
   private void configureSmartDashboard(){
   SmartDashboard.putNumber("Set Shooter RPM", 0.0);
-  SmartDashboard.putData("Start Shooter", new StartShooter(mShooter));
+  // SmartDashboard.putData("Start Shooter", new StartShooter(mShooter));
 
-  SmartDashboard.putData("Intake Foward", new MoveIntake(mIntake, 0.40));
+  SmartDashboard.putData("Intake Foward", new MoveIntake(mIntake, 0.40)); //2.25
   SmartDashboard.putData("Intake Reverse", new MoveIntake(mIntake, -0.40));
   
-  SmartDashboard.putData("Feeder Foward", new MoveFeeder(mFeeder, 0.05, false));
-  SmartDashboard.putData("Feeder Reverse", new MoveFeeder(mFeeder, -0.05, false));
+  SmartDashboard.putData("Feeder Foward", new MoveFeeder(mFeeder, 0.45, false)); //2:1
+  SmartDashboard.putData("Feeder Reverse", new MoveFeeder(mFeeder, -0.45, false));
+  SmartDashboard.putData("Feeder Shoot", new MoveFeeder(mFeeder, .9, false).alongWith(new MoveIntake(mIntake, 0.4)));
 
   SmartDashboard.putData("Pivot Foward", new MoveShooterPivot(mShooterPivot, 0.05));
   SmartDashboard.putData("Pivot Reverse", new MoveShooterPivot(mShooterPivot, -0.05));
+
+  SmartDashboard.putData("Start Shooter", new MoveShooter(mShooter, -0.8));
+
+  SmartDashboard.putData("AutoIntake", new MoveIntake(mIntake, 0.4).alongWith(new MoveFeeder(mFeeder, 0.45, false)));
 
 
   }

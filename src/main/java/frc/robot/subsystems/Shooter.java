@@ -26,7 +26,7 @@ public class Shooter extends SubsystemBase {
   private VelocityDutyCycle velocityControlRequest;
   private MotionMagicVelocityDutyCycle motionMagicVelocityControlRequest;
 
-  private double shooterTargetRPM;
+  private double shooterTargetRPM = 200.0;
 
   private StatusSignal<Double> shooterVelocity;
 
