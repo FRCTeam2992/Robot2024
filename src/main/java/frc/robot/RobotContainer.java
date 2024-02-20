@@ -65,8 +65,8 @@ public class RobotContainer {
 
   private void configureBindings() {
     
-    controller0.povUp().whileTrue(new MoveElevator(mElevator, 0.09));
-    controller0.povDown().whileTrue(new MoveElevator(mElevator, -0.05));
+    controller0.povUp().whileTrue(new MoveElevator(mElevator, mShooterPivot, 0.09));
+    controller0.povDown().whileTrue(new MoveElevator(mElevator, mShooterPivot, -0.05));
 
    }
 
@@ -90,8 +90,8 @@ public class RobotContainer {
   SmartDashboard.putData("Feeder Reverse", new MoveFeeder(mFeeder, -0.45, false));
   SmartDashboard.putData("Feeder Shoot", new MoveFeeder(mFeeder, .9, false).alongWith(new MoveIntake(mIntake, 0.4)));
 
-  SmartDashboard.putData("Pivot Foward", new MoveShooterPivot(mShooterPivot, 0.05));
-  SmartDashboard.putData("Pivot Reverse", new MoveShooterPivot(mShooterPivot, -0.05));
+  SmartDashboard.putData("Pivot Foward", new MoveShooterPivot(mShooterPivot, mElevator, 0.05));
+  SmartDashboard.putData("Pivot Reverse", new MoveShooterPivot(mShooterPivot, mElevator, -0.05));
 
   SmartDashboard.putData("Start Shooter", new MoveShooter(mShooter, -0.8));
 

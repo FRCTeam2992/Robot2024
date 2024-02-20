@@ -7,14 +7,17 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.ShooterPivot;
 
 public class MoveElevatorToTarget extends Command {
 
-  private final Elevator mElevator;
+  private Elevator mElevator;
+  private ShooterPivot mShooterPivot;
   /** Creates a new MoveElevatorToTarget. */
-  public MoveElevatorToTarget(Elevator subsystem) {
+  public MoveElevatorToTarget(Elevator subsystem, ShooterPivot shooterPivot) {
 
     mElevator = subsystem;
+    mShooterPivot = shooterPivot;
     addRequirements(mElevator);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -26,14 +29,20 @@ public class MoveElevatorToTarget extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    mElevator.moveElevatorToTargetPosition();
+    if (mShooterPivot.getPivotAngle() < Constants.ShooterPivot.Limits.pivotCollisionZone){
+      mElevator.setElevatorSpeed(0.0);
+      new SetPivotTargetAngle(mShooterPivot, Constants.ShooterPivot.Positions.pivotSafeZone).schedule();
+      new SetPivotToTargetAngle(mShooterPivot, mElevator).schedule();
+    } else { 
+      mElevator.moveElevatorToTargetPosition();
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     if (mElevator.getTargetPosition() < Constants.Elevator.Limits.softStopBottom){
-      new MoveElevator(mElevator, -0.01).schedule();
+      new MoveElevator(mElevator, mShooterPivot, -0.01).schedule();
     }
   }
 

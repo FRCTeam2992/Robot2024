@@ -5,13 +5,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ShooterPivot;
 
 public class SetPivotToTargetAngle extends Command {
   /** Creates a new setPivotToTargetAngle. */
   private ShooterPivot mPivot;
-  public SetPivotToTargetAngle(ShooterPivot subsystem) {
+  private Elevator mElevator;
+  public SetPivotToTargetAngle(ShooterPivot subsystem, Elevator elevator) {
     mPivot = subsystem;
+    mElevator = elevator;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(mPivot);
   }
@@ -23,7 +27,12 @@ public class SetPivotToTargetAngle extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    mPivot.setPivotToTarget();
+    if (mElevator.getElevatorInches() < Constants.Elevator.Limits.dangerZone 
+    && mPivot.getPivotTarget() < Constants.ShooterPivot.Limits.pivotCollisionZone) {
+      mPivot.setPivotSpeed(0.0);
+    } else {
+      mPivot.setPivotToTarget();
+    }
   }
 
   // Called once the command ends or is interrupted.

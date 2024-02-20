@@ -5,15 +5,19 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ShooterPivot;
 
 public class MoveShooterPivot extends Command {
   /** Creates a new moveShooterPivot. */
   private ShooterPivot mPivot;
+  private Elevator mElevator;
   private double mSpeed;
 
-  public MoveShooterPivot(ShooterPivot subsystem, double speed) {
+  public MoveShooterPivot(ShooterPivot subsystem, Elevator elevator, double speed) {
     mPivot = subsystem;
+    mElevator = elevator;
     mSpeed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(mPivot);
@@ -26,7 +30,12 @@ public class MoveShooterPivot extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    mPivot.setPivotSpeed(mSpeed);
+    if (mElevator.getElevatorInches() < Constants.Elevator.Limits.dangerZone 
+    && mPivot.getPivotAngle() < Constants.ShooterPivot.Limits.pivotCollisionZone && mSpeed < 0.0) {
+      mPivot.setPivotSpeed(0.0);
+    } else {
+      mPivot.setPivotSpeed(mSpeed);
+    }
   }
 
   // Called once the command ends or is interrupted.

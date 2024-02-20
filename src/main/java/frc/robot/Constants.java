@@ -49,12 +49,15 @@ public class Constants {
         }
 
         public static class Limits {
-            public static final double minPivotAngle = 0.0;
-            public static final double maxPivotAngle = 0.0;
-        }
+            public static final double minPivotAngle = 1.5; //PlaceHolder
+            public static final double maxPivotAngle = 70.0; //PlaceHolder
+
+            public static final double pivotCollisionZone = 10.0; //PlaceHolder
+            }
 
         public static class Positions {
             public static final double intakingPiece = 0.0; //Place holder
+            public static final double pivotSafeZone = 13.0; //PlaceHolder
         }
     }
 
@@ -98,10 +101,13 @@ public class Constants {
             public static final double hardStopTop = 23.0; //bottom soft stop (in)
 
             public static final double hardStopCurrentLimit = 10.0; // Place Holder
+
+            public static final double dangerZone = 7.0; //placeholder
         }
 
         public static class Positions {
             public static final double intakingPiece = 0.0;
+            public static final double safeZoneTop = 7.5; //placeholder
         }
     }
 }

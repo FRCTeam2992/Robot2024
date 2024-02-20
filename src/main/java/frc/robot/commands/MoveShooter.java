@@ -9,8 +9,8 @@ import frc.robot.subsystems.Shooter;
 
 public class MoveShooter extends Command {
 
-  private final Shooter mShooter;
-  private final Double mSpeed;
+  private Shooter mShooter;
+  private Double mSpeed;
   /** Creates a new MoveShooter. */
   public MoveShooter(Shooter subsystem, Double speed) {
 
