@@ -13,17 +13,17 @@ import frc.robot.commands.SetElevatorTargetPosition;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
-  private RobotContainer m_robotContainer;
+  public static RobotContainer mRobotContainer;
 
   @Override
   public void robotInit() {
-    m_robotContainer = new RobotContainer();
+    mRobotContainer = new RobotContainer();
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    SmartDashboard.putNumber("Elevator Current Out", m_robotContainer.mPDH.getCurrent(6));
+    SmartDashboard.putNumber("Elevator Current Out", mRobotContainer.mPDH.getCurrent(6));
 
   }
 
@@ -38,7 +38,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = mRobotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();

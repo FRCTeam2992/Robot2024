@@ -9,9 +9,13 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.MedianFilter;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
@@ -26,6 +30,7 @@ public class ShooterPivot extends SubsystemBase {
 
   private DutyCycleOut percentOutControlRequest;
 
+  private ProfiledPIDController profiledPivotController;
   private PIDController pivotController;
   
   private DutyCycleEncoder lampreyEncoder;
@@ -33,6 +38,11 @@ public class ShooterPivot extends SubsystemBase {
   private double pivotTarget;
 
   public MedianFilter pivotMedianFilter;
+
+  private boolean holdPositionRecorded;
+  private double holdPosition;
+
+  private Constraints pidConstraints;
 
   /** Creates a new ShooterPivot. */
   public ShooterPivot() {
@@ -42,16 +52,23 @@ public class ShooterPivot extends SubsystemBase {
     pivotMotorConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     pivotMotorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
+    pidConstraints = new TrapezoidProfile.Constraints(Constants.ShooterPivot.PIDController.maxVelocity, 
+    Constants.ShooterPivot.PIDController.maxAcceleration);
+
+    profiledPivotController = new ProfiledPIDController(Constants.ShooterPivot.PIDController.P, 
+    Constants.ShooterPivot.PIDController.I, Constants.ShooterPivot.PIDController.D, pidConstraints);
+    profiledPivotController.setTolerance(Constants.ShooterPivot.PIDController.pivotAngleTolerance);
+
     pivotController = new PIDController(Constants.ShooterPivot.PIDController.P, 
-    Constants.ShooterPivot.PIDController.I, Constants.ShooterPivot.PIDController.D, 0.02);
-    pivotController.setTolerance(Constants.ShooterPivot.PIDController.pivotAngleTolerance);
+    Constants.ShooterPivot.PIDController.I, Constants.ShooterPivot.PIDController.D);
+    profiledPivotController.setTolerance(Constants.ShooterPivot.PIDController.pivotAngleTolerance);
 
     lampreyEncoder = new DutyCycleEncoder(0);
     lampreyEncoder.setDistancePerRotation(1.0);
 
     percentOutControlRequest = new DutyCycleOut(0.0);
 
-    pivotMedianFilter = new MedianFilter(5);
+    pivotMedianFilter = new MedianFilter(3);
   }
 
   @Override
@@ -61,6 +78,12 @@ public class ShooterPivot extends SubsystemBase {
   }
 
   public void setPivotSpeed(double speed){
+    holdPositionRecorded = false;
+
+    if (getEncoderAngle() < Constants.ShooterPivot.Limits.minPivotAngle 
+    || getEncoderAngle() > Constants.ShooterPivot.Limits.maxPivotAngle) {
+      speed = 0.0;
+    }
     percentOutControlRequest.Output = speed;
     pivotMotor.setControl(percentOutControlRequest);
   }
@@ -77,6 +100,9 @@ public class ShooterPivot extends SubsystemBase {
   }
 
   public void setPivotToTarget(){
+    holdPositionRecorded = true;
+    holdPosition = pivotTarget;
+
     double position = Math.max(pivotTarget, Constants.ShooterPivot.Limits.minPivotAngle);
     position = Math.min(position, Constants.ShooterPivot.Limits.minPivotAngle);
 
@@ -92,8 +118,51 @@ public class ShooterPivot extends SubsystemBase {
     pivotMotor.setControl(percentOutControlRequest);
   }
 
+  public void movePivotWithTarget(double target){
+    holdPositionRecorded = true;
+    holdPosition = target;
+
+    double position = Math.max(target, Constants.ShooterPivot.Limits.minPivotAngle);
+    position = Math.min(position, Constants.ShooterPivot.Limits.minPivotAngle);
+
+    if(Math.abs(getEncoderAngle() - position) > 15.0){
+      pivotController.reset();
+    }
+
+    double power = pivotController.calculate(getEncoderAngle(), position) + Constants.ShooterPivot.PIDController.F;
+    power = Math.min(power, .5);
+    power = Math.max(power, -.5);
+
+    percentOutControlRequest.Output = power;
+    pivotMotor.setControl(percentOutControlRequest);
+  }
+
+  public void holdPivot() {
+    if (!holdPositionRecorded) {
+      // We haven't recorded where we are yet, so get it
+      holdPosition = getEncoderAngle();
+      holdPositionRecorded = true;
+
+      pivotMotor.set(0.0);
+    } else {
+    double power = pivotController.calculate(getEncoderAngle(), holdPosition) + Constants.ShooterPivot.PIDController.F;
+    power = Math.min(power, .5);
+    power = Math.max(power, -.5);
+
+    percentOutControlRequest.Output = power;
+    pivotMotor.setControl(percentOutControlRequest);
+    }
+
+  }
+
+  public void setHoldPosition(double angle){
+    holdPositionRecorded = true;
+
+    holdPosition = angle;
+  }
+
   public double getEncoderAngle(){
-    return pivotMedianFilter.calculate(lampreyEncoder.getAbsolutePosition());
+    return pivotMedianFilter.calculate(lampreyEncoder.getAbsolutePosition() * 360);
   }
 
   public double getPivotAngle(){

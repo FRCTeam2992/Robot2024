@@ -42,6 +42,9 @@ public class SetPivotToTargetAngle extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (mElevator.isAboveHeightLimit(mPivot.getEncoderAngle())){
+      return true;
+    }
     return false;
   }
 }

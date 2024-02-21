@@ -6,43 +6,45 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ShooterPivot;
 
-public class MoveElevator extends Command {
-  /** Creates a new moveElevator. */
+public class ElevatorSticks extends Command {
+
   private Elevator mElevator;
   private ShooterPivot mShooterPivot;
-  private double mSpeed;
-
-  public MoveElevator(Elevator subsystem, ShooterPivot shooterPivot, double speed) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    mElevator = subsystem;
+  /** Creates a new ClimbSticks. */
+  public ElevatorSticks(Elevator elevator, ShooterPivot shooterPivot) {
+    mElevator = elevator;
     mShooterPivot = shooterPivot;
-    mSpeed = speed;
     addRequirements(mElevator);
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    // if (mShooterPivot.getPivotAngle() < Constants.ShooterPivot.Limits.pivotCollisionZone){
-    //   new SetPivotTargetAngle(mShooterPivot, Constants.ShooterPivot.Positions.pivotSafeZone).schedule();
-    //   new SetPivotToTargetAngle(mShooterPivot).schedule();
-    // }
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (mShooterPivot.getPivotAngle() < Constants.ShooterPivot.Limits.pivotCollisionZone 
+    double climbY;
+
+    climbY = Robot.mRobotContainer.controller1.getLeftY();
+
+    if (climbY < Constants.Elevator.Climb.joyStickDeadBand){
+      climbY = 0.0;
+    } else if (mShooterPivot.getPivotAngle() < Constants.ShooterPivot.Limits.pivotCollisionZone 
     && mElevator.getElevatorInches() < Constants.Elevator.Limits.dangerZone) {
-      mElevator.setElevatorSpeed(0.0);
+      climbY = 0.0;
       new SetPivotTargetAngle(mShooterPivot, Constants.ShooterPivot.Positions.pivotSafeZone).schedule();
       new SetPivotToTargetAngle(mShooterPivot, mElevator).schedule();
-    } else { 
-      mElevator.setElevatorSpeed(mSpeed);
     }
+
+    climbY = climbY*climbY*climbY;
+
+    mElevator.setElevatorVelocity(climbY * 4);
   }
 
   // Called once the command ends or is interrupted.

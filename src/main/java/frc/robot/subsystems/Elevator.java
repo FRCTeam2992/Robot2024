@@ -113,11 +113,11 @@ public class Elevator extends SubsystemBase {
   public void setElevatorSpeed(double speed) {
     holdPositionRecorded = false;
 
-    // if (getElevatorInches() < Constants.Elevator.Limits.softStopBottom) {
-    //   speed = Math.max(0.0, speed);
-    // } else if (getElevatorInches() > Constants.Elevator.Limits.softStopTop) {
-    //   speed = 0.0;
-    // }
+    if (getElevatorInches() < Constants.Elevator.Limits.softStopBottom) {
+      speed = Math.max(0.0, speed);
+    } else if (getElevatorInches() > Constants.Elevator.Limits.softStopTop) {
+      speed = 0.0;
+    }
 
     leadMotor.set(speed);
   }
@@ -131,8 +131,6 @@ public class Elevator extends SubsystemBase {
     }
 
     targetPosition = inchesToEncoderRotations(position);
-
-    // leadMotor.getPIDController().setReference(position, CANSparkMax.ControlType.kPosition);
   }
 
   public void moveElevatorToTargetPosition() {
@@ -172,6 +170,34 @@ public class Elevator extends SubsystemBase {
 
   public double getTargetPosition(){
     return targetPosition;
+  }
+
+  public void setElevatorVelocity( double velocity){
+    holdPositionRecorded = false;
+
+    if (getElevatorInches() <= 0.15) {
+      velocity = Math.max(0.0, velocity);
+    } else if (getElevatorInches() > Constants.Elevator.Limits.softStopTop) {
+      velocity = 0.0;
+    }
+    if (getElevatorInches() < Constants.Elevator.Limits.softStopBottom){
+      velocity = 0.5;
+    }
+
+    velocity = inchesToEncoderRotations(velocity);
+
+    PIDController.setReference(velocity, CANSparkMax.ControlType.kVelocity);
+
+  }
+
+  public double getRobotHeight(double pivotAngle){
+    double height = Constants.ShooterPivot.pivotHeight + getElevatorInches() 
+    + (Constants.ShooterPivot.shooterLength * Math.sin(pivotAngle + 18));
+    return (height);
+  }
+
+  public boolean isAboveHeightLimit(double pivotAngle){
+    return (getRobotHeight(pivotAngle) > Constants.ShooterPivot.robotMaxHeight);
   }
 
 }

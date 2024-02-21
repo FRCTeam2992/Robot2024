@@ -39,11 +39,18 @@ public class Constants {
 
         public static final double pivotTargetedThreshold = 5.0;
 
+        public static final double pivotHeight = 0.0; //Pivot axis height above ground when elevator at 0 (in)
+        public static final double shooterLength = 16.5; //Axis to furthest point on flywheels (in)
+        public static final double robotMaxHeight = 48;
+
         public static class PIDController {
             public static final double P = 0.0;
             public static final double I = 0.0;
             public static final double D = 0.0;
             public static final double F = 0.0;
+
+            public static final double maxVelocity = 30.0; // degrees/second
+            public static final double maxAcceleration = 60.0; // degrees/second^2
 
             public static final double pivotAngleTolerance = 0.0;
         }
@@ -108,6 +115,10 @@ public class Constants {
         public static class Positions {
             public static final double intakingPiece = 0.0;
             public static final double safeZoneTop = 7.5; //placeholder
+        }
+
+        public static class Climb {
+            public static final double joyStickDeadBand = 0.2; 
         }
     }
 }

@@ -29,7 +29,8 @@ public class MoveElevatorToTarget extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (mShooterPivot.getPivotAngle() < Constants.ShooterPivot.Limits.pivotCollisionZone){
+    if (mShooterPivot.getPivotAngle() < Constants.ShooterPivot.Limits.pivotCollisionZone 
+    && mElevator.getElevatorInches() < Constants.Elevator.Limits.dangerZone) {
       mElevator.setElevatorSpeed(0.0);
       new SetPivotTargetAngle(mShooterPivot, Constants.ShooterPivot.Positions.pivotSafeZone).schedule();
       new SetPivotToTargetAngle(mShooterPivot, mElevator).schedule();

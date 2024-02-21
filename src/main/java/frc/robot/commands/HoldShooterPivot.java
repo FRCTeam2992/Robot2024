@@ -9,18 +9,16 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ShooterPivot;
 
-public class MoveShooterPivot extends Command {
-  /** Creates a new moveShooterPivot. */
-  private ShooterPivot mPivot;
-  private Elevator mElevator;
-  private double mSpeed;
+public class HoldShooterPivot extends Command {
 
-  public MoveShooterPivot(ShooterPivot subsystem, Elevator elevator, double speed) {
-    mPivot = subsystem;
+  private ShooterPivot mShooterPivot;
+  private Elevator mElevator;
+  /** Creates a new HoldShooterPivot. */
+  public HoldShooterPivot(ShooterPivot shooterPivot, Elevator elevator) {
+    mShooterPivot = shooterPivot;
     mElevator = elevator;
-    mSpeed = speed;
+    addRequirements(mShooterPivot);
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(mPivot);
   }
 
   // Called when the command is initially scheduled.
@@ -30,12 +28,11 @@ public class MoveShooterPivot extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (mElevator.getElevatorInches() < Constants.Elevator.Limits.dangerZone 
-    && mPivot.getPivotAngle() < Constants.ShooterPivot.Limits.pivotCollisionZone && mSpeed < 0.0) {
-      mPivot.setPivotSpeed(0.0);
-    } else {
-      mPivot.setPivotSpeed(mSpeed);
-    }
+    if (mElevator.isAboveHeightLimit(mShooterPivot.getEncoderAngle())){
+      mShooterPivot.setHoldPosition(Math.sinh((Constants.ShooterPivot.robotMaxHeight - 
+      Constants.ShooterPivot.pivotHeight-mElevator.getElevatorInches())/Constants.ShooterPivot.shooterLength));
+    } 
+    mShooterPivot.holdPivot();
   }
 
   // Called once the command ends or is interrupted.
@@ -45,9 +42,6 @@ public class MoveShooterPivot extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (mElevator.isAboveHeightLimit(mPivot.getEncoderAngle())){
-      return true;
-    }
     return false;
   }
 }

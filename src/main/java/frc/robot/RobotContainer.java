@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.ElevatorSticks;
 import frc.robot.commands.MoveElevator;
 import frc.robot.commands.MoveFeeder;
 import frc.robot.commands.MoveIntake;
@@ -36,6 +37,7 @@ public class RobotContainer {
   public final PowerDistribution mPDH;
 
   public CommandXboxController controller0;
+  public CommandXboxController controller1;
 
   public RobotContainer() {
 
@@ -56,6 +58,7 @@ public class RobotContainer {
     mPDH = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
 
     controller0 = new CommandXboxController(0);
+    controller1 = new CommandXboxController(1);
     // mShooterPivot.setDefaultCommand(getAutonomousCommand());
 
     configureBindings();
@@ -67,6 +70,9 @@ public class RobotContainer {
     
     controller0.povUp().whileTrue(new MoveElevator(mElevator, mShooterPivot, 0.09));
     controller0.povDown().whileTrue(new MoveElevator(mElevator, mShooterPivot, -0.05));
+
+    controller1.axisGreaterThan(1, Constants.Elevator.Climb.joyStickDeadBand).whileTrue(new ElevatorSticks(mElevator, mShooterPivot));
+    controller1.axisLessThan(1, -Constants.Elevator.Climb.joyStickDeadBand).whileTrue(new ElevatorSticks(mElevator, mShooterPivot));
 
    }
 
