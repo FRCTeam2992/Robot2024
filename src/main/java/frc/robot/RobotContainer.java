@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.ChangeClimbMode;
 import frc.robot.commands.ElevatorSticks;
 import frc.robot.commands.MoveElevator;
 import frc.robot.commands.MoveFeeder;
@@ -16,7 +17,6 @@ import frc.robot.commands.MoveIntake;
 import frc.robot.commands.MoveShooter;
 import frc.robot.commands.MoveShooterPivot;
 import frc.robot.commands.SetElevatorTargetPosition;
-import frc.robot.commands.StartShooter;
 import frc.robot.commands.StopElevator;
 import frc.robot.commands.StopIntake;
 import frc.robot.commands.StopShooter;
@@ -59,7 +59,6 @@ public class RobotContainer {
 
     controller0 = new CommandXboxController(0);
     controller1 = new CommandXboxController(1);
-    // mShooterPivot.setDefaultCommand(getAutonomousCommand());
 
     configureBindings();
     configureSmartDashboard();
@@ -74,6 +73,8 @@ public class RobotContainer {
     controller1.axisGreaterThan(1, Constants.Elevator.Climb.joyStickDeadBand).whileTrue(new ElevatorSticks(mElevator, mShooterPivot));
     controller1.axisLessThan(1, -Constants.Elevator.Climb.joyStickDeadBand).whileTrue(new ElevatorSticks(mElevator, mShooterPivot));
 
+    controller1.start().onTrue(new ChangeClimbMode(mElevator, true));
+    controller1.back().onTrue(new ChangeClimbMode(mElevator, false));
    }
 
   private void configureShuffleBoard(){
