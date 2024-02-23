@@ -29,6 +29,8 @@ public class Elevator extends SubsystemBase {
   private double targetPosition;
   private boolean holdPositionRecorded;
   private double holdPosition;
+  
+  private boolean climbMode;
 
   public Elevator() {
     leadMotor = new CANSparkMax(Constants.Elevator.leadMotorID, MotorType.kBrushless);
@@ -62,8 +64,7 @@ public class Elevator extends SubsystemBase {
     PIDController.setSmartMotionMaxAccel(Constants.Elevator.PIDConstants.SmartMotionMaxAcc, 0);
     PIDController.setSmartMotionAllowedClosedLoopError(Constants.Elevator.PIDConstants.SmartMotionAllowedError, 0);
 
-
-
+    climbMode = false;
   }
 
   @Override
@@ -81,6 +82,10 @@ public class Elevator extends SubsystemBase {
 
     SmartDashboard.putNumber("Ele Velocity", getElevatorVelocity());
     // This method will be called once per scheduler run
+  }
+
+  public void setClimbMode(boolean climbModeParam){
+    climbMode = climbModeParam;
   }
 
   public double[] getElevatorPosition() {
