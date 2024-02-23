@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.commands.StopElevator;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
 public class Elevator extends SubsystemBase {
@@ -143,8 +144,8 @@ public class Elevator extends SubsystemBase {
   }
 
   public boolean checkIfAtHardStop(){
-    return false;
-    // return (leadMotor.getOutputCurrent() > Constants.Elevator.Limits.hardStopCurrentLimit && leadMotor.getOutputCurrent() < 0.0);
+    // return false;
+     return (Robot.mRobotContainer.mPDH.getCurrent(Constants.Elevator.leadMotorPDHPort) > Constants.Elevator.Limits.hardStopCurrentLimit && leadMotor.getOutputCurrent() < 0.0);
   }
 
   public void holdElevator() {
@@ -198,6 +199,10 @@ public class Elevator extends SubsystemBase {
 
   public boolean isAboveHeightLimit(double pivotAngle){
     return (getRobotHeight(pivotAngle) > Constants.ShooterPivot.robotMaxHeight);
+  }
+
+  public void setHoldPositionRecorded(boolean isRecorded){
+    holdPositionRecorded = isRecorded;
   }
 
 }

@@ -37,7 +37,8 @@ public class MoveElevator extends Command {
   public void execute() {
     if (mShooterPivot.getPivotAngle() < Constants.ShooterPivot.Limits.pivotCollisionZone 
     && mElevator.getElevatorInches() < Constants.Elevator.Limits.dangerZone) {
-      mElevator.setElevatorSpeed(0.0);
+      mElevator.setHoldPositionRecorded(false);
+      mElevator.holdElevator();
       new SetPivotTargetAngle(mShooterPivot, Constants.ShooterPivot.Positions.pivotSafeZone).schedule();
       new SetPivotToTargetAngle(mShooterPivot, mElevator).schedule();
     } else { 

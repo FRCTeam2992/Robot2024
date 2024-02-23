@@ -118,25 +118,6 @@ public class ShooterPivot extends SubsystemBase {
     pivotMotor.setControl(percentOutControlRequest);
   }
 
-  public void movePivotWithTarget(double target){
-    holdPositionRecorded = true;
-    holdPosition = target;
-
-    double position = Math.max(target, Constants.ShooterPivot.Limits.minPivotAngle);
-    position = Math.min(position, Constants.ShooterPivot.Limits.minPivotAngle);
-
-    if(Math.abs(getEncoderAngle() - position) > 15.0){
-      pivotController.reset();
-    }
-
-    double power = pivotController.calculate(getEncoderAngle(), position) + Constants.ShooterPivot.PIDController.F;
-    power = Math.min(power, .5);
-    power = Math.max(power, -.5);
-
-    percentOutControlRequest.Output = power;
-    pivotMotor.setControl(percentOutControlRequest);
-  }
-
   public void holdPivot() {
     if (!holdPositionRecorded) {
       // We haven't recorded where we are yet, so get it
