@@ -39,7 +39,7 @@ public class Constants {
 
         public static final double pivotTargetedThreshold = 5.0; //Place holder
 
-        public static final double pivotHeight = 12.9397244; //Pivot axis height above ground when elevator at 0 (in) 
+        public static final double pivotHeight = 14.9397244; //Pivot axis height above ground when elevator at 0 (in) 
         public static final double shooterLength = 13.342337; //pivot axis to top flywheel axis
         public static final double flyWheelRadius = 2.0;
         public static final double robotMaxHeight = 47; // 1 inch wiggle room
