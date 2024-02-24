@@ -27,6 +27,10 @@ public class DriveSticks extends Command {
     private boolean gyroTargetRecorded;
 
     private ProfiledPIDController scoreYController;
+    private double botX = 0.0;
+    private double botY = 0.0;
+    private double goalX = 0.0;
+    private double goalY = 0.0; 
 
     public DriveSticks(Drivetrain subsystem) {
         // Subsystem Instance
@@ -212,6 +216,16 @@ public class DriveSticks extends Command {
             // Adjust the rotation to align to score
             if (mDriveTrain.isScoringMode()) {
                 x2 = mDriveTrain.getGyroYaw();
+                botX = mDriveTrain.latestSwervePose.getX();
+                botY = mDriveTrain.latestSwervePose.getY();
+                goalX = Constants.DrivetrainConstants.Field.goalX;
+
+                if (DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == DriverStation.Alliance.Red){
+                    goalY = Constants.DrivetrainConstants.Field.redGoalY;
+                } else {
+                    goalY = Constants.DrivetrainConstants.Field.blueGoalY;
+                }
+
                 if (x2 > 180) {
                     x2 -= 360;
                 }
