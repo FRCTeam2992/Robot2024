@@ -126,6 +126,9 @@ public class ShooterPivot extends SubsystemBase {
 
       pivotMotor.set(0.0);
     } else {
+    holdPosition = Math.max(pivotTarget, Constants.ShooterPivot.Limits.minPivotAngle);
+    holdPosition = Math.min(holdPosition, Constants.ShooterPivot.Limits.minPivotAngle);
+    
     double power = pivotController.calculate(getEncoderAngle(), holdPosition) + Constants.ShooterPivot.PIDController.F;
     power = Math.min(power, .5);
     power = Math.max(power, -.5);
