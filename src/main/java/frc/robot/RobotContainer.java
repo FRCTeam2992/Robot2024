@@ -18,12 +18,15 @@ import frc.robot.Subsystems.Drivetrain;
 public class RobotContainer {
 
   public final Drivetrain mDrivetrain;
+  public final RobotState mRobotState;
   public OdometryThread mOdometryThread;
 
 
   public final CommandXboxController controller0 = new CommandXboxController(0);
 
   public RobotContainer() {
+
+    mRobotState = new RobotState();
     
     mDrivetrain = new Drivetrain();
     if (Constants.DrivetrainConstants.odometryThread) {
@@ -31,7 +34,7 @@ public class RobotContainer {
       mOdometryThread.setFastMode();
       mOdometryThread.start();
     }
-    mDrivetrain.setDefaultCommand(new DriveSticks(mDrivetrain));
+    mDrivetrain.setDefaultCommand(new DriveSticks(mDrivetrain, mRobotState));
 
     configureBindings();
   }
