@@ -193,7 +193,7 @@ public class Elevator extends SubsystemBase {
 
   public double getRobotHeight(double pivotAngle){
     double height = Constants.ShooterPivot.pivotHeight + getElevatorInches() 
-    + (Constants.ShooterPivot.shooterLength * Math.sin(pivotAngle + 18));
+    + (Constants.ShooterPivot.shooterLength * Math.sin(pivotAngle + 19.537819)) + Constants.ShooterPivot.flyWheelRadius;
     return (height);
   }
 

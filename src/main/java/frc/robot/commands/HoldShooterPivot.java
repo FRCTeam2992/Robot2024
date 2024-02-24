@@ -30,7 +30,7 @@ public class HoldShooterPivot extends Command {
   public void execute() {
     if (mElevator.isAboveHeightLimit(mShooterPivot.getEncoderAngle())){
       mShooterPivot.setHoldPosition(Math.sinh((Constants.ShooterPivot.robotMaxHeight - 
-      Constants.ShooterPivot.pivotHeight-mElevator.getElevatorInches())/Constants.ShooterPivot.shooterLength));
+      Constants.ShooterPivot.pivotHeight-mElevator.getElevatorInches() - Constants.ShooterPivot.flyWheelRadius)/Constants.ShooterPivot.shooterLength));
     } 
     mShooterPivot.holdPivot();
   }
