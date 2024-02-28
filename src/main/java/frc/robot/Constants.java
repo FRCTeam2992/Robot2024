@@ -11,10 +11,23 @@ public class Constants {
     public static class Intake{
         public static final int intakeLeadMotorID = 10;
         public static final int intakeFollowMotorID = 11;
+
+        public static class Speeds {
+            public static final double intakingPieceSpeed = 0.4;
+            public static final double outakingPieceSpeed = -0.4;
+        }
     }
 
     public static class Feeder {
         public static final int feederMotorID = 6;
+
+        public static class Speeds {
+            public static final double intakingPieceSpeed = 0.4;
+            public static final double outakingPieceSpeed = -0.4;
+            public static final double speekerShootingSpeed = 0.5;
+            public static final double ampShootingSpeed = -0.5;
+            public static final double trapShootingSpeed = -0.5;
+        }
     }
 
     public static class Shooter{
@@ -66,7 +79,7 @@ public class Constants {
             }
 
         public static class Positions {
-            public static final double intakingPiece = 0.0; //Place holder
+            public static final double intakingPiece = 15.0; //Place holder
             public static final double pivotSafeZone = 13.0; //PlaceHolder
         }
     }
@@ -108,13 +121,15 @@ public class Constants {
         public static final double elevatorHeightToleranceInch = 0.5; //Place holder
 
         public static class Limits {
-            public static final double softStopBottom = 3.0; //bottom soft stop (in) //Place holder
-            public static final double softStopTop = 40.0; //bottom soft stop (in) //PlaceHolder
-            public static final double hardStopTop = 23.0; //bottom soft stop (in) //Place holder
+            public static final double softStopBottom = 1.0; //bottom soft stop (in) //Place holder
+            public static final double softStopTop = 24.5; //bottom soft stop (in) //PlaceHolder
+            public static final double hardStopTop = 25.0; //bottom soft stop (in) //Place holder
 
             public static final double hardStopCurrentLimit = 10.0; // Place Holder
 
-            public static final double dangerZone = 7.0; //placeholder
+            public static final double elevatorDangerZone = 7.0; //placeholder
+            public static final double intakeDangerZone = 2.0; //placeholder
+
         }
 
         public static class Positions {

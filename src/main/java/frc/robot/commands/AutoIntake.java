@@ -31,8 +31,8 @@ public class AutoIntake extends SequentialCommandGroup {
       ),
 
       new ParallelDeadlineGroup(
-        new MoveFeeder(mFeeder, 0.2, true),
-        new MoveIntake(mIntake, 0.4)
+        new MoveFeeder(mFeeder, Constants.Feeder.Speeds.intakingPieceSpeed, true),
+        new MoveIntake(mIntake, Constants.Intake.Speeds.intakingPieceSpeed)
       )
       
     );

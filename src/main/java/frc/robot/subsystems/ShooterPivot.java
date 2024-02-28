@@ -90,7 +90,7 @@ public class ShooterPivot extends SubsystemBase {
 
   public void setPivotTarget(double targetAngle){
     targetAngle = Math.max(targetAngle, Constants.ShooterPivot.Limits.minPivotAngle);
-    targetAngle = Math.min(targetAngle, Constants.ShooterPivot.Limits.minPivotAngle);
+    targetAngle = Math.min(targetAngle, Constants.ShooterPivot.Limits.maxPivotAngle);
 
     pivotTarget = targetAngle;
   }
@@ -104,7 +104,7 @@ public class ShooterPivot extends SubsystemBase {
     holdPosition = pivotTarget;
 
     double position = Math.max(pivotTarget, Constants.ShooterPivot.Limits.minPivotAngle);
-    position = Math.min(position, Constants.ShooterPivot.Limits.minPivotAngle);
+    position = Math.min(position, Constants.ShooterPivot.Limits.maxPivotAngle);
 
     if(Math.abs(getEncoderAngle() - position) > 15.0){
       pivotController.reset();
@@ -126,8 +126,9 @@ public class ShooterPivot extends SubsystemBase {
 
       pivotMotor.set(0.0);
     } else {
+
     holdPosition = Math.max(pivotTarget, Constants.ShooterPivot.Limits.minPivotAngle);
-    holdPosition = Math.min(holdPosition, Constants.ShooterPivot.Limits.minPivotAngle);
+    holdPosition = Math.min(holdPosition, Constants.ShooterPivot.Limits.maxPivotAngle);
     
     double power = pivotController.calculate(getEncoderAngle(), holdPosition) + Constants.ShooterPivot.PIDController.F;
     power = Math.min(power, .5);

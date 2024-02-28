@@ -29,9 +29,11 @@ public class HoldShooterPivot extends Command {
   @Override
   public void execute() {
     if (mElevator.isAboveHeightLimit(mShooterPivot.getEncoderAngle())){
-      mShooterPivot.setHoldPosition(Math.sinh((Constants.ShooterPivot.robotMaxHeight - 
-      Constants.ShooterPivot.pivotHeight-mElevator.getElevatorInches() - Constants.ShooterPivot.flyWheelRadius)/Constants.ShooterPivot.shooterLength));
-    } 
+      mShooterPivot.setHoldPosition((Math.sinh((Constants.ShooterPivot.robotMaxHeight - 
+      Constants.ShooterPivot.pivotHeight-mElevator.getElevatorInches() - Constants.ShooterPivot.flyWheelRadius)/Constants.ShooterPivot.shooterLength)) - 19.537819);
+    } else if (mElevator.getElevatorInches() < Constants.Elevator.Limits.intakeDangerZone){
+      mShooterPivot.setHoldPosition(Constants.ShooterPivot.Positions.pivotSafeZone);
+    }
     mShooterPivot.holdPivot();
   }
 

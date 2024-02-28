@@ -71,7 +71,7 @@ public class Elevator extends SubsystemBase {
 
     if (checkIfAtHardStop()){
       // zeroElevatorEncoders();
-      // new StopElevator(this).schedule();
+      // new HoldElevator(this).schedule();
     }
 
     SmartDashboard.putNumber("Elevator Inches", getElevatorInches());
@@ -117,7 +117,7 @@ public class Elevator extends SubsystemBase {
     if (getElevatorInches() < Constants.Elevator.Limits.softStopBottom) {
       speed = Math.max(0.0, speed);
     } else if (getElevatorInches() > Constants.Elevator.Limits.softStopTop) {
-      speed = 0.0;
+      speed = Math.min(0.0, speed);
     }
 
     leadMotor.set(speed);
@@ -125,13 +125,10 @@ public class Elevator extends SubsystemBase {
 
   public void setElevatorTargetPosition(double position) {
     
-    if (position < Constants.Elevator.Limits.softStopBottom) {
-      position = Constants.Elevator.Limits.softStopBottom;
-    } else if (position > Constants.Elevator.Limits.softStopTop) {
-      position = Constants.Elevator.Limits.softStopTop;
-    }
+    double mPosition = Math.max(position, Constants.Elevator.Limits.softStopBottom);
+    mPosition = Math.min(mPosition, Constants.Elevator.Limits.softStopTop);
 
-    targetPosition = inchesToEncoderRotations(position);
+    targetPosition = inchesToEncoderRotations(mPosition);
   }
 
   public void moveElevatorToTargetPosition() {
@@ -156,6 +153,9 @@ public class Elevator extends SubsystemBase {
 
       leadMotor.set(0.0);
     } else {
+      holdPosition = Math.max(holdPosition, Constants.Elevator.Limits.softStopBottom);
+      holdPosition = Math.min(holdPosition, Constants.Elevator.Limits.softStopTop);
+
     PIDController.setReference(holdPosition, CANSparkMax.ControlType.kSmartMotion);
     }
 
@@ -176,7 +176,7 @@ public class Elevator extends SubsystemBase {
   public void setElevatorVelocity( double velocity){
     holdPositionRecorded = false;
 
-    if (getElevatorInches() <= 0.15) {
+    if (getElevatorInches() <= 0.15 /*TODO add check if in climb mode */) {
       velocity = Math.max(0.0, velocity);
     } else if (getElevatorInches() > Constants.Elevator.Limits.softStopTop) {
       velocity = 0.0;

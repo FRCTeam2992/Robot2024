@@ -34,17 +34,18 @@ public class ElevatorSticks extends Command {
     climbY = Robot.mRobotContainer.controller1.getLeftY();
 
     if (climbY < Constants.Elevator.Climb.joyStickDeadBand){
-      climbY = 0.0;
+      mElevator.setHoldPositionRecorded(false);
+      mElevator.holdElevator();
     } else if (mShooterPivot.getPivotAngle() < Constants.ShooterPivot.Limits.pivotCollisionZone 
-    && mElevator.getElevatorInches() < Constants.Elevator.Limits.dangerZone) {
-      climbY = 0.0;
+    && mElevator.getElevatorInches() < Constants.Elevator.Limits.elevatorDangerZone) {
+      mElevator.setHoldPositionRecorded(false);
+      mElevator.holdElevator();
       new SetPivotTargetAngle(mShooterPivot, Constants.ShooterPivot.Positions.pivotSafeZone).schedule();
       new SetPivotToTargetAngle(mShooterPivot, mElevator).schedule();
+    } else {
+      climbY = climbY*climbY*climbY;
+      mElevator.setElevatorVelocity(climbY * 4);
     }
-
-    climbY = climbY*climbY*climbY;
-
-    mElevator.setElevatorVelocity(climbY * 4);
   }
 
   // Called once the command ends or is interrupted.

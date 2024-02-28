@@ -9,15 +9,20 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ShooterPivot;
 
-public class SetPivotToTargetAngle extends Command {
-  /** Creates a new setPivotToTargetAngle. */
-  private ShooterPivot mPivot;
+public class SetElevatorVelocity extends Command {
+
   private Elevator mElevator;
-  public SetPivotToTargetAngle(ShooterPivot subsystem, Elevator elevator) {
-    mPivot = subsystem;
+  private ShooterPivot mShooterPivot;
+  private double mVelocity;
+  /** Creates a new SetElevatorVelocity. */
+  public SetElevatorVelocity(Elevator elevator, ShooterPivot shooterPivot, double velocity) {
+
     mElevator = elevator;
+    mShooterPivot = shooterPivot;
+    mVelocity = velocity;
+
+    addRequirements(mElevator);
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(mPivot);
   }
 
   // Called when the command is initially scheduled.
@@ -27,11 +32,14 @@ public class SetPivotToTargetAngle extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (mElevator.getElevatorInches() < Constants.Elevator.Limits.elevatorDangerZone 
-    && mPivot.getPivotTarget() < Constants.ShooterPivot.Limits.pivotCollisionZone) {
-      mPivot.setPivotSpeed(0.0);
-    } else {
-      mPivot.setPivotToTarget();
+    if (mShooterPivot.getPivotAngle() < Constants.ShooterPivot.Limits.pivotCollisionZone 
+    && mElevator.getElevatorInches() < Constants.Elevator.Limits.elevatorDangerZone) {
+      mElevator.setHoldPositionRecorded(false);
+      mElevator.holdElevator();
+      new SetPivotTargetAngle(mShooterPivot, Constants.ShooterPivot.Positions.pivotSafeZone).schedule();
+      new SetPivotToTargetAngle(mShooterPivot, mElevator).schedule();
+    } else { 
+      mElevator.setElevatorSpeed(mVelocity);
     }
   }
 
@@ -42,9 +50,6 @@ public class SetPivotToTargetAngle extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (mElevator.isAboveHeightLimit(mPivot.getEncoderAngle())){
-      return true;
-    }
     return false;
   }
 }

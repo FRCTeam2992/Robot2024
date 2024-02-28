@@ -30,7 +30,7 @@ public class MoveShooterPivot extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (mElevator.getElevatorInches() < Constants.Elevator.Limits.dangerZone 
+    if (mElevator.getElevatorInches() < Constants.Elevator.Limits.elevatorDangerZone 
     && mPivot.getPivotAngle() < Constants.ShooterPivot.Limits.pivotCollisionZone && mSpeed < 0.0) {
       mPivot.setPivotSpeed(0.0);
     } else {
