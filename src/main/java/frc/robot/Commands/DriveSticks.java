@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.Commands;
+package frc.robot.commands;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -14,7 +14,7 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotState;
 import frc.robot.RobotState.RobotModeStates;
-import frc.robot.Subsystems.Drivetrain;
+import frc.robot.subsystems.Drivetrain;
 
 public class DriveSticks extends Command {
 
@@ -73,7 +73,7 @@ public class DriveSticks extends Command {
 
         if (isLeftStrafe) {
             x1 = -Robot.mRobotContainer.getController0().getLeftX();
-            y1 = 0.0;//-Robot.mRobotContainer.getController0().getLeftY();
+            y1 = -Robot.mRobotContainer.getController0().getLeftY();
             x2 = -Robot.mRobotContainer.getController0().getRightX();
         } else {
             x1 = -Robot.mRobotContainer.getController0().getRightX();

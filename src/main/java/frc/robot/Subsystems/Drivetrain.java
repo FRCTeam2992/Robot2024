@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.Subsystems;
+package frc.robot.subsystems;
 
 import java.util.ArrayList;
 
@@ -67,7 +67,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Commands.SetSwerveAngle;
+import frc.robot.commands.SetSwerveAngle;
 
 public class Drivetrain extends SubsystemBase {
     /** Creates a new Drivetrain. */
@@ -198,43 +198,43 @@ public class Drivetrain extends SubsystemBase {
         velocityControlRequest = new VelocityDutyCycle(0.0);
 
         // Motor Inits
-        frontLeftDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontLeftDrive);
+        frontLeftDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontLeftDrive, "CanBus2");
         initTalonFX(frontLeftDrive, driveMotorConfigs, InvertedValue.Clockwise_Positive);
 
-        frontLeftTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontLeftTurn);
+        frontLeftTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontLeftTurn, "CanBus2");
         initTalonFX(frontLeftTurn, turnMotorConfigs, InvertedValue.CounterClockwise_Positive);
 
-        frontRightDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontRightDrive);
+        frontRightDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontRightDrive, "CanBus2");
         initTalonFX(frontRightDrive, driveMotorConfigs,InvertedValue.Clockwise_Positive);
 
-        frontRightTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontRightTurn);
+        frontRightTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontRightTurn, "CanBus2");
         initTalonFX(frontRightTurn, turnMotorConfigs, InvertedValue.CounterClockwise_Positive);
 
-        rearRightDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearRightDrive);
+        rearRightDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearRightDrive, "CanBus2");
         initTalonFX(rearRightDrive, driveMotorConfigs,InvertedValue.Clockwise_Positive);
 
-        rearRightTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearRightTurn);
+        rearRightTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearRightTurn, "CanBus2");
         initTalonFX(rearRightTurn, turnMotorConfigs,InvertedValue.CounterClockwise_Positive);
 
-        rearLeftDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearLeftDrive);
+        rearLeftDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearLeftDrive, "CanBus2");
         initTalonFX(rearLeftDrive, driveMotorConfigs,InvertedValue.Clockwise_Positive);
 
-        rearLeftTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearLeftTurn);
+        rearLeftTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearLeftTurn, "CanBus2");
         initTalonFX(rearLeftTurn, turnMotorConfigs,InvertedValue.CounterClockwise_Positive);
 
 
 
-        frontRightEncoder = new CANcoder(Constants.DrivetrainConstants.CanIDs.frontRightEncoder);
+        frontRightEncoder = new CANcoder(Constants.DrivetrainConstants.CanIDs.frontRightEncoder, "CanBus2");
         // initCANCoder(frontRightEncoder, AbsoluteSensorRange.Signed_PlusMinus180, true);
         initCANCoder(frontRightEncoder, AbsoluteSensorRangeValue.Signed_PlusMinusHalf, SensorDirectionValue.Clockwise_Positive);
 
-        frontLeftEncoder = new CANcoder(Constants.DrivetrainConstants.CanIDs.frontLeftEncoder);
+        frontLeftEncoder = new CANcoder(Constants.DrivetrainConstants.CanIDs.frontLeftEncoder, "CanBus2");
         initCANCoder(frontLeftEncoder, AbsoluteSensorRangeValue.Signed_PlusMinusHalf, SensorDirectionValue.Clockwise_Positive);
 
-        rearRightEncoder = new CANcoder(Constants.DrivetrainConstants.CanIDs.rearRightEncoder);
+        rearRightEncoder = new CANcoder(Constants.DrivetrainConstants.CanIDs.rearRightEncoder, "CanBus2");
         initCANCoder(rearRightEncoder, AbsoluteSensorRangeValue.Signed_PlusMinusHalf, SensorDirectionValue.Clockwise_Positive);
 
-        rearLeftEncoder = new CANcoder(Constants.DrivetrainConstants.CanIDs.rearLeftEncoder);
+        rearLeftEncoder = new CANcoder(Constants.DrivetrainConstants.CanIDs.rearLeftEncoder, "CanBus2");
         initCANCoder(rearLeftEncoder,AbsoluteSensorRangeValue.Signed_PlusMinusHalf, SensorDirectionValue.Clockwise_Positive);
 
 
@@ -756,7 +756,7 @@ public class Drivetrain extends SubsystemBase {
 
     public Command XWheels() {
         // return new SetSwerveAngle(this, 45, -45, -45, 45);
-        return new frc.robot.Commands.SetSwerveAngle(this, 45, -45, -45, 45);
+        return new frc.robot.commands.SetSwerveAngle(this, 45, -45, -45, 45);
     }
 
     public Command ResetOdometry() {
