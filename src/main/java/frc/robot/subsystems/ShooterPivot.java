@@ -109,9 +109,6 @@ public class ShooterPivot extends SubsystemBase {
       case Hold: {
         // Hold current position using PID
         
-        // Make sure we chack that we have a hold position, and it fits in bounds based on Robot State
-        updateHoldPosition();
-        
         // And actually make the motor hold
         holdPivotMotor();
         break;
@@ -192,8 +189,8 @@ public class ShooterPivot extends SubsystemBase {
     updateHoldPosition(); // Will check for limits if mode changed!
     
     double power = pivotController.calculate(currentPivotAngle, holdPosition) + Constants.ShooterPivot.PIDController.F;
-    power = Math.min(power, .5);
-    power = Math.max(power, -.5);
+    power = Math.min(power, .05);
+    power = Math.max(power, -.02);
     
     percentOutControlRequest.Output = power;
     pivotMotor.setControl(percentOutControlRequest);
