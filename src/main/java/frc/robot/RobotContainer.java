@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -29,6 +30,8 @@ import frc.robot.subsystems.ShooterPivot;
 
 public class RobotContainer {
 
+  public  MyRobotState mRobotState;
+
   public final Shooter mShooter;
   private Intake mIntake;
   private Feeder mFeeder;
@@ -41,6 +44,8 @@ public class RobotContainer {
 
   public RobotContainer() {
 
+    mRobotState = new MyRobotState();
+
     mShooter = new Shooter();
     mShooter.setDefaultCommand(new StopShooter(mShooter));
 
@@ -50,7 +55,7 @@ public class RobotContainer {
     mFeeder = new Feeder();
     mFeeder.setDefaultCommand(new MoveFeeder(mFeeder, 0.0, false));
 
-    mShooterPivot = new ShooterPivot();
+    mShooterPivot = new ShooterPivot(mRobotState);
 
     mElevator = new Elevator();
     mElevator.setDefaultCommand(new StopElevator(mElevator));
@@ -97,8 +102,8 @@ public class RobotContainer {
   SmartDashboard.putData("Feeder Reverse", new MoveFeeder(mFeeder, -0.45, false));
   SmartDashboard.putData("Feeder Shoot", new MoveFeeder(mFeeder, 1.0, false).alongWith(new MoveIntake(mIntake, 0.4)));
 
-  SmartDashboard.putData("Pivot Foward", new MoveShooterPivot(mShooterPivot, mElevator, 0.05));
-  SmartDashboard.putData("Pivot Reverse", new MoveShooterPivot(mShooterPivot, mElevator, -0.05));
+  SmartDashboard.putData("Pivot Foward", new MoveShooterPivot(mShooterPivot, 0.05));
+  SmartDashboard.putData("Pivot Reverse", new MoveShooterPivot(mShooterPivot, -0.05));
 
   SmartDashboard.putData("Start Shooter", new MoveShooter(mShooter, -0.6));
   SmartDashboard.putData("StopShooter", new MoveShooter(mShooter, 0.0));

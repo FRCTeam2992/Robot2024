@@ -73,7 +73,10 @@ public class Constants {
 
         public static class Limits {
             public static final double minPivotAngle = 1.5; //PlaceHolder
-            public static final double maxPivotAngle = 70.0; //PlaceHolder
+            public static final double maxPivotAngle = 60.0; //PlaceHolder
+
+            public static final double maxPivotAmp = 10.0; // Max pivot angle when in Amp mode
+            public static final double maxPivotEndgame = 1.5;  // Max pivot angle in in Endgame mode
 
             public static final double pivotCollisionZone = 10.0; //PlaceHolder
             }

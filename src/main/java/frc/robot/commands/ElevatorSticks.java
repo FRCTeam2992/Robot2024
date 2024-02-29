@@ -41,7 +41,7 @@ public class ElevatorSticks extends Command {
       mElevator.setHoldPositionRecorded(false);
       mElevator.holdElevator();
       new SetPivotTargetAngle(mShooterPivot, Constants.ShooterPivot.Positions.pivotSafeZone).schedule();
-      new SetPivotToTargetAngle(mShooterPivot, mElevator).schedule();
+      new SetPivotToTargetAngle(mShooterPivot).schedule();
     } else {
       climbY = climbY*climbY*climbY;
       mElevator.setElevatorVelocity(climbY * 4);

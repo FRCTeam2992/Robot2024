@@ -34,7 +34,7 @@ public class MoveElevatorToTarget extends Command {
       mElevator.setHoldPositionRecorded(false);
       mElevator.holdElevator();
       new SetPivotTargetAngle(mShooterPivot, Constants.ShooterPivot.Positions.pivotSafeZone).schedule();
-      new SetPivotToTargetAngle(mShooterPivot, mElevator).schedule();
+      new SetPivotToTargetAngle(mShooterPivot).schedule();
     } else { 
       mElevator.moveElevatorToTargetPosition();
     }
