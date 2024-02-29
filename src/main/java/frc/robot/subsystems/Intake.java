@@ -34,7 +34,7 @@ public class Intake extends SubsystemBase {
     intakeLeadMotor.getConfigurator().apply(intakeMotorConfigs);
     intakeFollowMotor.getConfigurator().apply(intakeMotorConfigs);
 
-    intakeFollowMotor.setControl(new Follower(14, false));
+    intakeFollowMotor.setControl(new Follower(Constants.Intake.intakeLeadMotorID, false));
 
 
     percentOutControlRequest = new DutyCycleOut(0.0);

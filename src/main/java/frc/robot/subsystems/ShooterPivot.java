@@ -74,6 +74,7 @@ public class ShooterPivot extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putData(this);
+    SmartDashboard.putNumber("Pivot Angle (deg)", this.getEncoderAngle());
     // This method will be called once per scheduler run
   }
 

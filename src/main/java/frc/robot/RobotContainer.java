@@ -94,15 +94,16 @@ public class RobotContainer {
   
   SmartDashboard.putData("Feeder Foward", new MoveFeeder(mFeeder, 0.45, false)); //2:1
   SmartDashboard.putData("Feeder Reverse", new MoveFeeder(mFeeder, -0.45, false));
-  SmartDashboard.putData("Feeder Shoot", new MoveFeeder(mFeeder, .9, false).alongWith(new MoveIntake(mIntake, 0.4)));
+  SmartDashboard.putData("Feeder Shoot", new MoveFeeder(mFeeder, 1.0, false).alongWith(new MoveIntake(mIntake, 0.4)));
 
   SmartDashboard.putData("Pivot Foward", new MoveShooterPivot(mShooterPivot, mElevator, 0.05));
   SmartDashboard.putData("Pivot Reverse", new MoveShooterPivot(mShooterPivot, mElevator, -0.05));
 
-  SmartDashboard.putData("Start Shooter", new MoveShooter(mShooter, -0.8));
+  SmartDashboard.putData("Start Shooter", new MoveShooter(mShooter, -0.6));
+  SmartDashboard.putData("StopShooter", new MoveShooter(mShooter, 0.0));
 
-  SmartDashboard.putData("AutoIntake", new MoveIntake(mIntake, 0.4).alongWith(new MoveFeeder(mFeeder, 0.45, false)));
-
+  SmartDashboard.putData("AutoIntake", new MoveIntake(mIntake, 0.15).alongWith(new MoveFeeder(mFeeder, 0.20, false)));
+  SmartDashboard.putData("AutoIntakeStop", new MoveIntake(mIntake, 0).alongWith(new MoveFeeder(mFeeder, 0, false)));
 
   }
 
