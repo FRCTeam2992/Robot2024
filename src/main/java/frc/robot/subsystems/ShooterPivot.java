@@ -88,7 +88,7 @@ public class ShooterPivot extends SubsystemBase {
       pivotMotorConfigs.Slot0.kP = Constants.ShooterPivot.PIDController.P;
       pivotMotorConfigs.Slot0.kI = Constants.ShooterPivot.PIDController.I;
       pivotMotorConfigs.Slot0.kD = Constants.ShooterPivot.PIDController.D;
-      pivotMotorConfigs.Slot0.kS = Constants.ShooterPivot.PIDController.F;
+      pivotMotorConfigs.Slot0.kG = Constants.ShooterPivot.PIDController.F;
       pivotMotorConfigs.MotionMagic.MotionMagicAcceleration = Constants.ShooterPivot.PIDController.maxAcceleration;
       pivotMotorConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.ShooterPivot.PIDController.maxVelocity;
       pivotMotorConfigs.MotorOutput.PeakForwardDutyCycle = Constants.ShooterPivot.PIDController.peakForwardDutyCycle;
