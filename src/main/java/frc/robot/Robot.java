@@ -23,12 +23,16 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    SmartDashboard.putNumber("Elevator Current Out", mRobotContainer.mPDH.getCurrent(6));
+    // SmartDashboard.putNumber("Elevator Current Out",
+    // mRobotContainer.mPDH.getCurrent(6));
+    SmartDashboard.putString("Robot State", mRobotContainer.mRobotState.getRobotMode().toString());
 
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    mRobotContainer.mRobotState.setRobotMode(MyRobotState.RobotModeState.Speaker);
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -38,6 +42,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    mRobotContainer.mRobotState.setRobotMode(MyRobotState.RobotModeState.Auto);
     m_autonomousCommand = mRobotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {
@@ -53,6 +58,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    mRobotContainer.mRobotState.setRobotMode(MyRobotState.RobotModeState.Speaker);
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
@@ -67,6 +74,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
+    mRobotContainer.mRobotState.setRobotMode(MyRobotState.RobotModeState.Speaker);
     CommandScheduler.getInstance().cancelAll();
   }
 
