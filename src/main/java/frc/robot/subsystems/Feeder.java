@@ -12,6 +12,8 @@ import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
 import com.ctre.phoenix6.signals.ForwardLimitTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.ReverseLimitSourceValue;
+import com.ctre.phoenix6.signals.ReverseLimitTypeValue;
 import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 
 import frc.robot.Constants;
@@ -24,17 +26,16 @@ public class Feeder extends SubsystemBase {
   private TalonFXConfiguration feedMotorConfigs;
   private DutyCycleOut percentOutControlRequest;
 
-  private StatusSignal<Enum> limitStateEnum;
 
   public Feeder() {
     feedMotor = new TalonFX(Constants.Feeder.feederMotorID);
     feedMotorConfigs = new TalonFXConfiguration();
 
-    feedMotorConfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    feedMotorConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     feedMotorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    feedMotorConfigs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue.Disabled; //Not sure if sensor settings are correct
-    feedMotorConfigs.HardwareLimitSwitch.ForwardLimitType = ForwardLimitTypeValue.NormallyOpen;
-    feedMotorConfigs.HardwareLimitSwitch.ForwardLimitEnable = true;
+    feedMotorConfigs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin; //Not sure if sensor settings are correct
+    feedMotorConfigs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue.NormallyOpen;
+    feedMotorConfigs.HardwareLimitSwitch.ReverseLimitEnable = true;
 
 
     feedMotor.getConfigurator().apply(feedMotorConfigs);
@@ -51,20 +52,20 @@ public class Feeder extends SubsystemBase {
   }
 
   public void setFeederSpeed(double speed) {
-      feedMotor.setControl(percentOutControlRequest.withOutput(speed));
+      feedMotor.setControl(percentOutControlRequest.withOutput(-speed));
   }
 
   public boolean getBeamBreakTriggered() {
-    switch (feedMotor.getForwardLimit().refresh().getValue()) {
+    switch (feedMotor.getReverseLimit().refresh().getValue()) {
       case ClosedToGround: return true;
       case Open: return false;
-      default: return false;
+      default: return true;
     }
     
 }
 
 public void setBeamBreakControl(boolean isBeamEnabled){
-  feedMotorConfigs.HardwareLimitSwitch.ForwardLimitEnable = isBeamEnabled;
+  feedMotorConfigs.HardwareLimitSwitch.ReverseLimitEnable = isBeamEnabled;
   feedMotor.getConfigurator().apply(feedMotorConfigs);
 }
   

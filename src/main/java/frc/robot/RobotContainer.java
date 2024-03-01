@@ -65,7 +65,7 @@ public class RobotContainer {
     mFeeder.setDefaultCommand(new MoveFeeder(mFeeder, 0.0, false));
 
     mShooterPivot = new ShooterPivot(mRobotState);
-    mShooterPivot.setDefaultCommand(new HoldShooterPivot(mShooterPivot, mRobotState));
+    mShooterPivot.setDefaultCommand(new StopShooterPivot(mShooterPivot));
 
     mElevator = new Elevator();
     mElevator.setDefaultCommand(new StopElevator(mElevator));
@@ -138,7 +138,7 @@ public class RobotContainer {
 
 
 
-    controller0.povUp().whileTrue(new MoveElevator(mElevator, mShooterPivot, 0.09));
+    controller0.povUp().whileTrue(new MoveElevator(mElevator, mShooterPivot, 0.15));
     controller0.povDown().whileTrue(new MoveElevator(mElevator, mShooterPivot, -0.05));
 
     controller1.axisGreaterThan(1, Constants.Elevator.Climb.joyStickDeadBand)
@@ -169,6 +169,7 @@ public class RobotContainer {
     SmartDashboard.putData("Intake Reverse", new MoveIntake(mIntake, -0.40));
 
     SmartDashboard.putData("Feeder Foward", new MoveFeeder(mFeeder, 0.45, false)); // 2:1
+    SmartDashboard.putData("feedforward limited", new MoveFeeder(mFeeder, 0.45, true));
     SmartDashboard.putData("Feeder Reverse", new MoveFeeder(mFeeder, -0.45, false));
     SmartDashboard.putData("Feeder Shoot", new MoveFeeder(mFeeder, 1.0, false).alongWith(new MoveIntake(mIntake, 0.4)));
 

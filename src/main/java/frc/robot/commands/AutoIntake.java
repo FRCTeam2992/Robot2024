@@ -26,8 +26,8 @@ public class AutoIntake extends SequentialCommandGroup {
     new SetPivotTargetAngle(mShooterPivot, Constants.ShooterPivot.Positions.intakingPiece),
     
     new ParallelCommandGroup(
-        new MoveElevatorToTarget(mElevator, mShooterPivot),
-        new SetPivotToTargetAngle(mShooterPivot)
+        // new MoveElevatorToTarget(mElevator, mShooterPivot),
+        // new SetPivotToTargetAngle(mShooterPivot)
       ),
 
       new ParallelDeadlineGroup(

@@ -62,7 +62,7 @@ public class Constants {
         public static final double pivotLevelOffset = 0.0; // place holder // degrees added to pivot position to find
                                                            // position where level = 0
 
-        public static final double pivotGearRatio = 60.0;
+        public static final double pivotGearRatio = 80.0;
 
         public static class PIDController {
             public static final boolean useCodePID = false; // Whether to overwrite PID values in motor
