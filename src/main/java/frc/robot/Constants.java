@@ -37,7 +37,7 @@ public class Constants {
          }
 
         public static class ShooterPIDConstants{
-            public static double P = 0.0; //Place holder
+            public static double P = 0.0001; //Place holder
             public static double I = 0.0; //Place holder
             public static double D = 0.0; //Place holder
             public static double V = 0.0; //Place holder
@@ -50,20 +50,22 @@ public class Constants {
     public static class ShooterPivot {
         public static final int pivotMotorID = 7;
 
-        public static final double pivotTargetedThreshold = 5.0; //Place holder
+        public static final double pivotTargetedThreshold = 0.2; //Place holder
 
         public static final double pivotHeight = 14.9397244; //Pivot axis height above ground when elevator at 0 (in) 
         public static final double shooterLength = 13.342337; //pivot axis to top flywheel axis
         public static final double flyWheelRadius = 2.0;
         public static final double robotMaxHeight = 47; // 1 inch wiggle room
 
-        public static final double pivotLevelOffset = 0.0; //place holder // degrees added to pivot position to find position where level = 0 degrees
+        public static final double pivotLevelOffset = 0.0; //place holder // degrees added to pivot position to find position where level = 0 
+
+        public static final double pivotGearRatio = 60.0;
 
         public static class PIDController {
-            public static final double P = 0.0; //Place holder
+            public static final double P = 0.00001; //Place holder
             public static final double I = 0.0; //Place holder
-            public static final double D = 0.0; //Place holder
-            public static final double F = 0.0; //Place holder
+            public static final double D = 0.000; //Place holder
+            public static final double F = 0.01; //Place holder
 
             public static final double maxVelocity = 30.0; // degrees/second //Place holder
             public static final double maxAcceleration = 60.0; // degrees/second^2 //Place holder

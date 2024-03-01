@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -29,6 +30,7 @@ public class ShooterPivot extends SubsystemBase {
   private TalonFXConfiguration pivotMotorConfigs;
   
   private DutyCycleOut percentOutControlRequest;
+  private MotionMagicDutyCycle motionMagicControlRequest;
   
   private ProfiledPIDController profiledPivotController;
   private PIDController pivotController;
@@ -62,6 +64,7 @@ public class ShooterPivot extends SubsystemBase {
     pivotMotorConfigs = new TalonFXConfiguration();
     pivotMotorConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     pivotMotorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    // pivotMotor.getConfigurator().apply(pivotMotorConfigs);
     
     pidConstraints = new TrapezoidProfile.Constraints(Constants.ShooterPivot.PIDController.maxVelocity, 
     Constants.ShooterPivot.PIDController.maxAcceleration);
@@ -75,9 +78,10 @@ public class ShooterPivot extends SubsystemBase {
     profiledPivotController.setTolerance(Constants.ShooterPivot.PIDController.pivotAngleTolerance);
     
     lampreyEncoder = new DutyCycleEncoder(0);
-    lampreyEncoder.setDistancePerRotation(1.0);
+    // lampreyEncoder.setDistancePerRotation(1.0);
     
     percentOutControlRequest = new DutyCycleOut(0.0);
+    motionMagicControlRequest = new MotionMagicDutyCycle(0.0);
     
     pivotMedianFilter = new MedianFilter(3);
     
@@ -93,9 +97,11 @@ public class ShooterPivot extends SubsystemBase {
   public void periodic() {
     // Update the current encoder reading only once per cycle here in Periodic for moving average
     currentPivotAngle = getPivotAngle();
+    setPivotTarget(SmartDashboard.getNumber("Set Pivot angle", 0.0));
+    SmartDashboard.putNumber("Pivot target angle", getPivotTarget());
     
     SmartDashboard.putData(this);
-    SmartDashboard.putNumber("Pivot Angle (deg)", currentPivotAngle);
+    SmartDashboard.putNumber("Shooter Pivot Angle (deg)", currentPivotAngle);
     // This method will be called once per scheduler run
     
     
@@ -147,7 +153,8 @@ public class ShooterPivot extends SubsystemBase {
       double position = Math.max(pivotTarget, Constants.ShooterPivot.Limits.minPivotAngle);
       switch (mState.getRobotMode()) {
         case Override:
-        case Normal:
+        case DefaultSpeaker:
+        case Speaker:
         case Auto: {
           // In these cases use normal top limit
           position = Math.min(position, Constants.ShooterPivot.Limits.maxPivotAngle);
@@ -168,9 +175,11 @@ public class ShooterPivot extends SubsystemBase {
         pivotController.reset();
       }
       
-      double power = pivotController.calculate(currentPivotAngle, position) + Constants.ShooterPivot.PIDController.F;
-      power = Math.min(power, .05);
-      power = Math.max(power, -.02);
+      // double power = pivotController.calculate(currentPivotAngle, position) + Constants.ShooterPivot.PIDController.F;
+      // power = Math.min(power, .40);
+      // power = Math.max(power, -.25);
+
+
       
       holdPositionRecorded = true;
       holdPosition = position;
@@ -178,8 +187,11 @@ public class ShooterPivot extends SubsystemBase {
       // Reset the pivot target after constraint checks
       pivotTarget = position;
       
-      percentOutControlRequest.Output = power;
-      pivotMotor.setControl(percentOutControlRequest);
+      // percentOutControlRequest.Output = power;
+      // pivotMotor.setControl(percentOutControlRequest);
+
+      motionMagicControlRequest.Position = (position / 360) * Constants.ShooterPivot.pivotGearRatio;
+      pivotMotor.setControl(motionMagicControlRequest);
     }
   }
   
@@ -188,12 +200,14 @@ public class ShooterPivot extends SubsystemBase {
     // Called only from periodic
     updateHoldPosition(); // Will check for limits if mode changed!
     
-    double power = pivotController.calculate(currentPivotAngle, holdPosition) + Constants.ShooterPivot.PIDController.F;
-    power = Math.min(power, .05);
-    power = Math.max(power, -.02);
+    // double power = pivotController.calculate(currentPivotAngle, holdPosition) + Constants.ShooterPivot.PIDController.F;
+    // power = Math.min(power, .15);
+    // power = Math.max(power, -.06);
     
-    percentOutControlRequest.Output = power;
-    pivotMotor.setControl(percentOutControlRequest);
+    // percentOutControlRequest.Output = power;
+    // pivotMotor.setControl(percentOutControlRequest);
+     motionMagicControlRequest.Position = (holdPosition/ 360) * Constants.ShooterPivot.pivotGearRatio;
+      pivotMotor.setControl(motionMagicControlRequest);
   }
   
   /*
@@ -217,13 +231,14 @@ public class ShooterPivot extends SubsystemBase {
         break;
       }
       
-      case Normal: {
+      case DefaultSpeaker:      
+      case Speaker: {
         // Enforce soft top and bottom limits
         if (currentPivotAngle < Constants.ShooterPivot.Limits.minPivotAngle && speed < 0.0) {
-          speed = -0.01;  // Set to minimum down speed since encoder says too low
+          speed = -0.02;  // Set to minimum down speed since encoder says too low
         }
         else if (currentPivotAngle > Constants.ShooterPivot.Limits.maxPivotAngle && speed > 0.0) {
-          speed = 0.03; // Set to miniumum up speed since encoder says too high
+          speed = 0.0; // Set to miniumum up speed since encoder says too high
         }
         break;
       }
@@ -259,8 +274,9 @@ public class ShooterPivot extends SubsystemBase {
     targetAngle = Math.max(targetAngle, Constants.ShooterPivot.Limits.minPivotAngle);
     switch (mState.getRobotMode()) {
       case Override:
+      case DefaultSpeaker:      
       case Auto:
-      case Normal: {
+      case Speaker: {
         // Just do the "normal" checks in these modes  
         targetAngle = Math.min(targetAngle, Constants.ShooterPivot.Limits.maxPivotAngle);
         break;
@@ -302,7 +318,8 @@ public class ShooterPivot extends SubsystemBase {
     double angle = Math.max(holdPosition, Constants.ShooterPivot.Limits.minPivotAngle);
     switch (mState.getRobotMode()) {
       case Auto:
-      case Normal:
+      case DefaultSpeaker:      
+      case Speaker:
       case Override: {
         // Just use the normal hold to current position -- don't need to do anything
         angle = Math.min(angle, Constants.ShooterPivot.Limits.maxPivotAngle);
@@ -338,11 +355,17 @@ public class ShooterPivot extends SubsystemBase {
   
   
   public double getPivotAngle(){
-    return pivotMedianFilter.calculate(lampreyEncoder.getAbsolutePosition() * 360);
+    // return pivotMedianFilter.calculate(lampreyEncoder.getAbsolutePosition() * 360);
+
+    return pivotMotor.getPosition().getValueAsDouble() / Constants.ShooterPivot.pivotGearRatio * 360;
   }
   
   public boolean atTarget(){
     return (Math.abs(currentPivotAngle - pivotTarget) < Constants.ShooterPivot.pivotTargetedThreshold);
+  }
+
+  public void zeroPivotEncoder(){
+    pivotMotor.setPosition(0.0);
   }
   
 }

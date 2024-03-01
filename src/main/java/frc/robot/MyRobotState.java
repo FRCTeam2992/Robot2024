@@ -10,15 +10,16 @@ public class MyRobotState {
     public static enum RobotModeState {
         Auto,
         Override,
-        Normal,
+        Speaker,
         Amp,
-        Endgame
+        Endgame,
+        DefaultSpeaker
     }
 
-    private RobotModeState robotMode = RobotModeState.Normal;
+    private RobotModeState robotMode = RobotModeState.Speaker;
 
     public MyRobotState() {
-        robotMode = RobotModeState.Normal;  // Always start as normal at boot
+        robotMode = RobotModeState.Speaker;  // Always start as normal at boot
     }
 
     public void setRobotMode(RobotModeState mode) {
@@ -45,9 +46,12 @@ public class MyRobotState {
         return robotMode == RobotModeState.Override;
     }
 
-    public boolean isNormalMode() {
-        return robotMode == RobotModeState.Normal;
+    public boolean isSpeakerMode() {
+        return robotMode == RobotModeState.Speaker;
     }
 
-
+    public boolean isDefaultSpeakerMode() {
+        return robotMode == RobotModeState.DefaultSpeaker;
+    }
+    
 }
