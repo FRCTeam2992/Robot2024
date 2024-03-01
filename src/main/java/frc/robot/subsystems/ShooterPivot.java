@@ -35,7 +35,7 @@ public class ShooterPivot extends SubsystemBase {
   private ProfiledPIDController profiledPivotController;
   private PIDController pivotController;
   
-  private DutyCycleEncoder lampreyEncoder;
+  // private DutyCycleEncoder lampreyEncoder;
   private double currentPivotAngle;  // Update from encoder via filter once per cycle
   
   private double pivotTarget;
@@ -64,7 +64,38 @@ public class ShooterPivot extends SubsystemBase {
     pivotMotorConfigs = new TalonFXConfiguration();
     pivotMotorConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     pivotMotorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    // pivotMotor.getConfigurator().apply(pivotMotorConfigs);
+
+    if (!Constants.ShooterPivot.PIDController.useCodePID) {
+      // Make sure we copy old PID values in motor over so we don't lose them
+      TalonFXConfiguration oldConfig = new TalonFXConfiguration();
+      pivotMotor.getConfigurator().refresh(oldConfig); // Get the old config
+
+      // Copy all slot 0 & MM paramters
+      pivotMotorConfigs.Slot0.kA = oldConfig.Slot0.kA;
+      pivotMotorConfigs.Slot0.kD = oldConfig.Slot0.kD;
+      pivotMotorConfigs.Slot0.kG = oldConfig.Slot0.kG;
+      pivotMotorConfigs.Slot0.kI = oldConfig.Slot0.kI;
+      pivotMotorConfigs.Slot0.kP = oldConfig.Slot0.kP;
+      pivotMotorConfigs.Slot0.kS = oldConfig.Slot0.kS;
+      pivotMotorConfigs.Slot0.kV = oldConfig.Slot0.kV;
+      pivotMotorConfigs.Slot0.StaticFeedforwardSign = oldConfig.Slot0.StaticFeedforwardSign;
+      pivotMotorConfigs.Slot0.GravityType = oldConfig.Slot0.GravityType;
+      pivotMotorConfigs.MotionMagic.MotionMagicAcceleration = oldConfig.MotionMagic.MotionMagicAcceleration;
+      pivotMotorConfigs.MotionMagic.MotionMagicCruiseVelocity = oldConfig.MotionMagic.MotionMagicCruiseVelocity;
+      pivotMotorConfigs.MotorOutput.PeakForwardDutyCycle = oldConfig.MotorOutput.PeakForwardDutyCycle;
+      pivotMotorConfigs.MotorOutput.PeakReverseDutyCycle = oldConfig.MotorOutput.PeakReverseDutyCycle;
+    } else {
+      pivotMotorConfigs.Slot0.kP = Constants.ShooterPivot.PIDController.P;
+      pivotMotorConfigs.Slot0.kI = Constants.ShooterPivot.PIDController.I;
+      pivotMotorConfigs.Slot0.kD = Constants.ShooterPivot.PIDController.D;
+      pivotMotorConfigs.Slot0.kS = Constants.ShooterPivot.PIDController.F;
+      pivotMotorConfigs.MotionMagic.MotionMagicAcceleration = Constants.ShooterPivot.PIDController.maxAcceleration;
+      pivotMotorConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.ShooterPivot.PIDController.maxVelocity;
+      pivotMotorConfigs.MotorOutput.PeakForwardDutyCycle = Constants.ShooterPivot.PIDController.peakForwardDutyCycle;
+      pivotMotorConfigs.MotorOutput.PeakReverseDutyCycle = Constants.ShooterPivot.PIDController.peakReverseDutyCycle;
+    }
+
+    pivotMotor.getConfigurator().apply(pivotMotorConfigs);
     
     pidConstraints = new TrapezoidProfile.Constraints(Constants.ShooterPivot.PIDController.maxVelocity, 
     Constants.ShooterPivot.PIDController.maxAcceleration);
@@ -77,11 +108,11 @@ public class ShooterPivot extends SubsystemBase {
     Constants.ShooterPivot.PIDController.I, Constants.ShooterPivot.PIDController.D);
     profiledPivotController.setTolerance(Constants.ShooterPivot.PIDController.pivotAngleTolerance);
     
-    lampreyEncoder = new DutyCycleEncoder(0);
+    // lampreyEncoder = new DutyCycleEncoder(0);
     // lampreyEncoder.setDistancePerRotation(1.0);
     
-    percentOutControlRequest = new DutyCycleOut(0.0);
-    motionMagicControlRequest = new MotionMagicDutyCycle(0.0);
+    percentOutControlRequest = new DutyCycleOut(0.0).withEnableFOC(true);
+    motionMagicControlRequest = new MotionMagicDutyCycle(0.0).withEnableFOC(true).withSlot(0);
     
     pivotMedianFilter = new MedianFilter(3);
     
@@ -179,7 +210,6 @@ public class ShooterPivot extends SubsystemBase {
       // power = Math.min(power, .40);
       // power = Math.max(power, -.25);
 
-
       
       holdPositionRecorded = true;
       holdPosition = position;
@@ -206,8 +236,8 @@ public class ShooterPivot extends SubsystemBase {
     
     // percentOutControlRequest.Output = power;
     // pivotMotor.setControl(percentOutControlRequest);
-     motionMagicControlRequest.Position = (holdPosition/ 360) * Constants.ShooterPivot.pivotGearRatio;
-      pivotMotor.setControl(motionMagicControlRequest);
+    motionMagicControlRequest.Position = (holdPosition / 360) * Constants.ShooterPivot.pivotGearRatio;
+    pivotMotor.setControl(motionMagicControlRequest);
   }
   
   /*
