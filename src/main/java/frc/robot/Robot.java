@@ -4,18 +4,25 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.SetLimeLightOdometryUpdates;
 
 public class Robot extends TimedRobot {
+  
   private Command m_autonomousCommand;
 
-  private RobotContainer m_robotContainer;
+  public static RobotContainer mRobotContainer;
 
   @Override
   public void robotInit() {
-    m_robotContainer = new RobotContainer();
+    mRobotContainer = new RobotContainer();
+
+    mRobotContainer.mDrivetrain.navx.zeroYaw();
+
   }
 
   @Override
@@ -24,7 +31,13 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    mRobotContainer.mDrivetrain.onDisable();
+
+    CommandScheduler.getInstance().schedule(
+          new SetLimeLightOdometryUpdates(mRobotContainer.mDrivetrain, false));
+
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -34,7 +47,22 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = mRobotContainer.getAutonomousCommand();
+
+    mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralModeValue.Brake);
+        mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralModeValue.Brake);
+
+        // Set the Drive Motors Current Limit
+    mRobotContainer.mDrivetrain.setDriveCurrentLimit(60.0, 60.0);
+
+        // Zero the gyro
+    mRobotContainer.mDrivetrain.navx.zeroYaw();
+
+        // Set the Drive Motors Ramp Rate
+    mRobotContainer.mDrivetrain.setDriveRampRate(0.0);
+
+    CommandScheduler.getInstance().schedule(
+          new SetLimeLightOdometryUpdates(mRobotContainer.mDrivetrain, true));
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -49,6 +77,16 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+
+    mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralModeValue.Brake);
+        mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralModeValue.Brake);
+
+    mRobotContainer.mDrivetrain.setDriveCurrentLimit(40.0, 40.0);
+        mRobotContainer.mDrivetrain.setDriveRampRate(0.25);
+
+    CommandScheduler.getInstance().schedule(
+              new SetLimeLightOdometryUpdates(mRobotContainer.mDrivetrain, true));
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
