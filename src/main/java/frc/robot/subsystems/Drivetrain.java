@@ -105,7 +105,7 @@ public class Drivetrain extends SubsystemBase {
     // Limelights
     public final LimeLight limeLightCameraBack;
     public final ArrayList<LimeLight> limelightList;
-    private double limeLightBlendedLatency = 0.0;
+    public double limeLightBlendedLatency = 0.0;
     private double[] limelightBackBotPose;
 
     private DataLog mDataLog;
@@ -146,6 +146,9 @@ public class Drivetrain extends SubsystemBase {
     private boolean autoRotate = false;
     private boolean loadingMode = false;
     private boolean useLimelightOdometryUpdates = false;
+    private int odometryResetCount = 0;
+    private boolean simpleOdometryReset = true;
+    public Pose2d resetPose = Constants.DrivetrainConstants.zeroPose;
 
     private boolean odomReadingTesting = false;
 
@@ -341,7 +344,6 @@ public class Drivetrain extends SubsystemBase {
 
             updateOdometryPose(swerveDriveModulePositions);
         }
-        limelightBackBotPose = limeLightCameraBack.getBotPose(getAllianceCoordinateSpace());
 
         if (Constants.dataLogging && DriverStation.isEnabled()) {
             double[] navxReading = { navx.getYaw(), navx.getPitch(), navx.getRoll() };
@@ -393,14 +395,6 @@ public class Drivetrain extends SubsystemBase {
                 }
             }
             dashboardCounter = 0;
-        }
-
-        if (useLimelightOdometryUpdates) {
-            calculateBlendedVisionPose();
-            if (latestVisionPoseValid) {
-                swerveDrivePoseEstimator.addVisionMeasurement(latestVisionPose,
-                        Timer.getFPGATimestamp() - limeLightBlendedLatency / 1000);
-            }
         }
     }
 
@@ -490,18 +484,6 @@ public class Drivetrain extends SubsystemBase {
 
     }
 
-    public void resetOdometry() {
-        swerveDrivePoseEstimator.resetPosition(Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions,
-                new Pose2d(0.0, 0.0, new Rotation2d()));
-    }
-
-    public void resetOdometryToPose(Pose2d initialPose) {
-        setGyroOffset(navx.getYaw() - initialPose.getRotation().getDegrees());
-        swerveDrivePoseEstimator.resetPosition(Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions,
-                initialPose);
-        latestSwervePose = initialPose;
-    }
-
     public double getGyroYaw() {
         double angle = navx.getYaw() + gyroOffset;
         while (angle > 180) {
@@ -565,6 +547,35 @@ public class Drivetrain extends SubsystemBase {
         this.loadingMode = loadingMode;
     }
 
+    public void resetOdometry() {
+        if (this.simpleOdometryReset) {
+            swerveDrivePoseEstimator.resetPosition(
+                    Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions,
+                    Constants.DrivetrainConstants.zeroPose);
+
+        } else {
+            setGyroOffset(navx.getYaw() - resetPose.getRotation().getDegrees());
+            swerveDrivePoseEstimator.resetPosition(Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions,
+                    resetPose);
+            latestSwervePose = resetPose;
+        }
+    }
+
+    public int getOdometryResetCount() {
+        return this.odometryResetCount;
+    }
+
+    public void scheduleOdometryReset() {
+        this.simpleOdometryReset = true;
+        this.odometryResetCount++;
+    }
+
+    public void scheduleOdometryReset(Pose2d initialPose) {
+        this.simpleOdometryReset = false;
+        this.resetPose = initialPose;
+        this.odometryResetCount++;
+    }
+
     public void onDisable() {
         setDriveNeutralMode(NeutralModeValue.Coast);
         setTurnNeutralMode(NeutralModeValue.Coast);
@@ -588,11 +599,17 @@ public class Drivetrain extends SubsystemBase {
 
     public Command ResetOdometry() {
         return runOnce(() -> {
-            resetOdometry();
+            this.scheduleOdometryReset();
         });
     }
 
-    private void calculateBlendedVisionPose() {
+    public Command ResetOdometryToPose(Pose2d initialPose) {
+        return runOnce(() -> {
+            this.scheduleOdometryReset(initialPose);
+        });
+    }
+
+    public void calculateBlendedVisionPose() {
         double sumX = 0.0;
         double sumY = 0.0;
         double sumTheta = 0.0;
@@ -604,6 +621,9 @@ public class Drivetrain extends SubsystemBase {
             latestVisionPoseValid = false;
             return;
         }
+
+        limelightBackBotPose = limeLightCameraBack.getBotPose(getAllianceCoordinateSpace());
+
         if (limeLightCameraBack.getTargetID() != -1) {
             double Ta = limeLightCameraBack.getTargetArea();
             totalArea += Ta;
@@ -648,6 +668,10 @@ public class Drivetrain extends SubsystemBase {
         frontRight.setDriveVelocity(swerveStates[2], swerveStates[3]);
         rearLeft.setDriveVelocity(swerveStates[4], swerveStates[5]);
         rearRight.setDriveVelocity(swerveStates[6], swerveStates[7]);
+    }
+
+    public boolean useLimeLightForOdometry() {
+        return useLimelightOdometryUpdates;
     }
 
     public void setLimeLightOdometryUpdates(boolean isUpdating) {
