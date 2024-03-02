@@ -13,6 +13,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -29,6 +30,8 @@ public class Shooter extends SubsystemBase {
   private double shooterTargetRPM = 200.0;
 
   private StatusSignal<Double> shooterVelocity;
+
+  private MedianFilter medianFilter;
 
   /** Creates a new Shooter. */
   public Shooter() {
@@ -74,12 +77,14 @@ public class Shooter extends SubsystemBase {
 
     shooterVelocity = shooterMotor.getVelocity();
 
+    medianFilter = new MedianFilter(5);
+
   }
 
   @Override
   public void periodic() {
     SmartDashboard.putData(this);
-    setShooterTargetRPM(SmartDashboard.getNumber("Set Shooter RPM", shooterTargetRPM));
+    setShooterTargetRPM(SmartDashboard.getNumber("Set Shooter RPM", medianFilter.calculate(shooterTargetRPM)));
     SmartDashboard.putNumber("Shooter Target RPM", getShooterTargetRPM());
     SmartDashboard.putNumber("Shooter RPM", getShooterRPM());
     // This method will be called once per scheduler run
@@ -100,8 +105,8 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setShooterRawVelocity(double velocity) {
-    velocityControlRequest.Velocity = velocity;
-    shooterMotor.setControl(velocityControlRequest);
+    motionMagicVelocityControlRequest.Velocity = velocity;
+    shooterMotor.setControl(motionMagicVelocityControlRequest);
   }
 
   public double getShooterRPM() {
@@ -110,7 +115,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public double getShooterTargetRPM() {
-    return shooterTargetRPM;
+    return shooterTargetRPM * 60;
   }
 
   public boolean atShooterRPM() {

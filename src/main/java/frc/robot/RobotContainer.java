@@ -65,7 +65,7 @@ public class RobotContainer {
     mFeeder.setDefaultCommand(new MoveFeeder(mFeeder, 0.0, false));
 
     mShooterPivot = new ShooterPivot(mRobotState);
-    mShooterPivot.setDefaultCommand(new StopShooterPivot(mShooterPivot));
+    mShooterPivot.setDefaultCommand(new HoldShooterPivot(mShooterPivot, mRobotState));
 
     mElevator = new Elevator();
     mElevator.setDefaultCommand(new StopElevator(mElevator));
@@ -86,7 +86,7 @@ public class RobotContainer {
 
     // Triggers
     controller0.leftTrigger(0.3).whileTrue(new AutoAim());
-    controller0.rightTrigger(0.3).whileTrue(new AutoShoot(mElevator, mFeeder, mIntake, mShooterPivot, mShooter));
+    controller0.rightTrigger(0.3).whileTrue(new AutoShoot(mElevator, mFeeder, mIntake, mShooterPivot, mShooter, mRobotState));
 
     // Bumpers
     controller0.leftBumper().onTrue(new InstantCommand(

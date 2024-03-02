@@ -9,6 +9,7 @@ import java.sql.Driver;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
+import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -34,9 +35,6 @@ public class ShooterPivot extends SubsystemBase {
 
   private DutyCycleOut percentOutControlRequest;
   private MotionMagicDutyCycle motionMagicControlRequest;
-
-  private ProfiledPIDController profiledPivotController;
-  private PIDController pivotController;
 
   // private DutyCycleEncoder lampreyEncoder;
   private double currentPivotAngle; // Update from encoder via filter once per cycle
@@ -91,9 +89,10 @@ public class ShooterPivot extends SubsystemBase {
       pivotMotorConfigs.Slot0.kP = Constants.ShooterPivot.PIDController.P;
       pivotMotorConfigs.Slot0.kI = Constants.ShooterPivot.PIDController.I;
       pivotMotorConfigs.Slot0.kD = Constants.ShooterPivot.PIDController.D;
-      pivotMotorConfigs.Slot0.kG = Constants.ShooterPivot.PIDController.F;
+      pivotMotorConfigs.Slot0.kG = Constants.ShooterPivot.PIDController.G;
       pivotMotorConfigs.MotionMagic.MotionMagicAcceleration = Constants.ShooterPivot.PIDController.maxAcceleration;
       pivotMotorConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.ShooterPivot.PIDController.maxVelocity;
+      pivotMotorConfigs.MotionMagic.MotionMagicJerk = Constants.ShooterPivot.PIDController.jerk;
       pivotMotorConfigs.MotorOutput.PeakForwardDutyCycle = Constants.ShooterPivot.PIDController.peakForwardDutyCycle;
       pivotMotorConfigs.MotorOutput.PeakReverseDutyCycle = Constants.ShooterPivot.PIDController.peakReverseDutyCycle;
     }
@@ -103,13 +102,13 @@ public class ShooterPivot extends SubsystemBase {
     pidConstraints = new TrapezoidProfile.Constraints(Constants.ShooterPivot.PIDController.maxVelocity,
         Constants.ShooterPivot.PIDController.maxAcceleration);
 
-    profiledPivotController = new ProfiledPIDController(Constants.ShooterPivot.PIDController.P,
-        Constants.ShooterPivot.PIDController.I, Constants.ShooterPivot.PIDController.D, pidConstraints);
-    profiledPivotController.setTolerance(Constants.ShooterPivot.PIDController.pivotAngleTolerance);
+    // profiledPivotController = new ProfiledPIDController(Constants.ShooterPivot.PIDController.P,
+    //     Constants.ShooterPivot.PIDController.I, Constants.ShooterPivot.PIDController.D, pidConstraints);
+    // profiledPivotController.setTolerance(Constants.ShooterPivot.PIDController.pivotAngleTolerance);
 
-    pivotController = new PIDController(Constants.ShooterPivot.PIDController.P,
-        Constants.ShooterPivot.PIDController.I, Constants.ShooterPivot.PIDController.D);
-    profiledPivotController.setTolerance(Constants.ShooterPivot.PIDController.pivotAngleTolerance);
+    // pivotController = new PIDController(Constants.ShooterPivot.PIDController.P,
+    //     Constants.ShooterPivot.PIDController.I, Constants.ShooterPivot.PIDController.D);
+    // profiledPivotController.setTolerance(Constants.ShooterPivot.PIDController.pivotAngleTolerance);
 
     // lampreyEncoder = new DutyCycleEncoder(0);
     // lampreyEncoder.setDistancePerRotation(1.0);
@@ -251,6 +250,7 @@ public class ShooterPivot extends SubsystemBase {
     // pivotMotor.setControl(percentOutControlRequest);
     motionMagicControlRequest.Position = (holdPosition / 360) * Constants.ShooterPivot.pivotGearRatio;
     pivotMotor.setControl(motionMagicControlRequest);
+    
   }
 
   /*

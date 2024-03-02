@@ -62,20 +62,21 @@ public class Constants {
         public static final double pivotLevelOffset = 0.0; // place holder // degrees added to pivot position to find
                                                            // position where level = 0
 
-        public static final double pivotGearRatio = 80.0;
+        public static final double pivotGearRatio = 60.0;
 
         public static class PIDController {
-            public static final boolean useCodePID = false; // Whether to overwrite PID values in motor
-            public static final double P = 0.00001; // Place holder
-            public static final double I = 0.0; // Place holder
-            public static final double D = 0.000; // Place holder
-            public static final double F = 0.01; // Place holder
+            public static final boolean useCodePID = true; // Whether to overwrite PID values in motor
+            public static final double P = 0.2; // Place holder
+            public static final double I = 0.02; // Place holder
+            public static final double D = 0.001; // Place holder
+            public static final double G = 0.0225; // Place holder
 
-            public static final double maxVelocity = 30.0; // degrees/second //Place holder
-            public static final double maxAcceleration = 60.0; // degrees/second^2 //Place holder
+            public static final double maxVelocity = 48.0; // degrees/second //Place holder
+            public static final double maxAcceleration = 480.0; // degrees/second^2 //Place holder
+            public static final double jerk = 4000.0;
 
-            public static final double peakForwardDutyCycle = 0.4; // Max forward motor power
-            public static final double peakReverseDutyCycle = -0.2; // Max reverse power
+            public static final double peakForwardDutyCycle = 1.0; // Max forward motor power
+            public static final double peakReverseDutyCycle = -1.0; // Max reverse power
 
             public static final double pivotAngleTolerance = 0.0; // Place holder
         }
