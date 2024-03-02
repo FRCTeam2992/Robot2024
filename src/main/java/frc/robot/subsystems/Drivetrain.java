@@ -104,34 +104,14 @@ public class Drivetrain extends SubsystemBase {
 
     // Limelights
     public final LimeLight limeLightCameraBack;
-    public final LimeLight limeLightCameraRight;
-    public final LimeLight limeLightCameraLeft;
+    public final ArrayList<LimeLight> limelightList;
     private double limeLightBlendedLatency = 0.0;
-    public ArrayList<LimeLight> limelightList;
+    private double[] limelightBackBotPose;
 
     private DataLog mDataLog;
 
-    // private StringLogEntry limelight11JsonLog;
-    // private StringLogEntry limelight12JsonLog;
-    // private StringLogEntry limelight13JsonLog;
-
-    // private DoubleArrayLogEntry ll11BotposeFieldSpaceLog;
-    // private DoubleArrayLogEntry ll12BotposeFieldSpaceLog;
-    // private DoubleArrayLogEntry ll13BotposeFieldSpaceLog;
-    // private DoubleArrayLogEntry llBackBotposeBlueLog;
-    // private DoubleArrayLogEntry llRightBotposeBlueLog;
-    // private DoubleArrayLogEntry llLeftBotposeBlueLog;
-    // private DoubleArrayLogEntry llBackBotposeRedLog;
-    // private DoubleArrayLogEntry llRightBotposeRedLog;
-    // private DoubleArrayLogEntry llLeftBotposeRedLog;
     private DoubleArrayLogEntry navxLog;
     private DoubleArrayLogEntry swerveCANCoderLog;
-    // private IntegerLogEntry llBackTargetIDLog;
-    // private IntegerLogEntry llRightTargetIDLog;
-    // private IntegerLogEntry llLeftTargetIDLog;
-    private double[] limelightBackBotPose;
-    private double[] limelightRightBotPose;
-    private double[] limelightLeftBotPose;
 
     // Robot Gyro
     public AHRS navx;
@@ -165,7 +145,7 @@ public class Drivetrain extends SubsystemBase {
     private boolean doFieldOrient = true;
     private boolean autoRotate = false;
     private boolean loadingMode = false;
-    private boolean useLimelightOdometryUpdates;
+    private boolean useLimelightOdometryUpdates = false;
 
     private boolean odomReadingTesting = false;
 
@@ -299,44 +279,16 @@ public class Drivetrain extends SubsystemBase {
         loadMotionPaths();
 
         // Limelight
-        limelightList = new ArrayList<>();
         limeLightCameraBack = new LimeLight("limelight-back");
-        limelightList.add(limeLightCameraBack);
-        limeLightCameraRight = new LimeLight("limelight-right");
-        limelightList.add(limeLightCameraRight);
-        limeLightCameraLeft = new LimeLight("limelight-left");
-        limelightList.add(limeLightCameraLeft);
         limelightBackBotPose = new double[7];
-        limelightRightBotPose = new double[7];
-        limelightLeftBotPose = new double[7];
+
+        limelightList = new ArrayList<LimeLight>();
+        limelightList.add(limeLightCameraBack);
 
         if (Constants.dataLogging) {
             mDataLog = DataLogManager.getLog();
-
-            // limelight11JsonLog = new StringLogEntry(mDataLog, "/ll/eleven/json");
-            // limelight12JsonLog = new StringLogEntry(mDataLog, "/ll/twelve/json");
-            // limelight13JsonLog = new StringLogEntry(mDataLog, "/ll/thirteen/json");
-
-            // ll11BotposeFieldSpaceLog = new DoubleArrayLogEntry(mDataLog,
-            // "/ll/eleven/botpose_field");
-            // ll12BotposeFieldSpaceLog = new DoubleArrayLogEntry(mDataLog,
-            // "/ll/twelve/botpose_field");
-
-            // llBackBotposeBlueLog = new DoubleArrayLogEntry(mDataLog, "/ll/eleven/botpose_blue");
-            // llRightBotposeBlueLog = new DoubleArrayLogEntry(mDataLog, "/ll/twelve/botpose_blue");
-            // llLeftBotposeBlueLog = new DoubleArrayLogEntry(mDataLog, "/ll/thirteen/botpose_blue");
-
-            // llBackBotposeRedLog = new DoubleArrayLogEntry(mDataLog, "/ll/eleven/botpose_red");
-            // llRightBotposeRedLog = new DoubleArrayLogEntry(mDataLog, "/ll/twelve/botpose_red");
-            // llLeftBotposeRedLog = new DoubleArrayLogEntry(mDataLog, "/ll/thirteen/botpose_red");
-
-            // llBackTargetIDLog = new IntegerLogEntry(mDataLog, "/ll/eleven/target_id");
-            // llRightTargetIDLog = new IntegerLogEntry(mDataLog, "/ll/twelve/target_id");
-            // llLeftTargetIDLog = new IntegerLogEntry(mDataLog, "/ll/thirteen/target_id");
-
             navxLog = new DoubleArrayLogEntry(mDataLog, "/Drivetrain/navx/positions");
             swerveCANCoderLog = new DoubleArrayLogEntry(mDataLog, "/Drivetrain/Swerve/CANCoders");
-
         }
 
         // robot gyro initialization
@@ -357,7 +309,6 @@ public class Drivetrain extends SubsystemBase {
         // Serve Drive Odometry
         swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(
                 swerveDriveKinematics,
-                // Rotation2d.fromDegrees(navx.getYaw()),
                 Rotation2d.fromDegrees(getGyroYaw()),
                 swerveDriveModulePositions,
                 new Pose2d(0.0, 0.0, new Rotation2d()),
@@ -390,36 +341,9 @@ public class Drivetrain extends SubsystemBase {
 
             updateOdometryPose(swerveDriveModulePositions);
         }
-
         limelightBackBotPose = limeLightCameraBack.getBotPose(getAllianceCoordinateSpace());
-        limelightRightBotPose = limeLightCameraRight.getBotPose(getAllianceCoordinateSpace());
-        limelightLeftBotPose = limeLightCameraLeft.getBotPose(getAllianceCoordinateSpace());
 
         if (Constants.dataLogging && DriverStation.isEnabled()) {
-            // limelight11JsonLog.append(limeLightCamera11.getLimelightJson());
-            // limelight12JsonLog.append(limeLightCamera12.getLimelightJson());
-            // limelight13JsonLog.append(limeLightCamera13.getLimelightJson());
-
-            // ll11BotposeFieldSpaceLog.append(limeLightCamera11.getBotPose(CoordinateSpace.Field));
-            // ll12BotposeFieldSpaceLog.append(limeLightCamera12.getBotPose(CoordinateSpace.Field));
-            // ll13BotposeFieldSpaceLog.append(limeLightCamera13.getBotPose(CoordinateSpace.Field));
-
-            // llBackBotposeBlueLog.append(limeLightCameraBack.getBotPose(CoordinateSpace.Blue));
-            // llRightBotposeBlueLog.append(limeLightCameraRight.getBotPose(CoordinateSpace.Blue));
-            // llLeftBotposeBlueLog.append(limeLightCameraLeft.getBotPose(CoordinateSpace.Blue));
-
-            // //
-            // llBackBotposeRedLog.append(limeLightCameraBack.getBotPose(CoordinateSpace.Red));
-            // llRightBotposeRedLog.append(limeLightCameraRight.getBotPose(CoordinateSpace.Red));
-            // llLeftBotposeRedLog.append(limeLightCameraLeft.getBotPose(CoordinateSpace.Red));
-
-            // llBackTargetIDLog.append(limeLightCameraBack.getTargetID());
-            // llRightTargetIDLog.append(limeLightCameraRight.getTargetID());
-            // llLeftTargetIDLog.append(limeLightCameraLeft.getTargetID());
-            // // llBackTargetIDLog.append(limeLightCameraBack.getTargetID());
-            // llRightTargetIDLog.append(limeLightCameraRight.getTargetID());
-            // llLeftTargetIDLog.append(limeLightCameraLeft.getTargetID());
-
             double[] navxReading = { navx.getYaw(), navx.getPitch(), navx.getRoll() };
             navxLog.append(navxReading);
 
@@ -447,77 +371,18 @@ public class Drivetrain extends SubsystemBase {
                 SmartDashboard.putNumber("Back Left Encoder Angle", rearLeftModule.getEncoderAngle());
                 SmartDashboard.putNumber("Back Right Encoder Angle", rearRightModule.getEncoderAngle());
 
+                SmartDashboard.putNumber("Gyro Yaw (raw deg)", navx.getYaw());
+                SmartDashboard.putNumber("Gyro Yaw (adj deg)", getGyroYaw());
+                SmartDashboard.putNumber("Robot Gyro Pitch (raw deg)", getRobotPitch()); // Navx Roll
             }
-            SmartDashboard.putNumber("front left encoder", frontLeftModule.getEncoderAngle());
-            SmartDashboard.putNumber("front right encoder", frontRightModule.getEncoderAngle());
-            SmartDashboard.putNumber("back left encoder", rearLeftModule.getEncoderAngle());
-            SmartDashboard.putNumber("back right encoder", rearRightModule.getEncoderAngle());
 
-            SmartDashboard.putNumber("Gyro Yaw (raw deg)", navx.getYaw());
-            SmartDashboard.putNumber("Gyro Yaw (adj deg)", getGyroYaw());
-            SmartDashboard.putNumber("Robot Gyro Pitch (raw deg)", getRobotPitch()); // Navx Roll
-
-            // if (limeLightCameraBack.getTargetID() > 0) {
-            // if (Constants.debugDashboard) {
-            // SmartDashboard.putNumber("Limelight Pose X (m)", limelightBackBotPose[0]);
-            // SmartDashboard.putNumber("Limelight Pose Y (m)", limelightBackBotPose[1]);
-            // SmartDashboard.putNumber("Limelight Pose Yaw (deg)",
-            // limelightBackBotPose[5]);
-            // // SmartDashboard.putNumber("Limelight Pose Latency (ms)",
-            // // limelight11BotPose[6]);
-            // }
-            // }
-
-            if (Constants.debugDashboard) {
-                if (limeLightCameraBack.getTargetID() > 0) {
-                    if (Constants.debugDashboard) {
-                        SmartDashboard.putNumber("Limelight Back Pose X (m)",
-                                limelightBackBotPose[0]);
-                        SmartDashboard.putNumber("Limelight Back Pose Y (m)",
-                                limelightBackBotPose[1]);
-                        SmartDashboard.putNumber("Limelight Back Pose Yaw (deg)",
-                                limelightBackBotPose[5]);
-                        SmartDashboard.putNumber("Limelight Back Pose Latency (ms)",
-                                limelightBackBotPose[6]);
-                    }
-                }
-                if (limeLightCameraRight.getTargetID() > 0) {
-                    if (Constants.debugDashboard) {
-                        SmartDashboard.putNumber("Limelight Right Pose X (m)",
-                                limelightRightBotPose[0]);
-                        SmartDashboard.putNumber("Limelight Right Pose Y (m)",
-                                limelightRightBotPose[1]);
-                        SmartDashboard.putNumber("Limelight Right Pose Yaw (deg)",
-                                limelightRightBotPose[5]);
-                        SmartDashboard.putNumber("Limelight Right Pose Latency (ms)",
-                                limelightRightBotPose[6]);
-                    }
-                }
-                if (limeLightCameraLeft.getTargetID() > 0) {
-                    if (Constants.debugDashboard) {
-                        SmartDashboard.putNumber("Limelight Left Pose X (m)",
-                                limelightLeftBotPose[0]);
-                        SmartDashboard.putNumber("Limelight Left Pose Y (m)",
-                                limelightLeftBotPose[1]);
-                        SmartDashboard.putNumber("Limelight Left Pose Yaw (deg)",
-                                limelightLeftBotPose[5]);
-                        SmartDashboard.putNumber("Limelight Left Pose Latency (ms)",
-                                limelightLeftBotPose[6]);
-                    }
-                }
-
-                SmartDashboard.putNumber("Limelight Back Tid",
-                        limeLightCameraBack.getTargetID());
-                SmartDashboard.putNumber("Limelight Back Ta",
-                        limeLightCameraBack.getTargetArea());
-                SmartDashboard.putNumber("Limelight Right Tid",
-                        limeLightCameraRight.getTargetID());
-                SmartDashboard.putNumber("Limelight Right Ta",
-                        limeLightCameraRight.getTargetArea());
-                SmartDashboard.putNumber("Limelight Left Tid",
-                        limeLightCameraLeft.getTargetID());
-                SmartDashboard.putNumber("Limelight Left Ta",
-                        limeLightCameraLeft.getTargetArea());
+            if (Constants.debugDashboard && limeLightCameraBack.getTargetID() > 0) {
+                SmartDashboard.putNumber("Limelight Back Pose X (m)", limelightBackBotPose[0]);
+                SmartDashboard.putNumber("Limelight Back Pose Y (m)", limelightBackBotPose[1]);
+                SmartDashboard.putNumber("Limelight Back Pose Yaw (deg)", limelightBackBotPose[5]);
+                SmartDashboard.putNumber("Limelight Back Pose Latency (ms)", limelightBackBotPose[6]);
+                SmartDashboard.putNumber("Limelight Back Tid", limeLightCameraBack.getTargetID());
+                SmartDashboard.putNumber("Limelight Back Ta", limeLightCameraBack.getTargetArea());
 
                 if (latestVisionPose != null) {
                     SmartDashboard.putNumber("Limelight Blended X (m)", latestVisionPose.getX());
@@ -537,14 +402,6 @@ public class Drivetrain extends SubsystemBase {
                         Timer.getFPGATimestamp() - limeLightBlendedLatency / 1000);
             }
         }
-
-        // if (this.mRobotState.useLimelightOdometryUpdates) {
-        // calculateBlendedVisionPose();
-        // if (latestVisionPoseValid) {
-        // swerveDrivePoseEstimator.addVisionMeasurement(latestVisionPose,
-        // Timer.getFPGATimestamp() - limeLightBlendedLatency / 1000);
-        // }
-        // }
     }
 
     public CoordinateSpace getAllianceCoordinateSpace() {
@@ -754,22 +611,6 @@ public class Drivetrain extends SubsystemBase {
             sumY += Ta * limelightBackBotPose[1];
             sumTheta += Ta * limelightBackBotPose[5];
             sumLatency += Ta * limelightBackBotPose[6];
-        }
-        if (limeLightCameraRight.getTargetID() != -1) {
-            double Ta = limeLightCameraRight.getTargetArea();
-            totalArea += Ta;
-            sumX += Ta * limelightRightBotPose[0];
-            sumY += Ta * limelightRightBotPose[1];
-            sumTheta += Ta * limelightRightBotPose[5];
-            sumLatency += Ta * limelightRightBotPose[6];
-        }
-        if (limeLightCameraLeft.getTargetID() != -1) {
-            double Ta = limeLightCameraLeft.getTargetArea();
-            totalArea += Ta;
-            sumX += Ta * limelightLeftBotPose[0];
-            sumY += Ta * limelightLeftBotPose[1];
-            sumTheta += Ta * limelightLeftBotPose[5];
-            sumLatency += Ta * limelightLeftBotPose[6];
         }
 
         SmartDashboard.putNumber("Limelight TotalArea", totalArea);
