@@ -11,11 +11,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.lib.drive.swerve.OdometryThread;
 import frc.robot.MyRobotState.RobotModeState;
 import frc.robot.commands.AutoAim;
 import frc.robot.commands.AutoIntake;
 import frc.robot.commands.AutoShoot;
 import frc.robot.commands.ChangeClimbMode;
+import frc.robot.commands.DisableFieldOrientToggle;
+import frc.robot.commands.DriveSticks;
 import frc.robot.commands.ElevatorSticks;
 import frc.robot.commands.HoldShooterPivot;
 import frc.robot.commands.MoveElevator;
@@ -23,14 +26,17 @@ import frc.robot.commands.MoveFeeder;
 import frc.robot.commands.MoveIntake;
 import frc.robot.commands.MoveShooter;
 import frc.robot.commands.MoveShooterPivot;
+import frc.robot.commands.ResetGyro;
 import frc.robot.commands.SetElevatorTargetPosition;
 import frc.robot.commands.SetPivotToTargetAngle;
+import frc.robot.commands.SetSwerveAngle;
 import frc.robot.commands.StartShooter;
 import frc.robot.commands.StopElevator;
 import frc.robot.commands.StopIntake;
 import frc.robot.commands.StopShooter;
 import frc.robot.commands.StopShooterPivot;
 import frc.robot.commands.ZeroElevator;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
@@ -41,6 +47,9 @@ public class RobotContainer {
 
   public MyRobotState mRobotState;
 
+  public OdometryThread mOdometryThread;
+
+  public Drivetrain mDrivetrain;
   public final Shooter mShooter;
   private Intake mIntake;
   private Feeder mFeeder;
@@ -54,6 +63,14 @@ public class RobotContainer {
   public RobotContainer() {
 
     mRobotState = new MyRobotState();
+
+    mDrivetrain = new Drivetrain();
+    if (Constants.DrivetrainConstants.odometryThread) {
+      mOdometryThread = new OdometryThread(mDrivetrain);
+      mOdometryThread.setFastMode();
+      mOdometryThread.start();
+    }
+    mDrivetrain.setDefaultCommand(new DriveSticks(mDrivetrain, mRobotState));
 
     mShooter = new Shooter();
     mShooter.setDefaultCommand(new StopShooter(mShooter));
@@ -77,16 +94,15 @@ public class RobotContainer {
 
     configureBindings();
     configureSmartDashboard();
-
   }
 
   private void configureBindings() {
-
     // Controller 0 (A)
 
     // Triggers
     controller0.leftTrigger(0.3).whileTrue(new AutoAim());
-    controller0.rightTrigger(0.3).whileTrue(new AutoShoot(mElevator, mFeeder, mIntake, mShooterPivot, mShooter, mRobotState));
+    controller0.rightTrigger(0.3)
+        .whileTrue(new AutoShoot(mElevator, mFeeder, mIntake, mShooterPivot, mShooter, mRobotState));
 
     // Bumpers
     controller0.leftBumper().onTrue(new InstantCommand(
@@ -112,31 +128,38 @@ public class RobotContainer {
     // controller0.x().whileTrue(new XWheels());
     controller0.y().whileTrue(new MoveIntake(mIntake, Constants.Intake.Speeds.outakingPieceSpeed)
         .alongWith(new MoveFeeder(mFeeder, Constants.Feeder.Speeds.outakingPieceSpeed, false)));
-    
+
     // Start/Back
-    // controller0.start().onTrue(new resetFieldorrient());
+    controller0.start().onTrue(new ResetGyro(mDrivetrain));
 
-    //Controller 1 (B)
+    SmartDashboard.putData(new SetSwerveAngle(mDrivetrain, 90.0, 90.0, 90.0, 90.0));
 
-    //Triggers
+    // Controller 1 (B)
+
+    // Triggers
     controller1.rightTrigger(0.3).whileTrue(new MoveIntake(mIntake, Constants.Intake.Speeds.outakingPieceSpeed)
         .alongWith(new MoveFeeder(mFeeder, Constants.Feeder.Speeds.outakingPieceSpeed, false)));
-    
-    //Bumpers
-    controller1.leftBumper().onTrue(new InstantCommand(() -> {mRobotState.setRobotMode(RobotModeState.DefaultSpeaker);}));
+
+    // Bumpers
+    controller1.leftBumper().onTrue(new InstantCommand(() -> {
+      mRobotState.setRobotMode(RobotModeState.DefaultSpeaker);
+    }));
     controller1.rightBumper().onTrue(new AutoIntake(mElevator, mFeeder, mIntake, mShooterPivot));
 
-    //POV
+    // POV
     controller1.povUp().whileTrue(new MoveShooterPivot(mShooterPivot, 0.1));
     controller1.povDown().whileTrue(new MoveShooterPivot(mShooterPivot, -0.04));
-    
-    //ABXY
-    controller1.a().onTrue(new InstantCommand(() -> {mRobotState.setRobotMode(RobotModeState.Speaker);}));
-    controller1.b().onTrue(new InstantCommand(() -> {mRobotState.setRobotMode(RobotModeState.Amp);}));
-    controller1.y().onTrue(new InstantCommand(() -> {mRobotState.setRobotMode(RobotModeState.Endgame);}));
-    
 
-
+    // ABXY
+    controller1.a().onTrue(new InstantCommand(() -> {
+      mRobotState.setRobotMode(RobotModeState.Speaker);
+    }));
+    controller1.b().onTrue(new InstantCommand(() -> {
+      mRobotState.setRobotMode(RobotModeState.Amp);
+    }));
+    controller1.y().onTrue(new InstantCommand(() -> {
+      mRobotState.setRobotMode(RobotModeState.Endgame);
+    }));
 
     controller0.povUp().whileTrue(new MoveElevator(mElevator, mShooterPivot, 0.15));
     controller0.povDown().whileTrue(new MoveElevator(mElevator, mShooterPivot, -0.05));
@@ -182,11 +205,17 @@ public class RobotContainer {
     SmartDashboard.putData("AutoIntake", new MoveIntake(mIntake, 0.15).alongWith(new MoveFeeder(mFeeder, 0.20, false)));
     SmartDashboard.putData("AutoIntakeStop", new MoveIntake(mIntake, 0).alongWith(new MoveFeeder(mFeeder, 0, false)));
 
-    SmartDashboard.putData("Zero pivot encoder", new InstantCommand(() -> {mShooterPivot.zeroPivotEncoder();}));
+    SmartDashboard.putData("Zero pivot encoder", new InstantCommand(() -> {
+      mShooterPivot.zeroPivotEncoder();
+    }));
 
   }
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
+  }
+
+  public CommandXboxController getController0() {
+    return this.controller0;
   }
 }
