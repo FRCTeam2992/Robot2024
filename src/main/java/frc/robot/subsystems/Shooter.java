@@ -66,7 +66,9 @@ public class Shooter extends SubsystemBase {
       shooterMotorConfigs.Slot0.kD = Constants.Shooter.ShooterPIDConstants.D;
       shooterMotorConfigs.Slot0.kV = Constants.Shooter.ShooterPIDConstants.V;
       shooterMotorConfigs.MotionMagic.MotionMagicAcceleration = Constants.Shooter.ShooterPIDConstants.acceleration;
-      shooterMotorConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.Shooter.ShooterPIDConstants.cruiseVelocity;
+      // shooterMotorConfigs.MotionMagic.MotionMagicCruiseVelocity =
+      // Constants.Shooter.ShooterPIDConstants.cruiseVelocity;
+      shooterMotorConfigs.MotionMagic.MotionMagicJerk = Constants.Shooter.ShooterPIDConstants.jerk;
     }
 
     shooterMotor.getConfigurator().apply(shooterMotorConfigs);

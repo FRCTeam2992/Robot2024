@@ -37,14 +37,16 @@ public class Constants {
         }
 
         public static class ShooterPIDConstants {
-            public static final boolean useCodePID = false; // Whether to overwrite PID values in motor
+            public static final boolean useCodePID = true; // Whether to overwrite PID values in motor
 
-            public static double P = 0.0001; // Place holder
+            public static double P = 0.0005; // Place holder
             public static double I = 0.0; // Place holder
             public static double D = 0.0; // Place holder
-            public static double V = 0.0; // Place holder
-            public static double acceleration = 0.0; // Place holder
-            public static double cruiseVelocity = 0.0; // Place holder
+            public static double V = 0.01; // Place holder
+            public static double S = 0.01;
+            public static double acceleration = 100; // Place holder
+            public static double jerk = 400;
+            // public static double cruiseVelocity = 0.0; // Place holder
 
         }
     }

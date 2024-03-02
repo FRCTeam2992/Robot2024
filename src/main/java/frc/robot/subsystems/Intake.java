@@ -34,10 +34,10 @@ public class Intake extends SubsystemBase {
     intakeLeadMotor.getConfigurator().apply(intakeMotorConfigs);
     intakeFollowMotor.getConfigurator().apply(intakeMotorConfigs);
 
-    intakeFollowMotor.setControl(new Follower(Constants.Intake.intakeLeadMotorID, false));
+    intakeFollowMotor.setControl(new Follower(Constants.Intake.intakeLeadMotorID,
+        false));
 
-
-    percentOutControlRequest = new DutyCycleOut(0.0);
+    percentOutControlRequest = new DutyCycleOut(0.0).withEnableFOC(false);
   }
 
   @Override
@@ -48,5 +48,7 @@ public class Intake extends SubsystemBase {
 
   public void setIntakeSpeed(double speed) {
     intakeLeadMotor.setControl(percentOutControlRequest.withOutput(speed));
+    // intakeFollowMotor.setControl(percentOutControlRequest.withOutput(speed));
+
   }
 }
