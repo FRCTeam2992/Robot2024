@@ -70,7 +70,7 @@ public class RobotContainer {
       mOdometryThread.setFastMode();
       mOdometryThread.start();
     }
-    mDrivetrain.setDefaultCommand(new DriveSticks(mDrivetrain));
+    mDrivetrain.setDefaultCommand(new DriveSticks(mDrivetrain, mRobotState));
 
     mShooter = new Shooter();
     mShooter.setDefaultCommand(new StopShooter(mShooter));
@@ -213,5 +213,9 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
+  }
+
+  public CommandXboxController getController0() {
+    return this.controller0;
   }
 }

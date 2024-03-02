@@ -135,9 +135,16 @@ public class Constants {
         }
 
         // Field Coordinates
-        public static class FieldSize {
+        public static class Field {
             public static double FIELD_WIDTH_METERS = 8.02;
-            public static double FIELD_LENGTH_METERS = 16.04;
+            public static double FIELD_LENGTH_METERS = 16.522;
+            public static double goalX = 0.363;
+            public static double blueGoalY = 5.43;
+            public static double redGoalY = 2.66;
+        }
+
+        public static class StageAngles{
+            public static double[] angles = {120.0, -120.0, 0.0, 0.0, 120.0, -120.0}; //position 0 corresponds to id 11, 1 to 12, 2 to 13 ...
         }
     }
 
