@@ -1,4 +1,4 @@
-package frc.lib.Ranging;
+package frc.lib.range;
 
 public class NoteDataPoint implements Comparable<NoteDataPoint> {
 

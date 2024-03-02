@@ -1,4 +1,4 @@
-package frc.lib.Ranging;
+package frc.lib.range;
 
 import java.util.ArrayList;
 import java.util.Collections;
