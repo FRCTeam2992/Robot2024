@@ -5,26 +5,34 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.SetElevatorTargetPosition;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
-  private RobotContainer m_robotContainer;
+  public static RobotContainer mRobotContainer;
 
   @Override
   public void robotInit() {
-    m_robotContainer = new RobotContainer();
+    mRobotContainer = new RobotContainer();
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    // SmartDashboard.putNumber("Elevator Current Out",
+    // mRobotContainer.mPDH.getCurrent(6));
+    SmartDashboard.putString("Robot State", mRobotContainer.mRobotState.getRobotMode().toString());
+
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    mRobotContainer.mRobotState.setRobotMode(MyRobotState.RobotModeState.Speaker);
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -34,7 +42,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    mRobotContainer.mRobotState.setRobotMode(MyRobotState.RobotModeState.Auto);
+    m_autonomousCommand = mRobotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -49,19 +58,23 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    mRobotContainer.mRobotState.setRobotMode(MyRobotState.RobotModeState.Speaker);
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
   @Override
   public void teleopExit() {}
 
   @Override
   public void testInit() {
+    mRobotContainer.mRobotState.setRobotMode(MyRobotState.RobotModeState.Speaker);
     CommandScheduler.getInstance().cancelAll();
   }
 
