@@ -379,12 +379,14 @@ public class Drivetrain extends SubsystemBase {
             }
 
             if (Constants.debugDashboard && limeLightCameraBack.getTargetID() > 0) {
-                SmartDashboard.putNumber("Limelight Back Pose X (m)", limelightBackBotPose[0]);
-                SmartDashboard.putNumber("Limelight Back Pose Y (m)", limelightBackBotPose[1]);
-                SmartDashboard.putNumber("Limelight Back Pose Yaw (deg)", limelightBackBotPose[5]);
-                SmartDashboard.putNumber("Limelight Back Pose Latency (ms)", limelightBackBotPose[6]);
-                SmartDashboard.putNumber("Limelight Back Tid", limeLightCameraBack.getTargetID());
-                SmartDashboard.putNumber("Limelight Back Ta", limeLightCameraBack.getTargetArea());
+                if (limelightBackBotPose != null) {
+                    SmartDashboard.putNumber("Limelight Back Pose X (m)", limelightBackBotPose[0]);
+                    SmartDashboard.putNumber("Limelight Back Pose Y (m)", limelightBackBotPose[1]);
+                    SmartDashboard.putNumber("Limelight Back Pose Yaw (deg)", limelightBackBotPose[5]);
+                    SmartDashboard.putNumber("Limelight Back Pose Latency (ms)", limelightBackBotPose[6]);
+                    SmartDashboard.putNumber("Limelight Back Tid", limeLightCameraBack.getTargetID());
+                    SmartDashboard.putNumber("Limelight Back Ta", limeLightCameraBack.getTargetArea());
+                }
 
                 if (latestVisionPose != null) {
                     SmartDashboard.putNumber("Limelight Blended X (m)", latestVisionPose.getX());
@@ -624,13 +626,15 @@ public class Drivetrain extends SubsystemBase {
 
         limelightBackBotPose = limeLightCameraBack.getBotPose(getAllianceCoordinateSpace());
 
-        if (limeLightCameraBack.getTargetID() != -1) {
-            double Ta = limeLightCameraBack.getTargetArea();
-            totalArea += Ta;
-            sumX += Ta * limelightBackBotPose[0];
-            sumY += Ta * limelightBackBotPose[1];
-            sumTheta += Ta * limelightBackBotPose[5];
-            sumLatency += Ta * limelightBackBotPose[6];
+        if (limelightBackBotPose != null) {
+            if (limeLightCameraBack.getTargetID() != -1) {
+                double Ta = limeLightCameraBack.getTargetArea();
+                totalArea += Ta;
+                sumX += Ta * limelightBackBotPose[0];
+                sumY += Ta * limelightBackBotPose[1];
+                sumTheta += Ta * limelightBackBotPose[5];
+                sumLatency += Ta * limelightBackBotPose[6];
+            }
         }
 
         SmartDashboard.putNumber("Limelight TotalArea", totalArea);
