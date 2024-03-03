@@ -79,7 +79,7 @@ public class RobotContainer {
     mDrivetrain.setDefaultCommand(new DriveSticks(mDrivetrain, mRobotState));
 
     mShooter = new Shooter();
-    mShooter.setDefaultCommand(new StopShooter(mShooter));
+    // mShooter.setDefaultCommand(new StopShooter(mShooter));
 
     mIntake = new Intake();
     mIntake.setDefaultCommand(new StopIntake(mIntake));
