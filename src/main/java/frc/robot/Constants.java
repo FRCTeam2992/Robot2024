@@ -144,6 +144,8 @@ public class Constants {
             public static double goalX = 0.363;
             public static double blueGoalY = 5.43;
             public static double redGoalY = 2.66;
+            public static Translation2d redGoalTarget = new Translation2d(goalX, redGoalY);
+            public static Translation2d blueGoalTarget = new Translation2d(goalX, blueGoalY);
         }
 
         public static class StageAngles{
@@ -178,6 +180,8 @@ public class Constants {
         public static class DeviceIDs {
             public static int shooterMotorID = 8;
         }
+
+        public static final double defaultShooterSpeed = 1500; // RPM
 
         public static class ShooterPIDConstants {
             public static final boolean useCodePID = true; // Whether to overwrite PID values in motor
@@ -239,7 +243,7 @@ public class Constants {
         }
 
         public static class Positions {
-            public static final double intakingPiece = 15.0; // Place holder
+            public static final double intakingPiece = 20.0; // Place holder
             public static final double pivotSafeZone = 13.0; // PlaceHolder
         }
     }
@@ -293,6 +297,9 @@ public class Constants {
         public static class Positions {
             public static final double intakingPiece = 0.0; // Place holder
             public static final double safeZoneTop = 7.5; // placeholder
+            public static final double speakerShooting = 0.0;
+            public static final double ampScoring = 15.0; // placeholder
+            public static final double trapScoring = 20.0; // placeholder
         }
 
         public static class Climb {

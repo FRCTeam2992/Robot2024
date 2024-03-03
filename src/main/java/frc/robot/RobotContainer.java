@@ -11,7 +11,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+
 import frc.lib.drive.swerve.OdometryThread;
+import frc.lib.range.NoteDataPoint;
+import frc.lib.range.NoteInterpolator;
 import frc.robot.MyRobotState.RobotModeState;
 import frc.robot.commands.AutoAim;
 import frc.robot.commands.AutoIntake;
@@ -46,6 +49,7 @@ import frc.robot.subsystems.ShooterPivot;
 public class RobotContainer {
 
   public MyRobotState mRobotState;
+  public NoteInterpolator mNoteInterpolator;
 
   public OdometryThread mOdometryThread;
 
@@ -63,6 +67,8 @@ public class RobotContainer {
   public RobotContainer() {
 
     mRobotState = new MyRobotState();
+
+    initNoteInterp();
 
     mDrivetrain = new Drivetrain();
     if (Constants.DrivetrainConstants.odometryThread) {
@@ -100,7 +106,8 @@ public class RobotContainer {
     // Controller 0 (A)
 
     // Triggers
-    controller0.leftTrigger(0.3).whileTrue(new AutoAim());
+    controller0.leftTrigger(0.3).whileTrue(new AutoAim(mElevator, mShooterPivot,
+        mShooter, mRobotState, mNoteInterpolator, mDrivetrain));
     controller0.rightTrigger(0.3)
         .whileTrue(new AutoShoot(mElevator, mFeeder, mIntake, mShooterPivot, mShooter, mRobotState));
 
@@ -217,5 +224,14 @@ public class RobotContainer {
 
   public CommandXboxController getController0() {
     return this.controller0;
+  }
+
+  private void initNoteInterp() {
+    mNoteInterpolator = new NoteInterpolator();
+
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(54.0, 4500, 47.5));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(106, 4500, 31.5));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(200, 4500, 30.0));
+
   }
 }
