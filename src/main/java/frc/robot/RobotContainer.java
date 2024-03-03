@@ -209,6 +209,7 @@ public class RobotContainer {
       mShooterPivot.zeroPivotEncoder();
     }));
 
+    SmartDashboard.putData("Reset odometry", mDrivetrain.ResetOdometry());
   }
 
   public Command getAutonomousCommand() {
