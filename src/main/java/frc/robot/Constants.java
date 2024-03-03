@@ -158,7 +158,7 @@ public class Constants {
         public static final int intakeFollowMotorID = 11;
 
         public static class Speeds {
-            public static final double intakingPieceSpeed = 0.4;
+            public static final double intakingPieceSpeed = 0.35;
             public static final double outakingPieceSpeed = -0.4;
         }
     }
@@ -167,7 +167,7 @@ public class Constants {
         public static final int feederMotorID = 6;
 
         public static class Speeds {
-            public static final double intakingPieceSpeed = 0.4;
+            public static final double intakingPieceSpeed = 0.40;
             public static final double outakingPieceSpeed = -0.4;
             public static final double speekerShootingSpeed = 0.5;
             public static final double ampShootingSpeed = -0.65;
@@ -181,18 +181,18 @@ public class Constants {
             public static int shooterMotorID = 8;
         }
 
-        public static final double defaultShooterSpeed = 1500; // RPM
+        public static final double defaultShooterSpeed = 2500; // RPM
 
         public static class ShooterPIDConstants {
             public static final boolean useCodePID = true; // Whether to overwrite PID values in motor
 
-            public static double P = 0.0005; // Place holder
+            public static double P = 0.045; // Place holder
             public static double I = 0.0; // Place holder
             public static double D = 0.0; // Place holder
-            public static double V = 0.01; // Place holder
-            public static double S = 0.01;
-            public static double acceleration = 100; // Place holder
-            public static double jerk = 400;
+            public static double V = 0.0102; // Place holder
+            public static double S = 0.00;
+            public static double acceleration = 50; // Place holder
+            public static double jerk = 50;
             // public static double cruiseVelocity = 0.0; // Place holder
 
         }
@@ -243,7 +243,7 @@ public class Constants {
         }
 
         public static class Positions {
-            public static final double intakingPiece = 25.0; // Place holder
+            public static final double intakingPiece = 29.0; // Place holder
             public static final double pivotSafeZone = 13.0; // PlaceHolder
         }
     }

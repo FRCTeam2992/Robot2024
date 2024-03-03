@@ -331,7 +331,7 @@ public class Drivetrain extends SubsystemBase {
                 // State measurement standard deviations. X, Y, theta.
                 MatBuilder.fill(Nat.N3(), Nat.N1(), 0.02, 0.02, 0.01),
                 // Global measurement standard deviations. X, Y, and theta.
-                MatBuilder.fill(Nat.N3(), Nat.N1(), 0.9, 0.9, .9999));
+                MatBuilder.fill(Nat.N3(), Nat.N1(), 0.4, 0.4, .9999));
     }
 
     private void initTalonFX(TalonFX motorContollerName, TalonFXConfiguration configs, InvertedValue motorDirection) {
@@ -392,18 +392,24 @@ public class Drivetrain extends SubsystemBase {
             }
 
             if (Constants.debugDashboard) {
-                SmartDashboard.putBoolean("Limelight Back Pose OK?", limelightBackBotPose != null);
+                SmartDashboard.putBoolean("Limelight Back Pose OK?", limelightBackBotPose.length <= 7);
                 SmartDashboard.putBoolean("Limelight Seeing Target?", limeLightCameraBack.getTargetID() != -1);
                 SmartDashboard.putBoolean("Latest Vision Pose OK?", latestVisionPose != null);
                 SmartDashboard.putNumber("Limelight Calculations", limelightCalculationsCount);
 
                 if (limelightBackBotPose != null) {
-                    SmartDashboard.putNumber("Limelight Back Pose X (m)", limelightBackBotPose[0]);
-                    SmartDashboard.putNumber("Limelight Back Pose Y (m)", limelightBackBotPose[1]);
-                    SmartDashboard.putNumber("Limelight Back Pose Yaw (deg)", limelightBackBotPose[5]);
-                    SmartDashboard.putNumber("Limelight Back Pose Latency (ms)", limelightBackBotPose[6]);
-                    SmartDashboard.putNumber("Limelight Back Tid", limeLightCameraBack.getTargetID());
-                    SmartDashboard.putNumber("Limelight Back Ta", limeLightCameraBack.getTargetArea());
+                    SmartDashboard.putNumber("Limelight Back Pose X (m)",
+                            limelightBackBotPose[0]);
+                    SmartDashboard.putNumber("Limelight Back Pose Y (m)",
+                            limelightBackBotPose[1]);
+                    SmartDashboard.putNumber("Limelight Back Pose Yaw (deg)",
+                            limelightBackBotPose[5]);
+                    // SmartDashboard.putNumber("Limelight Back Pose Latency (ms)",
+                    // limelightBackBotPose[6]);
+                    SmartDashboard.putNumber("Limelight Back Tid",
+                            limeLightCameraBack.getTargetID());
+                    SmartDashboard.putNumber("Limelight Back Ta",
+                            limeLightCameraBack.getTargetArea());
                 }
 
                 if (latestVisionPose != null) {
@@ -636,7 +642,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void calculateBlendedVisionPose() {
-        limelightCalculationsCount++;
+
 
         if (!DriverStation.getAlliance().isPresent()) {
             limeLightBlendedLatency = 0.0;
@@ -647,10 +653,13 @@ public class Drivetrain extends SubsystemBase {
             return;
         }
 
+        SmartDashboard.putString("Alliance Color", getAllianceCoordinateSpace().toString());
         limelightBackBotPose = limeLightCameraBack.getBotPose(getAllianceCoordinateSpace());
 
         if (limelightBackBotPose != null && limeLightCameraBack.getTargetID() != -1) {
             limelightTotalArea = limeLightCameraBack.getTargetArea();
+
+            limelightCalculationsCount++;
 
             if (limelightTotalArea == 0.0) {
                 limeLightBlendedLatency = 0.0;

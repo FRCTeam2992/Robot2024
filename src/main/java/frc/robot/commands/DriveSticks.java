@@ -30,7 +30,7 @@ public class DriveSticks extends Command {
     private double gyroTarget;
     private boolean gyroTargetRecorded;
 
-    private ProfiledPIDController scoreYController;
+    // private ProfiledPIDController scoreYController;
     private double botX = 0.0;
     private double botY = 0.0;
     private double goalX = 0.0;
@@ -42,12 +42,14 @@ public class DriveSticks extends Command {
         mDriveTrain = subsystem;
         mRobotState = robotState;
 
-        scoreYController = new ProfiledPIDController(Constants.DrivetrainConstants.AutoScorePIDConstants.scoreP,
-                Constants.DrivetrainConstants.AutoScorePIDConstants.scoreI,
-                Constants.DrivetrainConstants.AutoScorePIDConstants.scoreD,
-                new TrapezoidProfile.Constraints(Constants.DrivetrainConstants.AutoScorePIDConstants.scoreCruise,
-                        Constants.DrivetrainConstants.AutoScorePIDConstants.scoreAccel));
-        scoreYController.setIntegratorRange(-0.2, 0.2);
+        // scoreYController = new
+        // ProfiledPIDController(Constants.DrivetrainConstants.AutoScorePIDConstants.scoreP,
+        // Constants.DrivetrainConstants.AutoScorePIDConstants.scoreI,
+        // Constants.DrivetrainConstants.AutoScorePIDConstants.scoreD,
+        // new
+        // TrapezoidProfile.Constraints(Constants.DrivetrainConstants.AutoScorePIDConstants.scoreCruise,
+        // Constants.DrivetrainConstants.AutoScorePIDConstants.scoreAccel));
+        // scoreYController.setIntegratorRange(-0.2, 0.2);
 
         // Set the Subsystem Requirement
         addRequirements(mDriveTrain);
@@ -233,28 +235,30 @@ public class DriveSticks extends Command {
 
                 targetAngle = Math.tanh((goalY - botY) / (goalX - botX));
 
-                x2 = mDriveTrain.getGyroYaw() - targetAngle;
+                SmartDashboard.putNumber("Speaker Target Angle", targetAngle);
+                // x2 = mDriveTrain.getGyroYaw() - targetAngle;
 
-                if (x2 > 180) {
-                    x2 -= 360;
-                } else if (x2 < -180) {
-                    x2 += 360;
-                }
-                if (Math.abs(x2 - targetAngle) > Constants.DrivetrainConstants.autoAngleThreshold) {
-                    x2 = x2 * Constants.DrivetrainConstants.driveRotationP;
-                } else {
-                    x2 = 0.0;
-                }
+                // if (x2 > 180) {
+                // x2 -= 360;
+                // } else if (x2 < -180) {
+                // x2 += 360;
+                // }
+                // if (Math.abs(x2 - targetAngle) >
+                // Constants.DrivetrainConstants.autoAngleThreshold) {
+                // x2 = x2 * Constants.DrivetrainConstants.driveRotationP;
+                // } else {
+                // x2 = 0.0;
+                // }
 
-                x2 = Math.min(x2, .90);
-                x2 = Math.max(x2, -.90);
+                // x2 = Math.min(x2, .90);
+                // x2 = Math.max(x2, -.90);
 
                 gyroTargetRecorded = false;
 
             } else {
                 // We are out of auto score align mode, but keep pid current
-                scoreYController.reset(mDriveTrain.getLatestSwervePose().getY(),
-                        x1 * Constants.DrivetrainConstants.swerveMaxSpeed);
+                // scoreYController.reset(mDriveTrain.getLatestSwervePose().getY(),
+                // x1 * Constants.DrivetrainConstants.swerveMaxSpeed);
             }
 
             if (mRobotState.isAmpMode() && mDriveTrain.isAutoRotate()) {
@@ -262,16 +266,18 @@ public class DriveSticks extends Command {
                 if (DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == DriverStation.Alliance.Red) {
                     targetAngle *= -1.0;
                 }
-                x2 = mDriveTrain.getGyroYaw() - targetAngle;
-                if (x2 > 180) {
-                    x2 -= 360;
-                } else if (x2 < -180) {
-                    x2 += 360;
-                }
-                x2 = x2 * Constants.DrivetrainConstants.driveRotationP;
 
-                x2 = Math.min(x2, .90);
-                x2 = Math.max(x2, -.90);
+                SmartDashboard.putNumber("Amp target angle", targetAngle);
+                // x2 = mDriveTrain.getGyroYaw() - targetAngle;
+                // if (x2 > 180) {
+                // x2 -= 360;
+                // } else if (x2 < -180) {
+                // x2 += 360;
+                // }
+                // x2 = x2 * Constants.DrivetrainConstants.driveRotationP;
+
+                // x2 = Math.min(x2, .90);
+                // x2 = Math.max(x2, -.90);
 
                 gyroTargetRecorded = false;
             }
@@ -283,23 +289,24 @@ public class DriveSticks extends Command {
                 targetAngle = Constants.DrivetrainConstants.StageAngles.angles[(Math
                         .toIntExact(mDriveTrain.limeLightCameraBack.getTargetID()) - 11)];
 
-                x2 = mDriveTrain.getGyroYaw() - targetAngle;
-                if (x2 > 180) {
-                    x2 -= 360;
-                } else if (x2 < -180) {
-                    x2 += 360;
-                }
+                SmartDashboard.putNumber("Endgame target angle", targetAngle);
+                // x2 = mDriveTrain.getGyroYaw() - targetAngle;
+                // if (x2 > 180) {
+                // x2 -= 360;
+                // } else if (x2 < -180) {
+                // x2 += 360;
+                // }
 
-                x2 = x2 * Constants.DrivetrainConstants.driveRotationP;
+                // x2 = x2 * Constants.DrivetrainConstants.driveRotationP;
 
-                x2 = Math.min(x2, .90);
-                x2 = Math.max(x2, -.90);
+                // x2 = Math.min(x2, .90);
+                // x2 = Math.max(x2, -.90);
 
                 gyroTargetRecorded = false;
             }
 
-            scoreYController.reset(mDriveTrain.getLatestSwervePose().getY(),
-                    x1 * Constants.DrivetrainConstants.swerveMaxSpeed);
+            // scoreYController.reset(mDriveTrain.getLatestSwervePose().getY(),
+            // x1 * Constants.DrivetrainConstants.swerveMaxSpeed);
 
             // Calculate the Swerve States
             double[] swerveStates;
