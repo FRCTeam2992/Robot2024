@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import java.util.ArrayList;
 
+import javax.print.attribute.standard.Media;
+
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -39,6 +41,7 @@ import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -107,6 +110,12 @@ public class Drivetrain extends SubsystemBase {
     public final ArrayList<LimeLight> limelightList;
     public double limeLightBlendedLatency = 0.0;
     private double[] limelightBackBotPose;
+    private boolean isUpdatingLimelightOdometry = true;
+    private double limelightTotalArea = 0.0;
+    private int limelightCalculationsCount = 0;
+    private MedianFilter limelightXMedianFilter;
+    private MedianFilter limelightYMedianFilter;
+    private MedianFilter limelightAngleMedianFilter;
 
     private DataLog mDataLog;
 
@@ -288,6 +297,10 @@ public class Drivetrain extends SubsystemBase {
         limelightList = new ArrayList<LimeLight>();
         limelightList.add(limeLightCameraBack);
 
+        limelightXMedianFilter = new MedianFilter(5);
+        limelightYMedianFilter = new MedianFilter(5);
+        limelightAngleMedianFilter = new MedianFilter(5);
+
         if (Constants.dataLogging) {
             mDataLog = DataLogManager.getLog();
             navxLog = new DoubleArrayLogEntry(mDataLog, "/Drivetrain/navx/positions");
@@ -318,7 +331,7 @@ public class Drivetrain extends SubsystemBase {
                 // State measurement standard deviations. X, Y, theta.
                 MatBuilder.fill(Nat.N3(), Nat.N1(), 0.02, 0.02, 0.01),
                 // Global measurement standard deviations. X, Y, and theta.
-                MatBuilder.fill(Nat.N3(), Nat.N1(), 0.1, 0.1, .9999));
+                MatBuilder.fill(Nat.N3(), Nat.N1(), 0.9, 0.9, .9999));
     }
 
     private void initTalonFX(TalonFX motorContollerName, TalonFXConfiguration configs, InvertedValue motorDirection) {
@@ -378,7 +391,12 @@ public class Drivetrain extends SubsystemBase {
                 SmartDashboard.putNumber("Robot Gyro Pitch (raw deg)", getRobotPitch()); // Navx Roll
             }
 
-            if (Constants.debugDashboard && limeLightCameraBack.getTargetID() > 0) {
+            if (Constants.debugDashboard) {
+                SmartDashboard.putBoolean("Limelight Back Pose OK?", limelightBackBotPose != null);
+                SmartDashboard.putBoolean("Limelight Seeing Target?", limeLightCameraBack.getTargetID() != -1);
+                SmartDashboard.putBoolean("Latest Vision Pose OK?", latestVisionPose != null);
+                SmartDashboard.putNumber("Limelight Calculations", limelightCalculationsCount);
+
                 if (limelightBackBotPose != null) {
                     SmartDashboard.putNumber("Limelight Back Pose X (m)", limelightBackBotPose[0]);
                     SmartDashboard.putNumber("Limelight Back Pose Y (m)", limelightBackBotPose[1]);
@@ -395,6 +413,11 @@ public class Drivetrain extends SubsystemBase {
                     SmartDashboard.putNumber("Limelight Blended FPGATime", Timer.getFPGATimestamp());
                     SmartDashboard.putNumber("Limelight Blended Latency", limeLightBlendedLatency);
                 }
+
+                SmartDashboard.putBoolean("Updating odometry from LimeLight", isUpdatingLimelightOdometry);
+                SmartDashboard.putBoolean("Latest Vision Pose Valid?", latestVisionPoseValid);
+                SmartDashboard.putNumber("LimeLight Total Area", limelightTotalArea);
+
             }
             dashboardCounter = 0;
         }
@@ -612,40 +635,46 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void calculateBlendedVisionPose() {
-        double sumX = 0.0;
-        double sumY = 0.0;
-        double sumTheta = 0.0;
-        double sumLatency = 0.0;
-        double totalArea = 0.0;
+        limelightCalculationsCount++;
 
         if (!DriverStation.getAlliance().isPresent()) {
             limeLightBlendedLatency = 0.0;
             latestVisionPoseValid = false;
+            limelightXMedianFilter.reset();
+            limelightYMedianFilter.reset();
+            limelightAngleMedianFilter.reset();
             return;
         }
 
         limelightBackBotPose = limeLightCameraBack.getBotPose(getAllianceCoordinateSpace());
 
-        if (limelightBackBotPose != null) {
-            if (limeLightCameraBack.getTargetID() != -1) {
-                double Ta = limeLightCameraBack.getTargetArea();
-                totalArea += Ta;
-                sumX += Ta * limelightBackBotPose[0];
-                sumY += Ta * limelightBackBotPose[1];
-                sumTheta += Ta * limelightBackBotPose[5];
-                sumLatency += Ta * limelightBackBotPose[6];
-            }
-        }
+        if (limelightBackBotPose != null && limeLightCameraBack.getTargetID() != -1) {
+            limelightTotalArea = limeLightCameraBack.getTargetArea();
 
-        SmartDashboard.putNumber("Limelight TotalArea", totalArea);
-        if (totalArea == 0.0) {
-            limeLightBlendedLatency = 0.0;
-            latestVisionPoseValid = false;
-            return;
+            if (limelightTotalArea == 0.0) {
+                limeLightBlendedLatency = 0.0;
+                latestVisionPoseValid = false;
+                limelightXMedianFilter.reset();
+                limelightYMedianFilter.reset();
+                limelightAngleMedianFilter.reset();
+                return;
+            }
+
+            isUpdatingLimelightOdometry = true;
+            limeLightBlendedLatency = limelightBackBotPose[6];
+            latestVisionPoseValid = true;
+
+            latestVisionPose = new Pose2d(
+                limelightXMedianFilter.calculate(limelightBackBotPose[0]),
+                limelightYMedianFilter.calculate(limelightBackBotPose[1]),
+                Rotation2d.fromDegrees(limelightAngleMedianFilter.calculate(limelightBackBotPose[5])));
+            isUpdatingLimelightOdometry = false;
+        } else {
+            limelightXMedianFilter.reset();
+            limelightYMedianFilter.reset();
+            limelightAngleMedianFilter.reset();
+
         }
-        limeLightBlendedLatency = sumLatency / totalArea;
-        latestVisionPoseValid = true;
-        latestVisionPose = new Pose2d(sumX / totalArea, sumY / totalArea, Rotation2d.fromDegrees(sumTheta / totalArea));
     }
 
     // Move robot straight at a heading and speed

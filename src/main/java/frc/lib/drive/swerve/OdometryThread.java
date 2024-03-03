@@ -44,9 +44,6 @@ public class OdometryThread extends Thread {
     }
 
     public void run() {
-
-        System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Odom Thread Started");
-
         int n;
         int slowLoopCount = 0;
 
