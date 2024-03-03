@@ -39,7 +39,7 @@ public class Robot extends TimedRobot {
     mRobotContainer.mDrivetrain.onDisable();
 
     CommandScheduler.getInstance().schedule(
-          new SetLimeLightOdometryUpdates(mRobotContainer.mDrivetrain, false));
+          new SetLimeLightOdometryUpdates(mRobotContainer.mDrivetrain, true));
 
     mRobotContainer.mRobotState.setRobotMode(MyRobotState.RobotModeState.Speaker);
   }
