@@ -132,8 +132,9 @@ public class ShooterPivot extends SubsystemBase {
     // Update the current encoder reading only once per cycle here in Periodic for
     // moving average
     currentPivotAngle = getPivotAngle();
-    setPivotTarget(SmartDashboard.getNumber("Set Pivot angle", 0.0));
+    // setPivotTarget(SmartDashboard.getNumber("Set Pivot angle", 0.0));
     SmartDashboard.putNumber("Pivot target angle", getPivotTarget());
+    SmartDashboard.putString("ShooterPivot State", pivotMode.toString());
 
     SmartDashboard.putData(this);
     SmartDashboard.putNumber("Shooter Pivot Angle (deg)", currentPivotAngle);

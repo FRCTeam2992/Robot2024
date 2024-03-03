@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.Constants;
@@ -56,6 +57,7 @@ public class AutoAim extends Command {
       case Speaker:
       case Auto: {
         double distance = calculateDistance();
+        SmartDashboard.putNumber("Aim Distance", distance);
 
         mShooter.setShooterTargetRPM(mInterpolator.calcMainShooterSpeed(distance));
         mShooter.setShooterToTargetRPM();
@@ -93,6 +95,9 @@ public class AutoAim extends Command {
         break;
       }
     }
+    SmartDashboard.putNumber("AutoAim shooter speed", mShooter.getShooterTargetRPM());
+    SmartDashboard.putNumber("AutoAim pivot angle", mShooterPivot.getPivotTarget());
+    SmartDashboard.putNumber("AutoAim Elevator Target", mElevator.getTargetPosition());
   }
 
   // Called once the command ends or is interrupted.
@@ -140,10 +145,10 @@ public class AutoAim extends Command {
     // goal changes depending on alliance
     if (DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == (DriverStation.Alliance.Red)) {
       return mDrivetrain.latestSwervePose.getTranslation()
-          .getDistance(Constants.DrivetrainConstants.Field.redGoalTarget);
+          .getDistance(Constants.DrivetrainConstants.Field.redGoalTarget) * 39.3701; // Inches
     } else {
       return mDrivetrain.latestSwervePose.getTranslation()
-          .getDistance(Constants.DrivetrainConstants.Field.blueGoalTarget);
+          .getDistance(Constants.DrivetrainConstants.Field.blueGoalTarget) * 39.3701; // Inches
     }
   }
 }

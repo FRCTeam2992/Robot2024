@@ -141,7 +141,7 @@ public class Constants {
         public static class Field {
             public static double FIELD_WIDTH_METERS = 8.02;
             public static double FIELD_LENGTH_METERS = 16.522;
-            public static double goalX = 0.363;
+            public static double goalX = 0.2286;
             public static double blueGoalY = 5.43;
             public static double redGoalY = 2.66;
             public static Translation2d redGoalTarget = new Translation2d(goalX, redGoalY);
@@ -170,8 +170,8 @@ public class Constants {
             public static final double intakingPieceSpeed = 0.4;
             public static final double outakingPieceSpeed = -0.4;
             public static final double speekerShootingSpeed = 0.5;
-            public static final double ampShootingSpeed = -0.5;
-            public static final double trapShootingSpeed = -0.5;
+            public static final double ampShootingSpeed = -0.65;
+            public static final double trapShootingSpeed = -0.65;
         }
     }
 
@@ -243,7 +243,7 @@ public class Constants {
         }
 
         public static class Positions {
-            public static final double intakingPiece = 20.0; // Place holder
+            public static final double intakingPiece = 25.0; // Place holder
             public static final double pivotSafeZone = 13.0; // PlaceHolder
         }
     }
@@ -284,7 +284,7 @@ public class Constants {
         public static final double elevatorHeightToleranceInch = 0.5; // Place holder
 
         public static class Limits {
-            public static final double softStopBottom = 1.0; // bottom soft stop (in) //Place holder
+            public static final double softStopBottom = 0.0; // bottom soft stop (in) //Place holder
             public static final double softStopTop = 24.5; // bottom soft stop (in) //PlaceHolder
             public static final double hardStopTop = 25.0; // bottom soft stop (in) //Place holder
 
@@ -298,7 +298,7 @@ public class Constants {
             public static final double intakingPiece = 0.0; // Place holder
             public static final double safeZoneTop = 7.5; // placeholder
             public static final double speakerShooting = 0.0;
-            public static final double ampScoring = 15.0; // placeholder
+            public static final double ampScoring = 20.0; // placeholder
             public static final double trapScoring = 20.0; // placeholder
         }
 
