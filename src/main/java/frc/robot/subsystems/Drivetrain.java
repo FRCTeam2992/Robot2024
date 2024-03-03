@@ -576,12 +576,13 @@ public class Drivetrain extends SubsystemBase {
         if (this.simpleOdometryReset) {
             swerveDrivePoseEstimator.resetPosition(
                     Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions,
-                    Constants.DrivetrainConstants.zeroPose);
-
+                    new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(-getGyroYaw())));
         } else {
             setGyroOffset(navx.getYaw() - resetPose.getRotation().getDegrees());
-            swerveDrivePoseEstimator.resetPosition(Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions,
-                    resetPose);
+            swerveDrivePoseEstimator.resetPosition(
+                Rotation2d.fromDegrees(-getGyroYaw()),
+                swerveDriveModulePositions,
+                resetPose);
             latestSwervePose = resetPose;
         }
     }
@@ -665,9 +666,9 @@ public class Drivetrain extends SubsystemBase {
             latestVisionPoseValid = true;
 
             latestVisionPose = new Pose2d(
-                limelightXMedianFilter.calculate(limelightBackBotPose[0]),
-                limelightYMedianFilter.calculate(limelightBackBotPose[1]),
-                Rotation2d.fromDegrees(limelightAngleMedianFilter.calculate(limelightBackBotPose[5])));
+                    limelightXMedianFilter.calculate(limelightBackBotPose[0]),
+                    limelightYMedianFilter.calculate(limelightBackBotPose[1]),
+                    Rotation2d.fromDegrees(limelightAngleMedianFilter.calculate(limelightBackBotPose[5])));
             isUpdatingLimelightOdometry = false;
         } else {
             limelightXMedianFilter.reset();
