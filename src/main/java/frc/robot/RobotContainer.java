@@ -109,7 +109,7 @@ public class RobotContainer {
     // Triggers
     controller0.leftTrigger(0.3).whileTrue(new AutoAim(mElevator, mShooterPivot,
         mShooter, mRobotState, mNoteInterpolator, mDrivetrain));
-    controller0.leftTrigger(0.3).whileTrue(new AutoRotateBot(mDrivetrain, true));
+    // controller0.leftTrigger(0.3).whileTrue(new AutoRotateBot(mDrivetrain, true));
     controller0.rightTrigger(0.3)
         .whileTrue(new AutoShoot(mElevator, mFeeder, mIntake, mShooterPivot, mShooter, mRobotState));
 
@@ -133,7 +133,7 @@ public class RobotContainer {
         })); // Slow Mode
 
     // ABXY
-    // controller0.a().whileTrue(new AutoRotate());
+    controller0.a().whileTrue(new AutoRotateBot(mDrivetrain, true));
     // controller0.x().whileTrue(new XWheels());
     controller0.y().whileTrue(new MoveIntake(mIntake, Constants.Intake.Speeds.outakingPieceSpeed)
         .alongWith(new MoveFeeder(mFeeder, Constants.Feeder.Speeds.outakingPieceSpeed, false)));

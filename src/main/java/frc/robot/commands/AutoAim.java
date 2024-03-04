@@ -59,6 +59,7 @@ public class AutoAim extends Command {
         double distance = calculateDistance();
         SmartDashboard.putNumber("Aim Distance", distance);
 
+        mDrivetrain.setAutoRotate(true);
         // mShooter.setShooterTargetRPM(mInterpolator.calcMainShooterSpeed(distance));
         // mShooter.setShooterToTargetRPM();
         mShooter.setShooterSpeed(0.0);
@@ -88,6 +89,7 @@ public class AutoAim extends Command {
       }
 
       case Endgame: {
+        mDrivetrain.setAutoRotate(true);
         mShooter.setShooterSpeed(0.0);
         mShooterPivot.setPivotTarget(0.0);
         mShooterPivot.setPivotToPID();
@@ -113,6 +115,7 @@ public class AutoAim extends Command {
       case Auto:
       case Speaker:
       case DefaultSpeaker: {
+        mDrivetrain.setAutoRotate(false);
         mShooterPivot.setPivotTarget(Constants.ShooterPivot.Positions.intakingPiece);
         mShooterPivot.setPivotToPID();
         mElevator.setElevatorTargetPosition(Constants.Elevator.Positions.intakingPiece);
@@ -125,6 +128,7 @@ public class AutoAim extends Command {
 
       case Amp:
       case Endgame: {
+        mDrivetrain.setAutoRotate(false);
         mShooterPivot.setPivotTarget(Constants.ShooterPivot.Positions.intakingPiece);
         mShooterPivot.setPivotToPID();
         mElevator.setElevatorTargetPosition(Constants.Elevator.Positions.intakingPiece);
