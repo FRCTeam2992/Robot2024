@@ -19,7 +19,6 @@ public class SetLimeLightOdometryUpdates extends InstantCommand {
     public SetLimeLightOdometryUpdates(Drivetrain drivetrain, boolean useLimelight) {
         mDrivetrain = drivetrain;
         mUseLimelight = useLimelight;
-        runsWhenDisabled();
         // Use addRequirements() here to declare subsystem dependencies.
     }
 
@@ -35,4 +34,7 @@ public class SetLimeLightOdometryUpdates extends InstantCommand {
             }
         }
     }
+
+    @Override
+    public boolean runsWhenDisabled() { return true; }
 }

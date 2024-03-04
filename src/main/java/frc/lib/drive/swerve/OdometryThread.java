@@ -2,13 +2,14 @@ package frc.lib.drive.swerve;
 
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 
 public class OdometryThread extends Thread {
     private int refreshTimeoutFastMillis = Constants.DrivetrainConstants.odometryFastRefreshTimeoutMillis;
     private int refreshTimeoutSlowMillis = Constants.DrivetrainConstants.odometrySlowRefreshTimeoutMillis;
+    private int odometryCyclesForLimelightRefresh = 4;
+    private int lastOdometryResetCount = 0;
 
     private Drivetrain drivetrain;
     private SwerveModuleFalconFalcon[] modules;
@@ -43,19 +44,43 @@ public class OdometryThread extends Thread {
     }
 
     public void run() {
-
-        System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Odom Thread Started");
-
         int n;
+        int slowLoopCount = 0;
 
         while (!this.cancelled) {
             this.rioTimestamp = Timer.getFPGATimestamp();
 
-            for (n = 0; n < this.modules.length; n++) {
-                this.modulePositions[n] = this.modules[n].getPosition();
-            }
-            drivetrain.updateOdometryPose(this.modulePositions);
+            if (drivetrain.getOdometryResetCount() > lastOdometryResetCount) {
+                // Reset odometry if needed
+                drivetrain.resetOdometry();
+                lastOdometryResetCount = drivetrain.getOdometryResetCount();
+            } else {
+                // Update odometry via LimeLight vision, if set
+                if (drivetrain.useLimeLightForOdometry()) {
+                    if (slowLoopCount >= odometryCyclesForLimelightRefresh) {
+                        slowLoopCount = 0;
+                        drivetrain.calculateBlendedVisionPose();
+                        if (drivetrain.latestVisionPoseValid) {
+                            drivetrain.swerveDrivePoseEstimator.addVisionMeasurement(
+                                drivetrain.latestVisionPose,
+                                Timer.getFPGATimestamp() - drivetrain.limeLightBlendedLatency / 1000
+                            );
+                        }
+                    } else {
+                        slowLoopCount++;
+                    }
+                } else {
+                    slowLoopCount = odometryCyclesForLimelightRefresh;
+                }
 
+                // Update odometry via wheel encoders
+                for (n = 0; n < this.modules.length; n++) {
+                    this.modulePositions[n] = this.modules[n].getPosition();
+                }
+                drivetrain.updateOdometryPose(this.modulePositions);
+            }
+
+            // Wait for refresh timeout
             Timer.delay(
                 Math.max(0.0, this.rioTimestamp + refreshTimeoutSeconds() - Timer.getFPGATimestamp())
             );

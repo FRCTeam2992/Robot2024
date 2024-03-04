@@ -1,9 +1,12 @@
+
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
 /** Add your docs here. */
@@ -27,6 +30,7 @@ public class Constants {
         public static final int odometrySlowRefreshTimeoutMillis = 100;
         public static final double sensorUpdateRateHz = 200.0;
         public static final byte gyroUpdateRateHz = (byte) 200;
+        public static final Pose2d zeroPose = new Pose2d(0.0, 0.0, new Rotation2d());
 
         // Length and Width of the Robot in Meters (Inches: 28 x 31.5) 23.75 x 24.75
         public static final double swerveWidth = 0.62865; // 0.578;
@@ -234,7 +238,7 @@ public class Constants {
 
             public static final double pivotCollisionZone = 10.0; // PlaceHolder
         }
-
+x
         public static class Positions {
             public static final double intakingPiece = 15.0; // Place holder
             public static final double pivotSafeZone = 13.0; // PlaceHolder

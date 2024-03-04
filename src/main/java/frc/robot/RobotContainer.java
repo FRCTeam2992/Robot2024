@@ -213,6 +213,7 @@ public class RobotContainer {
     SmartDashboard.putData("zero ele target", new SetElevatorTargetPosition(mElevator, 0.0));
     SmartDashboard.putData("zero ele encoder", new ZeroElevator(mElevator));
 
+    SmartDashboard.putData("Reset odometry", mDrivetrain.ResetOdometry());
   }
 
   public Command getAutonomousCommand() {
