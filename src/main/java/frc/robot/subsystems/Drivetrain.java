@@ -297,9 +297,9 @@ public class Drivetrain extends SubsystemBase {
         limelightList = new ArrayList<LimeLight>();
         limelightList.add(limeLightCameraBack);
 
-        limelightXMedianFilter = new MedianFilter(5);
-        limelightYMedianFilter = new MedianFilter(5);
-        limelightAngleMedianFilter = new MedianFilter(5);
+        limelightXMedianFilter = new MedianFilter(1);
+        limelightYMedianFilter = new MedianFilter(1);
+        limelightAngleMedianFilter = new MedianFilter(1);
 
         if (Constants.dataLogging) {
             mDataLog = DataLogManager.getLog();
@@ -329,9 +329,9 @@ public class Drivetrain extends SubsystemBase {
                 swerveDriveModulePositions,
                 new Pose2d(0.0, 0.0, new Rotation2d()),
                 // State measurement standard deviations. X, Y, theta.
-                MatBuilder.fill(Nat.N3(), Nat.N1(), 0.02, 0.02, 0.01),
+                MatBuilder.fill(Nat.N3(), Nat.N1(), 0.002, 0.002, 0.01),
                 // Global measurement standard deviations. X, Y, and theta.
-                MatBuilder.fill(Nat.N3(), Nat.N1(), 0.4, 0.4, .9999));
+                MatBuilder.fill(Nat.N3(), Nat.N1(), 0.1, 0.1, .9999));
     }
 
     private void initTalonFX(TalonFX motorContollerName, TalonFXConfiguration configs, InvertedValue motorDirection) {
@@ -389,6 +389,8 @@ public class Drivetrain extends SubsystemBase {
                 SmartDashboard.putNumber("Gyro Yaw (raw deg)", navx.getYaw());
                 SmartDashboard.putNumber("Gyro Yaw (adj deg)", getGyroYaw());
                 SmartDashboard.putNumber("Robot Gyro Pitch (raw deg)", getRobotPitch()); // Navx Roll
+
+                SmartDashboard.putBoolean("IsAutoRotate", isAutoRotate());
             }
 
             if (Constants.debugDashboard) {
@@ -660,8 +662,9 @@ public class Drivetrain extends SubsystemBase {
             limelightTotalArea = limeLightCameraBack.getTargetArea();
 
             limelightCalculationsCount++;
+            latestVisionPoseValid = true;
 
-            if (limelightTotalArea == 0.0) {
+            if (limelightTotalArea <= 0.05) {
                 limeLightBlendedLatency = 0.0;
                 latestVisionPoseValid = false;
                 limelightXMedianFilter.reset();
@@ -672,7 +675,6 @@ public class Drivetrain extends SubsystemBase {
 
             isUpdatingLimelightOdometry = true;
             limeLightBlendedLatency = limelightBackBotPose[6];
-            latestVisionPoseValid = true;
 
             latestVisionPose = new Pose2d(
                     limelightXMedianFilter.calculate(limelightBackBotPose[0]),
@@ -683,6 +685,7 @@ public class Drivetrain extends SubsystemBase {
             limelightXMedianFilter.reset();
             limelightYMedianFilter.reset();
             limelightAngleMedianFilter.reset();
+            latestVisionPoseValid = false;
 
         }
     }
@@ -735,7 +738,7 @@ public class Drivetrain extends SubsystemBase {
         odomReadingTesting = true;
         this.latestSwervePose = this.swerveDrivePoseEstimator.updateWithTime(
                 Timer.getFPGATimestamp(),
-                Rotation2d.fromDegrees(-getGyroYaw()),
+                Rotation2d.fromDegrees(getGyroYaw()),
                 modulePositions);
     }
 }

@@ -142,7 +142,7 @@ public class DriveSticks extends Command {
         // Lock Rotation to 0 for scoring
 
         // Check for Movement or autoDriveMode
-        if (Math.abs(x1) > 0.0 || Math.abs(y1) > 0.0 || Math.abs(x2) > 0.0 || mDriveTrain.isAutoRotate()
+        if (Math.abs(x1) > 0.00 || Math.abs(y1) > 0.00 || Math.abs(x2) > 0.00 || mDriveTrain.isAutoRotate()
                 || mDriveTrain.isLoadingMode()) {
 
             // if (Constants.DemoMode.isDemoMode) {
@@ -223,6 +223,8 @@ public class DriveSticks extends Command {
             // Adjust the rotation to align to score
             if (mRobotState.isSpeakerMode() && mDriveTrain.isAutoRotate()) {
 
+                // botX = mDriveTrain.latestVisionPose.getX();
+                // botY = mDriveTrain.latestSwervePose.getY();
                 botX = mDriveTrain.latestSwervePose.getX();
                 botY = mDriveTrain.latestSwervePose.getY();
                 goalX = Constants.DrivetrainConstants.Field.goalX;
@@ -233,25 +235,25 @@ public class DriveSticks extends Command {
                     goalY = Constants.DrivetrainConstants.Field.blueGoalY;
                 }
 
-                targetAngle = Math.tanh((goalY - botY) / (goalX - botX));
+                targetAngle = -Math.atan2((botY - goalY), (botX - goalX));
+                targetAngle = targetAngle * 180.0 / Math.PI;
 
                 SmartDashboard.putNumber("Speaker Target Angle", targetAngle);
-                // x2 = mDriveTrain.getGyroYaw() - targetAngle;
+                x2 = mDriveTrain.getGyroYaw() - targetAngle;
 
-                // if (x2 > 180) {
-                // x2 -= 360;
-                // } else if (x2 < -180) {
-                // x2 += 360;
-                // }
-                // if (Math.abs(x2 - targetAngle) >
-                // Constants.DrivetrainConstants.autoAngleThreshold) {
-                // x2 = x2 * Constants.DrivetrainConstants.driveRotationP;
-                // } else {
-                // x2 = 0.0;
-                // }
+                if (x2 > 180) {
+                    x2 -= 360;
+                } else if (x2 < -180) {
+                    x2 += 360;
+                }
+                if (Math.abs(x2 - targetAngle) > Constants.DrivetrainConstants.autoAngleThreshold) {
+                    x2 = x2 * Constants.DrivetrainConstants.driveRotationP;
+                } else {
+                    x2 = 0.0;
+                }
 
-                // x2 = Math.min(x2, .90);
-                // x2 = Math.max(x2, -.90);
+                x2 = Math.min(x2, .90);
+                x2 = Math.max(x2, -.90);
 
                 gyroTargetRecorded = false;
 
@@ -311,36 +313,43 @@ public class DriveSticks extends Command {
             // Calculate the Swerve States
             double[] swerveStates;
 
-            // Check for Field Centric Enabled
-            if (Constants.DrivetrainConstants.isFieldCentric && mDriveTrain.getDoFieldOrient()) {
-                swerveStates = mDriveTrain.swerveController.calculate(x1, y1, x2, gyroValue);
-                if (Constants.debugDashboard) {
-                    SmartDashboard.putBoolean("Is Field Oriented", true);
-                }
-            } else {
-                swerveStates = mDriveTrain.swerveController.calculate(x1, y1, x2);
-                if (Constants.debugDashboard) {
-                    SmartDashboard.putBoolean("Is Field Oriented", false);
-                }
-            }
+            // Make sure we don't creep in AutoRotate mode
+            if (mDriveTrain.isAutoRotate() && Math.abs(x1) < 0.05 && Math.abs(y1) < 0.05 && Math.abs(x2) < 0.01) {
+                mDriveTrain.stopDrive();
 
-            // Get the Swerve Modules
-            SwerveModuleFalconFalcon frontLeft = mDriveTrain.frontLeftModule;
-            SwerveModuleFalconFalcon frontRight = mDriveTrain.frontRightModule;
-            SwerveModuleFalconFalcon rearLeft = mDriveTrain.rearLeftModule;
-            SwerveModuleFalconFalcon rearRight = mDriveTrain.rearRightModule;
-
-            // Command the Swerve Modules
-            if (Constants.DrivetrainConstants.isVelocityControlled) {
-                frontLeft.setDriveVelocity(swerveStates[0], swerveStates[1]);
-                frontRight.setDriveVelocity(swerveStates[2], swerveStates[3]);
-                rearLeft.setDriveVelocity(swerveStates[4], swerveStates[5]);
-                rearRight.setDriveVelocity(swerveStates[6], swerveStates[7]);
             } else {
-                frontLeft.setDrive(swerveStates[0], swerveStates[1]);
-                frontRight.setDrive(swerveStates[2], swerveStates[3]);
-                rearLeft.setDrive(swerveStates[4], swerveStates[5]);
-                rearRight.setDrive(swerveStates[6], swerveStates[7]);
+                // Check for Field Centric Enabled
+                if (Constants.DrivetrainConstants.isFieldCentric && mDriveTrain.getDoFieldOrient()) {
+                    swerveStates = mDriveTrain.swerveController.calculate(x1, y1, x2, gyroValue);
+                    if (Constants.debugDashboard) {
+                        SmartDashboard.putBoolean("Is Field Oriented", true);
+                    }
+                } else {
+                    swerveStates = mDriveTrain.swerveController.calculate(x1, y1, x2);
+                    if (Constants.debugDashboard) {
+                        SmartDashboard.putBoolean("Is Field Oriented", false);
+                    }
+                }
+
+                // Get the Swerve Modules
+                SwerveModuleFalconFalcon frontLeft = mDriveTrain.frontLeftModule;
+                SwerveModuleFalconFalcon frontRight = mDriveTrain.frontRightModule;
+                SwerveModuleFalconFalcon rearLeft = mDriveTrain.rearLeftModule;
+                SwerveModuleFalconFalcon rearRight = mDriveTrain.rearRightModule;
+
+                // Command the Swerve Modules
+                if (Constants.DrivetrainConstants.isVelocityControlled) {
+                    frontLeft.setDriveVelocity(swerveStates[0], swerveStates[1]);
+                    frontRight.setDriveVelocity(swerveStates[2], swerveStates[3]);
+                    rearLeft.setDriveVelocity(swerveStates[4], swerveStates[5]);
+                    rearRight.setDriveVelocity(swerveStates[6], swerveStates[7]);
+                } else {
+                    frontLeft.setDrive(swerveStates[0], swerveStates[1]);
+                    frontRight.setDrive(swerveStates[2], swerveStates[3]);
+                    rearLeft.setDrive(swerveStates[4], swerveStates[5]);
+                    rearRight.setDrive(swerveStates[6], swerveStates[7]);
+                }
+
             }
         } else {
             mDriveTrain.stopDrive();

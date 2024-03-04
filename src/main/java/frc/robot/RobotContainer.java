@@ -18,6 +18,7 @@ import frc.lib.range.NoteInterpolator;
 import frc.robot.MyRobotState.RobotModeState;
 import frc.robot.commands.AutoAim;
 import frc.robot.commands.AutoIntake;
+import frc.robot.commands.AutoRotateBot;
 import frc.robot.commands.AutoShoot;
 import frc.robot.commands.ChangeClimbMode;
 import frc.robot.commands.DisableFieldOrientToggle;
@@ -108,6 +109,7 @@ public class RobotContainer {
     // Triggers
     controller0.leftTrigger(0.3).whileTrue(new AutoAim(mElevator, mShooterPivot,
         mShooter, mRobotState, mNoteInterpolator, mDrivetrain));
+    controller0.leftTrigger(0.3).whileTrue(new AutoRotateBot(mDrivetrain, true));
     controller0.rightTrigger(0.3)
         .whileTrue(new AutoShoot(mElevator, mFeeder, mIntake, mShooterPivot, mShooter, mRobotState));
 
@@ -230,13 +232,13 @@ public class RobotContainer {
   private void initNoteInterp() {
     mNoteInterpolator = new NoteInterpolator();
 
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(40.75, 3300, 49));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 3300, 49));
     mNoteInterpolator.addDataPoint(new NoteDataPoint(53, 3500, 42));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(65, 4200, 38.0));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(76, 4200, 36.0));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(85, 4200, 33.0));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(101, 4200, 28.5));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(126, 3250, 28.5));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(64, 4200, 38.0));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(75, 4200, 36.0));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(86, 4200, 33.0));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(109, 4200, 28.5));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(134, 3250, 28.5));
 
   }
 }
