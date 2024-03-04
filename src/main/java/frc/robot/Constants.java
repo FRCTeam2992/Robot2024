@@ -260,11 +260,11 @@ public class Constants {
             public static final double kIZone0 = 0.0; // placeholder
             public static final double kF0 = 0.035; // Place holder
 
-            public static final double kP1 = 0.0; // placeholder
+            public static final double kP1 = 0.03; // placeholder
             public static final double kI1 = 0.0; // placeholder
             public static final double kD1 = 0.0; // placeholder
             public static final double kIZone1 = 0.0; // placeholder
-            public static final double kF1 = 0.035; // Place holder
+            public static final double kF1 = 0.0; // Place holder
 
             public static final double kMinOutput = -0.4; // placeholder
             public static final double kMaxOutput = 0.55; // placeholder
