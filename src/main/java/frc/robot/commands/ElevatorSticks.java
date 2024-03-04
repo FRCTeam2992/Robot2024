@@ -24,7 +24,9 @@ public class ElevatorSticks extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    mElevator.setElevatorManualMode();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -36,16 +38,10 @@ public class ElevatorSticks extends Command {
     if (climbY < Constants.Elevator.Climb.joyStickDeadBand){
       mElevator.setHoldPositionRecorded(false);
       mElevator.holdElevator();
-    } else if (mShooterPivot.getPivotAngle() < Constants.ShooterPivot.Limits.pivotCollisionZone 
-    && mElevator.getElevatorInches() < Constants.Elevator.Limits.elevatorDangerZone) {
-      mElevator.setHoldPositionRecorded(false);
-      mElevator.holdElevator();
-      new SetPivotTargetAngle(mShooterPivot, Constants.ShooterPivot.Positions.pivotSafeZone).schedule();
-      new SetPivotToTargetAngle(mShooterPivot).schedule();
-    } else {
+    } 
       climbY = climbY*climbY*climbY;
-      mElevator.setElevatorVelocity(climbY * 4);
-    }
+      mElevator.setElevatorVelocity(climbY * 300);
+    
   }
 
   // Called once the command ends or is interrupted.

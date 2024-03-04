@@ -23,6 +23,8 @@ public class Robot extends TimedRobot {
 
     mRobotContainer.mDrivetrain.navx.zeroYaw();
 
+    mRobotContainer.mElevator.zeroElevatorEncoders();
+
   }
 
   @Override
