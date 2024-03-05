@@ -156,6 +156,7 @@ public class Drivetrain extends SubsystemBase {
     private boolean loadingMode = false;
     private boolean useLimelightOdometryUpdates = false;
     private int odometryResetCount = 0;
+    private int lastOdometryResetCount = -1;
     private boolean simpleOdometryReset = true;
     public Pose2d resetPose = Constants.DrivetrainConstants.zeroPose;
 
@@ -325,13 +326,13 @@ public class Drivetrain extends SubsystemBase {
         // Serve Drive Odometry
         swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(
                 swerveDriveKinematics,
-                Rotation2d.fromDegrees(getGyroYaw()),
+                Rotation2d.fromDegrees(-getGyroYaw()),
                 swerveDriveModulePositions,
                 new Pose2d(0.0, 0.0, new Rotation2d()),
                 // State measurement standard deviations. X, Y, theta.
                 MatBuilder.fill(Nat.N3(), Nat.N1(), 0.002, 0.002, 0.01),
                 // Global measurement standard deviations. X, Y, and theta.
-                MatBuilder.fill(Nat.N3(), Nat.N1(), 0.1, 0.1, .9999));
+                MatBuilder.fill(Nat.N3(), Nat.N1(), 0.01, 0.01, .9999));
     }
 
     private void initTalonFX(TalonFX motorContollerName, TalonFXConfiguration configs, InvertedValue motorDirection) {
@@ -350,12 +351,28 @@ public class Drivetrain extends SubsystemBase {
     public void periodic() {
         // This method will be called once per scheduler run
         if (!Constants.DrivetrainConstants.odometryThread) {
-            swerveDriveModulePositions[0] = frontLeftModule.getPosition();
-            swerveDriveModulePositions[1] = frontRightModule.getPosition();
-            swerveDriveModulePositions[2] = rearLeftModule.getPosition();
-            swerveDriveModulePositions[3] = rearRightModule.getPosition();
+            if (getOdometryResetCount() > lastOdometryResetCount) {
+                // Reset odometry if needed
+                resetOdometry();
+                lastOdometryResetCount = getOdometryResetCount();
+            } else {
+                if (useLimeLightForOdometry()) {
+                    calculateBlendedVisionPose();
+                    if (latestVisionPoseValid) {
+                        swerveDrivePoseEstimator.addVisionMeasurement(
+                            latestVisionPose, Timer.getFPGATimestamp() - limeLightBlendedLatency / 1000
+                        );
+                    }
+                }
 
-            updateOdometryPose(swerveDriveModulePositions);
+                // Update odometry via wheel encoders
+                swerveDriveModulePositions[0] = frontLeftModule.getPosition();
+                swerveDriveModulePositions[1] = frontRightModule.getPosition();
+                swerveDriveModulePositions[2] = rearLeftModule.getPosition();
+                swerveDriveModulePositions[3] = rearRightModule.getPosition();
+
+                updateOdometryPose(swerveDriveModulePositions);
+            }
         }
 
         if (Constants.dataLogging && DriverStation.isEnabled()) {
@@ -387,7 +404,7 @@ public class Drivetrain extends SubsystemBase {
                 SmartDashboard.putNumber("Back Right Encoder Angle", rearRightModule.getEncoderAngle());
 
                 SmartDashboard.putNumber("Gyro Yaw (raw deg)", navx.getYaw());
-                SmartDashboard.putNumber("Gyro Yaw (adj deg)", getGyroYaw());
+                SmartDashboard.putNumber("Gyro Yaw (adj deg)", -getGyroYaw());
                 SmartDashboard.putNumber("Robot Gyro Pitch (raw deg)", getRobotPitch()); // Navx Roll
 
                 SmartDashboard.putBoolean("IsAutoRotate", isAutoRotate());
