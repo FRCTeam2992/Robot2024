@@ -79,6 +79,7 @@ public class AutoShoot extends Command {
       case Endgame: {
         mFeeder.setBeamBreakControl(false);
         mFeeder.setFeederSpeed(Constants.Feeder.Speeds.trapShootingSpeed);
+        break;
       }
     }
 
