@@ -154,7 +154,10 @@ public class RobotContainer {
     controller1.leftBumper().onTrue(new InstantCommand(() -> {
       mRobotState.setRobotMode(RobotModeState.DefaultSpeaker);
     }));
-    controller1.rightBumper().onTrue(new AutoIntake(mElevator, mFeeder, mIntake, mShooterPivot));
+    controller1.rightBumper().onTrue(new AutoIntake(mFeeder, mIntake, mShooterPivot));
+    controller1.rightBumper().onTrue(
+        new SetElevatorTargetPosition(mElevator, Constants.Elevator.Positions.intakingPiece)
+            .andThen(new MoveElevatorToTarget(mElevator)));
 
     // POV
     controller1.povUp().whileTrue(new MoveShooterPivot(mShooterPivot, 0.1));
