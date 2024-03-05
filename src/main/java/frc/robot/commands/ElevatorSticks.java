@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -14,38 +15,43 @@ public class ElevatorSticks extends Command {
 
   private Elevator mElevator;
   private ShooterPivot mShooterPivot;
+    private MedianFilter medianFilter;
+
   /** Creates a new ClimbSticks. */
   public ElevatorSticks(Elevator elevator, ShooterPivot shooterPivot) {
     mElevator = elevator;
     mShooterPivot = shooterPivot;
     addRequirements(mElevator);
+
+    medianFilter = new MedianFilter(5);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    mElevator.setElevatorManualMode();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double climbY;
 
-    climbY = Robot.mRobotContainer.controller1.getLeftY();
+    climbY = -medianFilter.calculate(Robot.mRobotContainer.controller1.getLeftY());
 
     if (climbY < Constants.Elevator.Climb.joyStickDeadBand){
       mElevator.setHoldPositionRecorded(false);
       mElevator.holdElevator();
-    } else if (mShooterPivot.getPivotAngle() < Constants.ShooterPivot.Limits.pivotCollisionZone 
-    && mElevator.getElevatorInches() < Constants.Elevator.Limits.elevatorDangerZone) {
-      mElevator.setHoldPositionRecorded(false);
-      mElevator.holdElevator();
-      new SetPivotTargetAngle(mShooterPivot, Constants.ShooterPivot.Positions.pivotSafeZone).schedule();
-      new SetPivotToTargetAngle(mShooterPivot).schedule();
+    } 
+      // climbY = climbY*climbY*climbY;
+      // mElevator.setElevatorVelocity(climbY * 60);
+    if (climbY > 0.0){
+      mElevator.setElevatorSpeed((climbY / 2) - 0.1);
     } else {
-      climbY = climbY*climbY*climbY;
-      mElevator.setElevatorVelocity(climbY * 4);
+      mElevator.setElevatorSpeed(climbY / 1.3);
     }
+    
   }
 
   // Called once the command ends or is interrupted.

@@ -645,7 +645,6 @@ public class Drivetrain extends SubsystemBase {
 
     public void calculateBlendedVisionPose() {
 
-
         if (!DriverStation.getAlliance().isPresent()) {
             limeLightBlendedLatency = 0.0;
             latestVisionPoseValid = false;
@@ -686,7 +685,6 @@ public class Drivetrain extends SubsystemBase {
             limelightYMedianFilter.reset();
             limelightAngleMedianFilter.reset();
             latestVisionPoseValid = false;
-
         }
     }
 
@@ -738,7 +736,7 @@ public class Drivetrain extends SubsystemBase {
         odomReadingTesting = true;
         this.latestSwervePose = this.swerveDrivePoseEstimator.updateWithTime(
                 Timer.getFPGATimestamp(),
-                Rotation2d.fromDegrees(getGyroYaw()),
+                Rotation2d.fromDegrees(-getGyroYaw()),
                 modulePositions);
     }
 }

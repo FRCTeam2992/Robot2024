@@ -20,12 +20,13 @@ import frc.robot.commands.AutoAim;
 import frc.robot.commands.AutoIntake;
 import frc.robot.commands.AutoRotateBot;
 import frc.robot.commands.AutoShoot;
-import frc.robot.commands.ChangeClimbMode;
 import frc.robot.commands.DisableFieldOrientToggle;
 import frc.robot.commands.DriveSticks;
 import frc.robot.commands.ElevatorSticks;
+import frc.robot.commands.HoldElevatorPosition;
 import frc.robot.commands.HoldShooterPivot;
 import frc.robot.commands.MoveElevator;
+import frc.robot.commands.MoveElevatorToTarget;
 import frc.robot.commands.MoveFeeder;
 import frc.robot.commands.MoveIntake;
 import frc.robot.commands.MoveShooter;
@@ -91,8 +92,8 @@ public class RobotContainer {
     mShooterPivot = new ShooterPivot(mRobotState);
     mShooterPivot.setDefaultCommand(new HoldShooterPivot(mShooterPivot, mRobotState));
 
-    mElevator = new Elevator();
-    mElevator.setDefaultCommand(new StopElevator(mElevator));
+    mElevator = new Elevator(mRobotState);
+    mElevator.setDefaultCommand(new HoldElevatorPosition(mElevator));
 
     mPDH = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
 
@@ -178,8 +179,6 @@ public class RobotContainer {
     controller1.axisLessThan(1, -Constants.Elevator.Climb.joyStickDeadBand)
         .whileTrue(new ElevatorSticks(mElevator, mShooterPivot));
 
-    controller1.start().onTrue(new ChangeClimbMode(mElevator, true));
-    controller1.back().onTrue(new ChangeClimbMode(mElevator, false));
   }
 
   private void configureShuffleBoard() {
@@ -217,6 +216,11 @@ public class RobotContainer {
     SmartDashboard.putData("Zero pivot encoder", new InstantCommand(() -> {
       mShooterPivot.zeroPivotEncoder();
     }));
+
+    SmartDashboard.putNumber("Set Elevator Position", 0.0);
+    SmartDashboard.putData("Move Elevator", new MoveElevatorToTarget(mElevator));
+    SmartDashboard.putData("zero ele target", new SetElevatorTargetPosition(mElevator, 0.0));
+    SmartDashboard.putData("zero ele encoder", new ZeroElevator(mElevator));
 
     SmartDashboard.putData("Reset odometry", mDrivetrain.ResetOdometry());
   }

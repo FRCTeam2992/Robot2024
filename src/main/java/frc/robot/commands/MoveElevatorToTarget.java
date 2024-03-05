@@ -7,17 +7,14 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.ShooterPivot;
 
 public class MoveElevatorToTarget extends Command {
 
   private Elevator mElevator;
-  private ShooterPivot mShooterPivot;
   /** Creates a new MoveElevatorToTarget. */
-  public MoveElevatorToTarget(Elevator subsystem, ShooterPivot shooterPivot) {
+  public MoveElevatorToTarget(Elevator subsystem) {
 
     mElevator = subsystem;
-    mShooterPivot = shooterPivot;
     addRequirements(mElevator);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -35,9 +32,6 @@ public class MoveElevatorToTarget extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if (mElevator.getTargetPosition() < Constants.Elevator.Limits.softStopBottom){
-      new MoveElevator(mElevator, mShooterPivot, -0.01).schedule();
-    }
   }
 
   // Returns true when the command should end.

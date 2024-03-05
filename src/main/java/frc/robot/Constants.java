@@ -261,19 +261,25 @@ public class Constants {
         public static final double encoderToInches = gearRatio * (sprocketPitchDiameter * Math.PI) * 2; // calculates
 
         public static class PIDConstants {
-            public static final double kP = 2.5; // placeholder
-            public static final double kI = 0.0; // placeholder
-            public static final double kD = 0.0; // placeholder
-            public static final double kIZone = 0.0; // placeholder
-            public static final double kF = 0.025; // Place holder
+            public static final double kP0 = 0.1; // placeholder
+            public static final double kI0 = 0.0; // placeholder
+            public static final double kD0 = 0.0001; // placeholder
+            public static final double kIZone0 = 0.0; // placeholder
+            public static final double kF0 = 0.035; // Place holder
 
-            public static final double kMinOutput = -0.2; // placeholder
-            public static final double kMaxOutput = 0.2; // placeholder
+            public static final double kP1 = 0.03; // placeholder
+            public static final double kI1 = 0.0; // placeholder
+            public static final double kD1 = 0.0; // placeholder
+            public static final double kIZone1 = 0.0; // placeholder
+            public static final double kF1 = 0.0; // Place holder
+
+            public static final double kMinOutput = -0.4; // placeholder
+            public static final double kMaxOutput = 0.55; // placeholder
 
             public static final double SmartMotionMaxVel = 350.0; // placeholder
             public static final double SmartMotionMinVel = -350.0; // placeholder
-            public static final double SmartMotionMaxAcc = 500.0; // placeholder
-            public static final double SmartMotionAllowedError = 0.1; // placeholder
+            public static final double SmartMotionMaxAcc = 5.0; // placeholder
+            public static final double SmartMotionAllowedError = 1.0; // placeholder
 
             public static final double positionTolerance = 0.0; // placeholder
 
@@ -284,14 +290,18 @@ public class Constants {
         public static final double elevatorHeightToleranceInch = 0.5; // Place holder
 
         public static class Limits {
-            public static final double softStopBottom = 0.0; // bottom soft stop (in) //Place holder
-            public static final double softStopTop = 24.5; // bottom soft stop (in) //PlaceHolder
-            public static final double hardStopTop = 25.0; // bottom soft stop (in) //Place holder
+            public static final double softStopBottom = 1.0; // bottom soft stop (in) //Place holder
+            public static final double softStopTop = 23.0; // bottom soft stop (in) //PlaceHolder
+            public static final double hardStopTop = 24.0; // bottom soft stop (in) //Place holder
+
 
             public static final double hardStopCurrentLimit = 10.0; // Place Holder
 
             public static final double elevatorDangerZone = 7.0; // placeholder
             public static final double intakeDangerZone = 2.0; // placeholder
+
+            public static final double maxElevatorAmp = 23.0; 
+            public static final double maxElevatorSpeaker = 6.0; 
         }
 
         public static class Positions {
@@ -303,7 +313,8 @@ public class Constants {
         }
 
         public static class Climb {
-            public static final double joyStickDeadBand = 0.2;
+            public static final double joyStickDeadBand = 0.1;
+
         }
     }
 }
