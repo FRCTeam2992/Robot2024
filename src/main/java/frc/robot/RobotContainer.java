@@ -33,6 +33,7 @@ import frc.robot.commands.MoveShooter;
 import frc.robot.commands.MoveShooterPivot;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.SetElevatorTargetPosition;
+import frc.robot.commands.SetPivotTargetAngle;
 import frc.robot.commands.SetPivotToTargetAngle;
 import frc.robot.commands.SetSwerveAngle;
 import frc.robot.commands.StartShooter;
@@ -154,7 +155,10 @@ public class RobotContainer {
     controller1.leftBumper().onTrue(new InstantCommand(() -> {
       mRobotState.setRobotMode(RobotModeState.DefaultSpeaker);
     }));
-    controller1.rightBumper().onTrue(new AutoIntake(mFeeder, mIntake, mShooterPivot));
+    controller1.rightBumper()
+        .onTrue(new SetPivotTargetAngle(mShooterPivot, Constants.ShooterPivot.Positions.intakingPiece)
+            .andThen(new SetPivotToTargetAngle(mShooterPivot).withTimeout(2.0)));
+    controller1.rightBumper().onTrue(new AutoIntake(mFeeder, mIntake));
     controller1.rightBumper().onTrue(
         new SetElevatorTargetPosition(mElevator, Constants.Elevator.Positions.intakingPiece)
             .andThen(new MoveElevatorToTarget(mElevator)));
