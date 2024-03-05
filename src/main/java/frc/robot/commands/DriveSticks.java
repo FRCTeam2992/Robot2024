@@ -284,14 +284,14 @@ public class DriveSticks extends Command {
                 gyroTargetRecorded = false;
             }
 
-            if (mRobotState.isEndgameMode() && mDriveTrain.isAutoRotate()
-                    && mDriveTrain.limeLightCameraBack.getTargetID() > 10
-                    && mDriveTrain.limeLightCameraBack.getTargetID() < 17) {
+            // if (mRobotState.isEndgameMode() && mDriveTrain.isAutoRotate()
+            // && mDriveTrain.limeLightCameraBack.getTargetID() > 10
+            // && mDriveTrain.limeLightCameraBack.getTargetID() < 17) {
 
-                targetAngle = Constants.DrivetrainConstants.StageAngles.angles[(Math
-                        .toIntExact(mDriveTrain.limeLightCameraBack.getTargetID()) - 11)];
+            // targetAngle = Constants.DrivetrainConstants.StageAngles.angles[(Math
+            // .toIntExact(mDriveTrain.limeLightCameraBack.getTargetID()) - 11)];
 
-                SmartDashboard.putNumber("Endgame target angle", targetAngle);
+            // SmartDashboard.putNumber("Endgame target angle", targetAngle);
                 // x2 = mDriveTrain.getGyroYaw() - targetAngle;
                 // if (x2 > 180) {
                 // x2 -= 360;
@@ -304,8 +304,8 @@ public class DriveSticks extends Command {
                 // x2 = Math.min(x2, .90);
                 // x2 = Math.max(x2, -.90);
 
-                gyroTargetRecorded = false;
-            }
+                // gyroTargetRecorded = false;
+                // }
 
             // scoreYController.reset(mDriveTrain.getLatestSwervePose().getY(),
             // x1 * Constants.DrivetrainConstants.swerveMaxSpeed);
