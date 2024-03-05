@@ -4,33 +4,22 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import frc.robot.Constants;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.ShooterPivot;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AutoIntake extends SequentialCommandGroup {
+public class AutoIntake extends ParallelRaceGroup {
   /** Creates a new AutoIntake. */
-  public AutoIntake(Feeder mFeeder, Intake mIntake, ShooterPivot mShooterPivot) {
-
+  public AutoIntake(Feeder mFeeder, Intake mIntake) {
     addCommands(
-      new ParallelCommandGroup(
-          new SetPivotTargetAngle(mShooterPivot, Constants.ShooterPivot.Positions.intakingPiece),
-          new SetPivotToTargetAngle(mShooterPivot)
-      ),
-      new ParallelDeadlineGroup(
         new MoveFeeder(mFeeder, Constants.Feeder.Speeds.intakingPieceSpeed, true),
         new MoveIntake(mIntake, Constants.Intake.Speeds.intakingPieceSpeed)
-      )
     );
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands();
   }
 }
