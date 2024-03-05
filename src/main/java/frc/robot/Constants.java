@@ -31,9 +31,9 @@ public class Constants {
         public static final byte gyroUpdateRateHz = (byte) 50; // 50
         public static final Pose2d zeroPose = new Pose2d(0.0, 0.0, new Rotation2d());
 
-        // Length and Width of the Robot in Meters (Inches: 28 x 31.5) 23.75 x 24.75
-        public static final double swerveWidth = 0.62865; // 0.578;
-        public static final double swerveLength = 0.60325; // 0.667;
+        // Length and Width of the Robot in Meters (Inches: 24.25 x 24.75)
+        public static final double swerveWidth = 0.62865;
+        public static final double swerveLength = 0.61595;
 
         // Max Swerve Speed (Velocity Control)
         public static final double swerveMaxSpeed = 4.5; // (Meters per Second)(2 Slow, 4.5 normal)
@@ -88,21 +88,19 @@ public class Constants {
         public static final double driveRotationP = .005;
         public static final double autoAngleThreshold = 0.3;
 
-        // Swerve Module Translations x=.591/2 y=.654/2
-        public static final Translation2d frontLeftLocation = new Translation2d(0.289, 0.3335);
-        public static final Translation2d frontRightLocation = new Translation2d(0.289, -0.3335);
-        public static final Translation2d rearLeftLocation = new Translation2d(-0.289, 0.3335);
-        public static final Translation2d rearRightLocation = new Translation2d(-0.289, -0.3335);
+        // Swerve Module Translations x=.628/2, y=.616/2
+        public static final Translation2d frontLeftLocation = new Translation2d(0.314, 0.308);
+        public static final Translation2d frontRightLocation = new Translation2d(0.314, -0.308);
+        public static final Translation2d rearLeftLocation = new Translation2d(-0.314, 0.308);
+        public static final Translation2d rearRightLocation = new Translation2d(-0.314, -0.308);
 
-        // Swerve X Axis Correction PID (Path Following)
+        // Swerve Drive Base Radius (Path Following)
+        public static final double driveBaseRadius = 0.43984;
+
+        // Swerve Translation Correction PID (Path Following)
         public static final double xCorrectionP = 10.0;
         public static final double xCorrectionI = 0.0;
         public static final double xCorrectionD = 0.0;
-
-        // Swerve Y Axis Correction PID (Path Following)
-        public static final double yCorrectionP = 10.0;
-        public static final double yCorrectionI = 0.0;
-        public static final double yCorrectionD = 0.0;
 
         // Swerve Theta Axis Correction PID (Path Following)
         public static final double thetaCorrectionP = 150.0;
