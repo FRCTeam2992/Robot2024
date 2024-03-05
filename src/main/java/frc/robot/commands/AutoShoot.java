@@ -53,7 +53,13 @@ public class AutoShoot extends Command {
   @Override
   public void execute() {
     switch (mState.getRobotMode()) {
-      case Override:
+      case Override: {
+        mIntake.setIntakeSpeed(Constants.Intake.Speeds.intakingPieceSpeed);
+        mFeeder.setBeamBreakControl(false);
+        mFeeder.setFeederSpeed(Constants.Feeder.Speeds.speekerShootingSpeed);
+        break;
+
+      }
       case Speaker:
       case DefaultSpeaker:
       case Auto: {
@@ -62,8 +68,8 @@ public class AutoShoot extends Command {
           mIntake.setIntakeSpeed(Constants.Intake.Speeds.intakingPieceSpeed);
           mFeeder.setBeamBreakControl(false);
           mFeeder.setFeederSpeed(Constants.Feeder.Speeds.speekerShootingSpeed);
-          break;
         }
+        break;
       }
       case Amp: {
         mFeeder.setBeamBreakControl(false);
