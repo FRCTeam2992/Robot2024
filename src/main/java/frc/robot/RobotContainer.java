@@ -4,7 +4,10 @@
 
 package frc.robot;
 
+import com.fasterxml.jackson.databind.deser.impl.NullsAsEmptyProvider;
+import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -259,5 +262,17 @@ public class RobotContainer {
     mNoteInterpolator.addDataPoint(new NoteDataPoint(109, 4200, 28.5));
     mNoteInterpolator.addDataPoint(new NoteDataPoint(134, 3250, 28.5));
 
+  }
+
+  private void registerAutoCommandNames() {
+    NamedCommands.registerCommand("autoAim",
+        new AutoAim(mElevator, mShooterPivot, mShooter, mRobotState, mNoteInterpolator, mDrivetrain));
+    NamedCommands.registerCommand("autoShoot",
+        new AutoShoot(mIntake, mFeeder, mRobotState, mElevator, mShooterPivot, mShooter, 0));
+    NamedCommands.registerCommand("autoIntake", new AutoIntake(mFeeder, mIntake));
+    NamedCommands.registerCommand("stopShooter", new StopShooter(mShooter));
+    NamedCommands.registerCommand("stopIntake", new StopIntake(mIntake));
+    NamedCommands.registerCommand("stopFeeder", new MoveFeeder(mFeeder, 0, false));
+    NamedCommands.registerCommand("stopPivot", new StopShooterPivot(mShooterPivot));
   }
 }
