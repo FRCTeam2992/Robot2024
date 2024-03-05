@@ -108,7 +108,6 @@ public class Elevator extends SubsystemBase {
     // This method will be called once per scheduler run
     if (DriverStation.isDisabled()) {
       setElevatorSpeed(0.0);
-      return;
     }
 
     // Here we do the work for all modes except manual control
