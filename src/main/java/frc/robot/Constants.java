@@ -238,7 +238,7 @@ public class Constants {
 
             public static final double pivotCollisionZone = 10.0; // PlaceHolder
         }
-x
+
         public static class Positions {
             public static final double intakingPiece = 15.0; // Place holder
             public static final double pivotSafeZone = 13.0; // PlaceHolder
