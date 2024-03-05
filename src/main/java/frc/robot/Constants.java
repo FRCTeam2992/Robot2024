@@ -24,11 +24,11 @@ public class Constants {
         public static double joystickRotationInverseDeadband = 0.14;
 
         // Odometry variables
-        public static final boolean odometryThread = true;
+        public static final boolean odometryThread = false;
         public static final int odometryFastRefreshTimeoutMillis = 5;
         public static final int odometrySlowRefreshTimeoutMillis = 100;
-        public static final double sensorUpdateRateHz = 200.0;
-        public static final byte gyroUpdateRateHz = (byte) 200;
+        public static final double sensorUpdateRateHz = 50.0; // 200.0
+        public static final byte gyroUpdateRateHz = (byte) 50; // 50
         public static final Pose2d zeroPose = new Pose2d(0.0, 0.0, new Rotation2d());
 
         // Length and Width of the Robot in Meters (Inches: 28 x 31.5) 23.75 x 24.75
