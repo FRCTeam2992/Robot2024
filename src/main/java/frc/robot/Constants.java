@@ -1,4 +1,3 @@
-
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -291,6 +290,7 @@ public class Constants {
             public static final double softStopTop = 23.0; // bottom soft stop (in) //PlaceHolder
             public static final double hardStopTop = 24.0; // bottom soft stop (in) //Place holder
 
+
             public static final double hardStopCurrentLimit = 10.0; // Place Holder
 
             public static final double elevatorDangerZone = 7.0; // placeholder
@@ -307,6 +307,7 @@ public class Constants {
 
         public static class Climb {
             public static final double joyStickDeadBand = 0.1;
+
         }
     }
 }
