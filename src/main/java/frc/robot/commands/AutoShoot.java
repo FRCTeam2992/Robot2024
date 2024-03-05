@@ -41,6 +41,7 @@ public class AutoShoot extends Command {
     mShooter = shooter;
     mWaitTime = waitTime;
     addRequirements(mIntake, mFeeder);
+    timer = new Timer();
   }
 
   // Called when the command is initially scheduled.
