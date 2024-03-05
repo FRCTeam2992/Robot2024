@@ -714,7 +714,9 @@ public class Drivetrain extends SubsystemBase {
         }
 
         SmartDashboard.putString("Alliance Color", getAllianceCoordinateSpace().toString());
-        limelightBackBotPose = limeLightCameraBack.getBotPose(getAllianceCoordinateSpace());
+        // ALWAYS use blue coordinate space even if red to be compatible with
+        // Pathplanner
+        limelightBackBotPose = limeLightCameraBack.getBotPose(CoordinateSpace.Blue);
 
         if (limelightBackBotPose != null && limeLightCameraBack.getTargetID() != -1) {
             limelightTotalArea = limeLightCameraBack.getTargetArea();
