@@ -4,8 +4,11 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import javax.swing.text.html.HTMLDocument.HTMLReader.SpecialAction;
+import javax.xml.stream.events.EndDocument;
+
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.MyRobotState;
 import frc.robot.subsystems.Elevator;
@@ -14,40 +17,73 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ShooterPivot;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AutoShoot extends SequentialCommandGroup {
+public class AutoShoot extends Command {
+
+  private Intake mIntake;
+  private Feeder mFeeder;
+  private MyRobotState mState;
+  private Elevator mElevator;
+  private ShooterPivot mPivot;
+  private Shooter mShooter;
+
+  private Timer timer;
+
   /** Creates a new AutoShoot. */
-  public AutoShoot(Elevator mElevator, Feeder mFeeder, Intake mIntake, ShooterPivot mShooterPivot, Shooter mShooter, MyRobotState mMyRobotState) {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
+  public AutoShoot(Intake intake, Feeder feeder, MyRobotState state, Elevator elevator,
+      ShooterPivot pivot, Shooter shooter) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    mIntake = intake;
+    mFeeder = feeder;
+    mState = state;
+    mElevator = elevator;
+    mPivot = pivot;
+    mShooter = shooter;
+    addRequirements(mIntake, mFeeder);
+  }
 
-    if (true) { // TODO check if in Speaker Robot state
-      addCommands(
-        // new IsReadyToShoot(mElevator, mShooterPivot, mShooter), 
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {
+    timer.restart();
+  }
 
-        new ParallelDeadlineGroup(
-              new MoveFeeder(mFeeder, Constants.Feeder.Speeds.speekerShootingSpeed, false),
-          new MoveIntake(mIntake, Constants.Intake.Speeds.intakingPieceSpeed)
-        )
-      );
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
+    switch (mState.getRobotMode()) {
+      case Override:
+      case Speaker:
+      case DefaultSpeaker:
+      case Auto: {
+        if (timer.get() > 1.0 ||
+            (mElevator.atPosition() && mPivot.atTarget() && mShooter.atShooterRPM())) {
+          mIntake.setIntakeSpeed(Constants.Intake.Speeds.intakingPieceSpeed);
+          mFeeder.setBeamBreakControl(false);
+          mFeeder.setFeederSpeed(Constants.Feeder.Speeds.speekerShootingSpeed);
+          break;
+        }
+      }
+      case Amp: {
+        mFeeder.setBeamBreakControl(false);
+        mFeeder.setFeederSpeed(Constants.Feeder.Speeds.ampShootingSpeed);
+        break;
+      }
+      case Endgame: {
+        mFeeder.setBeamBreakControl(false);
+        mFeeder.setFeederSpeed(Constants.Feeder.Speeds.trapShootingSpeed);
+      }
     }
 
-    if (false) { // TODO check if in Amp Robot state
-      addCommands(
-          // new IsReadyToShoot(mElevator, mShooterPivot, mShooter),
-          new MoveFeeder(mFeeder, Constants.Feeder.Speeds.ampShootingSpeed, false)
-      );
-    }
+  }
 
-    if (false) { // TODO check if in Trap Robot state
-      addCommands(
-        new IsReadyToShoot(mElevator, mShooterPivot, mShooter),
-          new MoveFeeder(mFeeder, Constants.Feeder.Speeds.trapShootingSpeed, false)
-      );
-    }
+  // Called once the command ends or is interrupted.
+  @Override
+  public void end(boolean interrupted) {
+  }
 
-
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    return false;
   }
 }
