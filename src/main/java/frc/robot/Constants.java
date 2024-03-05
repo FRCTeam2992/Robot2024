@@ -296,8 +296,8 @@ public class Constants {
             public static final double elevatorDangerZone = 7.0; // placeholder
             public static final double intakeDangerZone = 2.0; // placeholder
 
-            public static final double maxElevatorAmp = 23.0; // Max pivot angle when in Amp mode
-            public static final double maxElevatorSpeaker = 23.0; // Max pivot angle in in Endgame mode
+            public static final double maxElevatorAmp = 23.0; 
+            public static final double maxElevatorSpeaker = 6.0; 
         }
 
         public static class Positions {
