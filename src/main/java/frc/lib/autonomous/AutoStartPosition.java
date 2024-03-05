@@ -1,34 +1,34 @@
 package frc.lib.autonomous;
 
-import frc.robot.Constants.ScoringGridConstants;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.AutoConstants;
 
 public enum AutoStartPosition {
+
     // Path planner start poses MUST match these starting pose values!
-    LoadStationMidCube("Load Station MidCube",
-            new Pose2d(ScoringGridConstants.autoStartXCoordMeters,
-                    ScoringGridConstants.Red.grid3CenterYMeters,
-                    Rotation2d.fromDegrees(180.0)),
-            new Pose2d(ScoringGridConstants.autoStartXCoordMeters,
-                    ScoringGridConstants.Blue.grid6CenterYMeters,
-                    Rotation2d.fromDegrees(180.0))),
-    WallMidCube("Wall MidCube",
-            new Pose2d(ScoringGridConstants.autoStartXCoordMeters,
-                    ScoringGridConstants.Red.grid1CenterYMeters,
-                    Rotation2d.fromDegrees(180.0)),
-            new Pose2d(ScoringGridConstants.autoStartXCoordMeters,
-                    ScoringGridConstants.Blue.grid8CenterYMeters,
-                    Rotation2d.fromDegrees(180.0))),
-    CenterMidCube("Center MidCube",
-            new Pose2d(ScoringGridConstants.autoStartXCoordMeters,
-                    ScoringGridConstants.Red.grid2CenterYMeters,
-                    Rotation2d.fromDegrees(180.0)),
-            new Pose2d(ScoringGridConstants.autoStartXCoordMeters,
-                    ScoringGridConstants.Blue.grid7CenterYMeters,
-                    Rotation2d.fromDegrees(180.0)));
+    Right("Right",
+            new Pose2d(AutoConstants.StartLocations.rightX,
+                    AutoConstants.StartLocations.redRightY,
+                    Rotation2d.fromDegrees(AutoConstants.StartLocations.rightAngle)),
+            new Pose2d(AutoConstants.StartLocations.rightX,
+                    AutoConstants.StartLocations.blueRightY,
+                    Rotation2d.fromDegrees(AutoConstants.StartLocations.rightAngle))),
+    Center("Center",
+            new Pose2d(AutoConstants.StartLocations.centerX,
+                    AutoConstants.StartLocations.redCenterY,
+                    Rotation2d.fromDegrees(0.0)),
+            new Pose2d(AutoConstants.StartLocations.centerX,
+                    AutoConstants.StartLocations.blueCenterY,
+                    Rotation2d.fromDegrees(0.0))),
+    Left("Left",
+            new Pose2d(AutoConstants.StartLocations.leftX,
+                    AutoConstants.StartLocations.redLeftY,
+                    Rotation2d.fromDegrees(AutoConstants.StartLocations.leftAngle)),
+            new Pose2d(AutoConstants.StartLocations.leftX,
+                    AutoConstants.StartLocations.blueLeftY,
+                    Rotation2d.fromDegrees(AutoConstants.StartLocations.leftAngle)));
 
     public String description;
     public Pose2d startPoseRed;
@@ -41,7 +41,7 @@ public enum AutoStartPosition {
     }
 
     public Pose2d getStartPose() {
-        if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
+        if (DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == DriverStation.Alliance.Red) {
             return this.startPoseRed;
         } else {
             return this.startPoseBlue;
