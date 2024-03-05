@@ -17,7 +17,7 @@ public class SetElevatorTargetPosition extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     mElevator = subsystem;
     mPosition = position;
-    addRequirements(mElevator);
+    // addRequirements(mElevator);
   }
 
   // Called when the command is initially scheduled.

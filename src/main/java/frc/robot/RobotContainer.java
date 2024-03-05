@@ -11,10 +11,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+
 import frc.lib.drive.swerve.OdometryThread;
+import frc.lib.range.NoteDataPoint;
+import frc.lib.range.NoteInterpolator;
 import frc.robot.MyRobotState.RobotModeState;
 import frc.robot.commands.AutoAim;
 import frc.robot.commands.AutoIntake;
+import frc.robot.commands.AutoRotateBot;
 import frc.robot.commands.AutoShoot;
 import frc.robot.commands.DisableFieldOrientToggle;
 import frc.robot.commands.DriveSticks;
@@ -47,6 +51,7 @@ import frc.robot.subsystems.ShooterPivot;
 public class RobotContainer {
 
   public MyRobotState mRobotState;
+  public NoteInterpolator mNoteInterpolator;
 
   public OdometryThread mOdometryThread;
 
@@ -65,6 +70,8 @@ public class RobotContainer {
 
     mRobotState = new MyRobotState();
 
+    initNoteInterp();
+
     mDrivetrain = new Drivetrain();
     if (Constants.DrivetrainConstants.odometryThread) {
       mOdometryThread = new OdometryThread(mDrivetrain);
@@ -74,7 +81,7 @@ public class RobotContainer {
     mDrivetrain.setDefaultCommand(new DriveSticks(mDrivetrain, mRobotState));
 
     mShooter = new Shooter();
-    mShooter.setDefaultCommand(new StopShooter(mShooter));
+    // mShooter.setDefaultCommand(new StopShooter(mShooter));
 
     mIntake = new Intake();
     mIntake.setDefaultCommand(new StopIntake(mIntake));
@@ -101,7 +108,9 @@ public class RobotContainer {
     // Controller 0 (A)
 
     // Triggers
-    controller0.leftTrigger(0.3).whileTrue(new AutoAim());
+    controller0.leftTrigger(0.3).whileTrue(new AutoAim(mElevator, mShooterPivot,
+        mShooter, mRobotState, mNoteInterpolator, mDrivetrain));
+    // controller0.leftTrigger(0.3).whileTrue(new AutoRotateBot(mDrivetrain, true));
     controller0.rightTrigger(0.3)
         .whileTrue(new AutoShoot(mElevator, mFeeder, mIntake, mShooterPivot, mShooter, mRobotState));
 
@@ -125,7 +134,7 @@ public class RobotContainer {
         })); // Slow Mode
 
     // ABXY
-    // controller0.a().whileTrue(new AutoRotate());
+    controller0.a().whileTrue(new AutoRotateBot(mDrivetrain, true));
     // controller0.x().whileTrue(new XWheels());
     controller0.y().whileTrue(new MoveIntake(mIntake, Constants.Intake.Speeds.outakingPieceSpeed)
         .alongWith(new MoveFeeder(mFeeder, Constants.Feeder.Speeds.outakingPieceSpeed, false)));
@@ -222,5 +231,18 @@ public class RobotContainer {
 
   public CommandXboxController getController0() {
     return this.controller0;
+  }
+
+  private void initNoteInterp() {
+    mNoteInterpolator = new NoteInterpolator();
+
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 3300, 49));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(53, 3500, 42));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(64, 4200, 38.0));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(75, 4200, 36.0));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(86, 4200, 33.0));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(109, 4200, 28.5));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(134, 3250, 28.5));
+
   }
 }

@@ -85,7 +85,7 @@ public class Constants {
         public static final double balanceD = 0.006;
 
         // Drive Rotation P
-        public static final double driveRotationP = .01;
+        public static final double driveRotationP = .005;
         public static final double autoAngleThreshold = 0.3;
 
         // Swerve Module Translations x=.591/2 y=.654/2
@@ -141,9 +141,11 @@ public class Constants {
         public static class Field {
             public static double FIELD_WIDTH_METERS = 8.02;
             public static double FIELD_LENGTH_METERS = 16.522;
-            public static double goalX = 0.363;
+            public static double goalX = 0.2286;
             public static double blueGoalY = 5.43;
             public static double redGoalY = 2.66;
+            public static Translation2d redGoalTarget = new Translation2d(goalX, redGoalY);
+            public static Translation2d blueGoalTarget = new Translation2d(goalX, blueGoalY);
         }
 
         public static class StageAngles{
@@ -156,7 +158,7 @@ public class Constants {
         public static final int intakeFollowMotorID = 11;
 
         public static class Speeds {
-            public static final double intakingPieceSpeed = 0.4;
+            public static final double intakingPieceSpeed = 0.35;
             public static final double outakingPieceSpeed = -0.4;
         }
     }
@@ -165,11 +167,11 @@ public class Constants {
         public static final int feederMotorID = 6;
 
         public static class Speeds {
-            public static final double intakingPieceSpeed = 0.4;
+            public static final double intakingPieceSpeed = 0.40;
             public static final double outakingPieceSpeed = -0.4;
             public static final double speekerShootingSpeed = 0.5;
-            public static final double ampShootingSpeed = -0.5;
-            public static final double trapShootingSpeed = -0.5;
+            public static final double ampShootingSpeed = -0.65;
+            public static final double trapShootingSpeed = -0.65;
         }
     }
 
@@ -179,16 +181,18 @@ public class Constants {
             public static int shooterMotorID = 8;
         }
 
+        public static final double defaultShooterSpeed = 2500; // RPM
+
         public static class ShooterPIDConstants {
             public static final boolean useCodePID = true; // Whether to overwrite PID values in motor
 
-            public static double P = 0.0005; // Place holder
+            public static double P = 0.045; // Place holder
             public static double I = 0.0; // Place holder
             public static double D = 0.0; // Place holder
-            public static double V = 0.01; // Place holder
-            public static double S = 0.01;
-            public static double acceleration = 100; // Place holder
-            public static double jerk = 400;
+            public static double V = 0.0102; // Place holder
+            public static double S = 0.00;
+            public static double acceleration = 50; // Place holder
+            public static double jerk = 50;
             // public static double cruiseVelocity = 0.0; // Place holder
 
         }
@@ -232,14 +236,14 @@ public class Constants {
             public static final double minPivotAngle = 1.5; // PlaceHolder
             public static final double maxPivotAngle = 60.0; // PlaceHolder
 
-            public static final double maxPivotAmp = 20.0; // Max pivot angle when in Amp mode
-            public static final double maxPivotEndgame = 8.0; // Max pivot angle in in Endgame mode
+            public static final double maxPivotAmp = 10.0; // Max pivot angle when in Amp mode
+            public static final double maxPivotEndgame = 1.5; // Max pivot angle in in Endgame mode
 
             public static final double pivotCollisionZone = 10.0; // PlaceHolder
         }
 
         public static class Positions {
-            public static final double intakingPiece = 15.0; // Place holder
+            public static final double intakingPiece = 29.0; // Place holder
             public static final double pivotSafeZone = 13.0; // PlaceHolder
         }
     }
@@ -303,6 +307,9 @@ public class Constants {
         public static class Positions {
             public static final double intakingPiece = 0.0; // Place holder
             public static final double safeZoneTop = 7.5; // placeholder
+            public static final double speakerShooting = 0.0;
+            public static final double ampScoring = 20.0; // placeholder
+            public static final double trapScoring = 20.0; // placeholder
         }
 
         public static class Climb {

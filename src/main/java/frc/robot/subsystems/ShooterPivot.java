@@ -132,8 +132,9 @@ public class ShooterPivot extends SubsystemBase {
     // Update the current encoder reading only once per cycle here in Periodic for
     // moving average
     currentPivotAngle = getPivotAngle();
-    setPivotTarget(SmartDashboard.getNumber("Set Pivot angle", 0.0));
+    // setPivotTarget(SmartDashboard.getNumber("Set Pivot angle", 0.0));
     SmartDashboard.putNumber("Pivot target angle", getPivotTarget());
+    SmartDashboard.putString("ShooterPivot State", pivotMode.toString());
 
     SmartDashboard.putData(this);
     SmartDashboard.putNumber("Shooter Pivot Angle (deg)", currentPivotAngle);
@@ -276,6 +277,7 @@ public class ShooterPivot extends SubsystemBase {
 
       case DefaultSpeaker:
       case Speaker: {
+        pivotMode = PivotModeState.ManualMovement;
         // Enforce soft top and bottom limits
         if (currentPivotAngle < Constants.ShooterPivot.Limits.minPivotAngle && speed < 0.0) {
           speed = -0.02; // Set to minimum down speed since encoder says too low
@@ -286,6 +288,7 @@ public class ShooterPivot extends SubsystemBase {
       }
 
       case Amp: {
+        pivotMode = PivotModeState.ManualMovement;
         if (currentPivotAngle < Constants.ShooterPivot.Limits.minPivotAngle && speed < 0.0) {
           speed = -0.01; // Set to minimum down speed since encoder says too low
         } else if (currentPivotAngle > Constants.ShooterPivot.Limits.maxPivotAmp && speed > 0.0) {
@@ -295,6 +298,7 @@ public class ShooterPivot extends SubsystemBase {
       }
 
       case Endgame: {
+        pivotMode = PivotModeState.ManualMovement;
         if (currentPivotAngle < Constants.ShooterPivot.Limits.minPivotAngle && speed < 0.0) {
           speed = -0.01; // Set to minimum down speed since encoder says too low
         } else if (currentPivotAngle > Constants.ShooterPivot.Limits.maxPivotEndgame && speed > 0.0) {

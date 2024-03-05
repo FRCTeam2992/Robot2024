@@ -23,28 +23,28 @@ public class AutoShoot extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
 
-    if (mMyRobotState.isSpeakerMode()){ //TODO check if in Speaker Robot state
+    if (true) { // TODO check if in Speaker Robot state
       addCommands(
         // new IsReadyToShoot(mElevator, mShooterPivot, mShooter), 
 
         new ParallelDeadlineGroup(
-          new MoveFeeder(mFeeder, Constants.Feeder.Speeds.speekerShootingSpeed, true),
+              new MoveFeeder(mFeeder, Constants.Feeder.Speeds.speekerShootingSpeed, false),
           new MoveIntake(mIntake, Constants.Intake.Speeds.intakingPieceSpeed)
         )
       );
     }
 
-     if (true){ //TODO check if in Amp Robot state
+    if (false) { // TODO check if in Amp Robot state
       addCommands(
-        new IsReadyToShoot(mElevator, mShooterPivot, mShooter), 
-        new MoveFeeder(mFeeder, Constants.Feeder.Speeds.ampShootingSpeed, true)
+          // new IsReadyToShoot(mElevator, mShooterPivot, mShooter),
+          new MoveFeeder(mFeeder, Constants.Feeder.Speeds.ampShootingSpeed, false)
       );
     }
 
-    if (true){ //TODO check if in Trap Robot state
+    if (false) { // TODO check if in Trap Robot state
       addCommands(
         new IsReadyToShoot(mElevator, mShooterPivot, mShooter),
-        new MoveFeeder(mFeeder, Constants.Feeder.Speeds.trapShootingSpeed, true)
+          new MoveFeeder(mFeeder, Constants.Feeder.Speeds.trapShootingSpeed, false)
       );
     }
 

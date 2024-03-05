@@ -20,7 +20,7 @@ public class SetPivotTargetAngle extends Command {
     mPivot = subsystem;
     mAngle = angle;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(mPivot);
+    // addRequirements(mPivot);
   }
   
   // Called when the command is initially scheduled.
