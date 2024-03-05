@@ -30,7 +30,7 @@ public class ResetGyro extends Command {
   public void initialize() {
     // Reset the Gyro
     mDriveTrain.resetGyro();
-    mDriveTrain.gyroOffset = mGyroOffset;
+    mDriveTrain.setGyroOffset(mGyroOffset);
     // Pose2d pose = mDriveTrain.latestSwervePoseEstimate;
     // mDriveTrain.setPoseEstimatePosition(true, new Pose2d(pose.getX(),
     // pose.getY(), new Rotation2d(0.0)));

@@ -127,7 +127,7 @@ public class Drivetrain extends SubsystemBase {
 
     // Robot Gyro
     private AHRS navx;
-    public double gyroOffset = 0.0;
+    private double gyroOffset = 0.0;
 
     public Pose2d latestSwervePose = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0));
     public Pose2d latestVisionPose = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0));
