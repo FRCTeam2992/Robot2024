@@ -127,13 +127,15 @@ public class Constants {
 
         // Field Coordinates
         public static class Field {
+            // All in blue field coordiantes
             public static double FIELD_WIDTH_METERS = 8.02;
             public static double FIELD_LENGTH_METERS = 16.522;
-            public static double goalX = 0.2286;
+            public static double blueGoalX = 0.2286;
             public static double blueGoalY = 5.43;
-            public static double redGoalY = 2.66;
-            public static Translation2d redGoalTarget = new Translation2d(goalX, redGoalY);
-            public static Translation2d blueGoalTarget = new Translation2d(goalX, blueGoalY);
+            public static double redGoalX = FIELD_LENGTH_METERS - blueGoalX;
+            public static double redGoalY = FIELD_WIDTH_METERS - blueGoalY;
+            public static Translation2d redGoalTarget = new Translation2d(redGoalX, redGoalY);
+            public static Translation2d blueGoalTarget = new Translation2d(blueGoalX, blueGoalY);
         }
 
         public static class StageAngles{

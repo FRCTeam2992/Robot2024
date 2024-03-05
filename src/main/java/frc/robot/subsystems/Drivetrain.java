@@ -565,7 +565,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void resetGyro() {
-        navx.zeroYaw(); // TODO: Handle red/blue needed?
+        navx.zeroYaw(); // This is always relative to which alliance station we are in.
         setGyroOffset(0.0);
     }
 
