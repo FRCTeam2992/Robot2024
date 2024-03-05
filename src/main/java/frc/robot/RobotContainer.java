@@ -268,7 +268,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("autoAim",
         new AutoAim(mElevator, mShooterPivot, mShooter, mRobotState, mNoteInterpolator, mDrivetrain));
     NamedCommands.registerCommand("autoShoot",
-        new AutoShoot(mIntake, mFeeder, mRobotState, mElevator, mShooterPivot, mShooter, 0));
+        new AutoShoot(mIntake, mFeeder, mRobotState, mElevator, mShooterPivot, mShooter, 0).withTimeout(1.0));
     NamedCommands.registerCommand("autoIntake", new AutoIntake(mFeeder, mIntake));
     NamedCommands.registerCommand("stopShooter", new StopShooter(mShooter));
     NamedCommands.registerCommand("stopIntake", new StopIntake(mIntake));
