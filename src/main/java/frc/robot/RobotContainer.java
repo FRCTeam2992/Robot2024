@@ -118,20 +118,20 @@ public class RobotContainer {
     // Bumpers
     controller0.leftBumper().onTrue(new InstantCommand(
         () -> {
-          // mDrivetrain.setDoFieldOreint(false);
+          mDrivetrain.setDoFieldOrient(false);
         }));// Disable Field Orient
     controller0.leftBumper().onFalse(new InstantCommand(
         () -> {
-          // mDrivetrain.setDoFieldOreint(true);
+          mDrivetrain.setDoFieldOrient(true);
         }));// Disable Field Orient
 
     controller0.rightBumper().onTrue(new InstantCommand(
         () -> {
-          // mDrivetrain.setInSlowMode(true);
+          mDrivetrain.setInSlowMode(true);
         })); // Slow Mode
     controller0.rightBumper().onFalse(new InstantCommand(
         () -> {
-          // mDrivetrain.setInSlowMode(false);
+          mDrivetrain.setInSlowMode(false);
         })); // Slow Mode
 
     // ABXY
@@ -185,6 +185,11 @@ public class RobotContainer {
         .whileTrue(new ElevatorSticks(mElevator, mShooterPivot));
     controller1.axisLessThan(1, -Constants.Elevator.Climb.joyStickDeadBand)
         .whileTrue(new ElevatorSticks(mElevator, mShooterPivot));
+
+    //middle buttos
+    controller1.start().onTrue(new InstantCommand(() -> {mShooterPivot.zeroPivotEncoder();}));    
+    controller1.back().onTrue(new InstantCommand(() -> {mElevator.zeroElevatorEncoders();}));
+
 
   }
 
