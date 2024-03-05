@@ -157,8 +157,8 @@ public class RobotContainer {
     }));
     controller1.rightBumper()
         .onTrue(new SetPivotTargetAngle(mShooterPivot, Constants.ShooterPivot.Positions.intakingPiece)
-            .andThen(new SetPivotToTargetAngle(mShooterPivot).withTimeout(2.0))
-            .andThen(new AutoIntake(mFeeder, mIntake)));
+            .andThen(new SetPivotToTargetAngle(mShooterPivot).withTimeout(2.0)));
+    controller1.rightBumper().onTrue(new AutoIntake(mFeeder, mIntake));
     controller1.rightBumper().onTrue(
         new SetElevatorTargetPosition(mElevator, Constants.Elevator.Positions.intakingPiece)
             .andThen(new MoveElevatorToTarget(mElevator)));
