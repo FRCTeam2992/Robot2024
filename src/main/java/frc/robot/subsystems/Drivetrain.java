@@ -562,6 +562,13 @@ public class Drivetrain extends SubsystemBase {
 
     public void resetGyro() {
         navx.zeroYaw(); // TODO: Handle red/blue needed?
+        setGyroOffset(0.0);
+    }
+
+    public void resetGyro(double offset) {
+        // Reset the gyro but set an offset
+        navx.zeroYaw();
+        setGyroOffset(offset);
     }
 
     public double getGyroYaw() {
@@ -573,6 +580,10 @@ public class Drivetrain extends SubsystemBase {
             angle += 360;
         }
         return angle; // Navx is opposite sign from everything else
+    }
+
+    public double getGyroOffset() {
+        return gyroOffset;
     }
 
     public void setGyroOffset(double offset) {
