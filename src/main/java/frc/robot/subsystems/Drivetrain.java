@@ -328,29 +328,34 @@ public class Drivetrain extends SubsystemBase {
                 // Global measurement standard deviations. X, Y, and theta.
                 MatBuilder.fill(Nat.N3(), Nat.N1(), 0.01, 0.01, .9999));
 
-            // Configure AutoBuilder last
-            AutoBuilder.configureHolonomic(
+        // Configure AutoBuilder last
+        AutoBuilder.configureHolonomic(
                 this::getLatestSwervePose, // Robot pose supplier
-                this::scheduleOdometryReset, // Method to reset odometry (will be called if your auto has a starting pose)
+                this::scheduleOdometryReset, // Method to reset odometry (will be called if your auto has a starting
+                                             // pose)
                 this::getRobotChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                this::driveRobotFromChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                    // Translation PID constants
-                    new PIDConstants(
-                        Constants.DrivetrainConstants.xyCorrectionP,
-                        Constants.DrivetrainConstants.xyCorrectionI,
-                        Constants.DrivetrainConstants.xyCorrectionD),
-                    // Rotation PID constants
-                    new PIDConstants(
-                        Constants.DrivetrainConstants.thetaCorrectionP,
-                        Constants.DrivetrainConstants.thetaCorrectionI,
-                        Constants.DrivetrainConstants.thetaCorrectionD),
-                    3.0, // Max module speed, in m/s
-                    Constants.DrivetrainConstants.driveBaseRadius, // Drive base radius in meters. Distance from robot center to furthest module.
-                    new ReplanningConfig() // Default path replanning config. See the API for the options here
+                this::driveRobotFromChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE
+                                                   // ChassisSpeeds
+                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your
+                                                 // Constants class
+                        // Translation PID constants
+                        new PIDConstants(
+                                Constants.DrivetrainConstants.xyCorrectionP,
+                                Constants.DrivetrainConstants.xyCorrectionI,
+                                Constants.DrivetrainConstants.xyCorrectionD),
+                        // Rotation PID constants
+                        new PIDConstants(
+                                Constants.DrivetrainConstants.thetaCorrectionP,
+                                Constants.DrivetrainConstants.thetaCorrectionI,
+                                Constants.DrivetrainConstants.thetaCorrectionD),
+                        3.0, // Max module speed, in m/s
+                        Constants.DrivetrainConstants.driveBaseRadius, // Drive base radius in meters. Distance from
+                                                                       // robot center to furthest module.
+                        new ReplanningConfig() // Default path replanning config. See the API for the options here
                 ),
                 () -> {
-                    // Boolean supplier that controls when the path will be mirrored for the red alliance
+                    // Boolean supplier that controls when the path will be mirrored for the red
+                    // alliance
                     // This will flip the path being followed to the red side of the field.
                     // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
                     var alliance = DriverStation.getAlliance();
@@ -360,7 +365,7 @@ public class Drivetrain extends SubsystemBase {
                     return false;
                 },
                 this // Reference to this subsystem to set requirements
-            );
+        );
 
     }
 
@@ -389,8 +394,7 @@ public class Drivetrain extends SubsystemBase {
                     calculateBlendedVisionPose();
                     if (latestVisionPoseValid) {
                         swerveDrivePoseEstimator.addVisionMeasurement(
-                            latestVisionPose, Timer.getFPGATimestamp() - limeLightBlendedLatency / 1000
-                        );
+                                latestVisionPose, Timer.getFPGATimestamp() - limeLightBlendedLatency / 1000);
                     }
                 }
 
@@ -478,7 +482,7 @@ public class Drivetrain extends SubsystemBase {
         if (!DriverStation.getAlliance().isPresent()) {
             return CoordinateSpace.Field;
         }
-        if (DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == DriverStation.Alliance.Red) {
+        if (DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red) {
             return CoordinateSpace.Red;
         }
         return CoordinateSpace.Blue;
@@ -640,11 +644,22 @@ public class Drivetrain extends SubsystemBase {
                     Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions,
                     new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(-getGyroYaw())));
         } else {
-            setGyroOffset(navx.getYaw() - resetPose.getRotation().getDegrees());
+            double newGyroOffset = navx.getYaw() - resetPose.getRotation().getDegrees();
+            if (getAllianceCoordinateSpace() == CoordinateSpace.Blue) {
+                // Blue so just set gyro offset normally
+                setGyroOffset(newGyroOffset);
+            } else {
+                // Red so we have to flip gyro by 180
+                newGyroOffset += 180.0;
+                if (newGyroOffset > 180) {
+                    newGyroOffset -= 360.0;
+                }
+                setGyroOffset(newGyroOffset);
+            }
             swerveDrivePoseEstimator.resetPosition(
-                Rotation2d.fromDegrees(-getGyroYaw()),
-                swerveDriveModulePositions,
-                resetPose);
+                    Rotation2d.fromDegrees(-getGyroYaw()),
+                    swerveDriveModulePositions,
+                    resetPose);
             latestSwervePose = resetPose;
         }
     }
