@@ -29,7 +29,7 @@ public class ResetGyro extends Command {
   @Override
   public void initialize() {
     // Reset the Gyro
-    mDriveTrain.navx.zeroYaw();
+    mDriveTrain.resetGyro();
     mDriveTrain.gyroOffset = mGyroOffset;
     // Pose2d pose = mDriveTrain.latestSwervePoseEstimate;
     // mDriveTrain.setPoseEstimatePosition(true, new Pose2d(pose.getX(),

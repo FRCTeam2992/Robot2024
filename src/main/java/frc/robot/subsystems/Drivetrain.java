@@ -123,11 +123,10 @@ public class Drivetrain extends SubsystemBase {
 
     private DataLog mDataLog;
 
-    private DoubleArrayLogEntry navxLog;
     private DoubleArrayLogEntry swerveCANCoderLog;
 
     // Robot Gyro
-    public AHRS navx;
+    private AHRS navx;
     public double gyroOffset = 0.0;
 
     public Pose2d latestSwervePose = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0));
@@ -300,7 +299,6 @@ public class Drivetrain extends SubsystemBase {
 
         if (Constants.dataLogging) {
             mDataLog = DataLogManager.getLog();
-            navxLog = new DoubleArrayLogEntry(mDataLog, "/Drivetrain/navx/positions");
             swerveCANCoderLog = new DoubleArrayLogEntry(mDataLog, "/Drivetrain/Swerve/CANCoders");
         }
 
@@ -407,8 +405,6 @@ public class Drivetrain extends SubsystemBase {
         }
 
         if (Constants.dataLogging && DriverStation.isEnabled()) {
-            double[] navxReading = { navx.getYaw(), navx.getPitch(), navx.getRoll() };
-            navxLog.append(navxReading);
 
             double[] canReadings = { frontLeftModule.getEncoderAngle(), frontRightModule.getEncoderAngle(),
                     rearLeftModule.getEncoderAngle(), rearRightModule.getEncoderAngle() };
@@ -435,8 +431,7 @@ public class Drivetrain extends SubsystemBase {
                 SmartDashboard.putNumber("Back Right Encoder Angle", rearRightModule.getEncoderAngle());
 
                 SmartDashboard.putNumber("Gyro Yaw (raw deg)", navx.getYaw());
-                SmartDashboard.putNumber("Gyro Yaw (adj deg)", -getGyroYaw());
-                SmartDashboard.putNumber("Robot Gyro Pitch (raw deg)", getRobotPitch()); // Navx Roll
+                SmartDashboard.putNumber("Gyro Yaw (adj deg)", getGyroYaw());
 
                 SmartDashboard.putBoolean("IsAutoRotate", isAutoRotate());
             }
@@ -565,6 +560,10 @@ public class Drivetrain extends SubsystemBase {
 
     }
 
+    public void resetGyro() {
+        navx.zeroYaw(); // TODO: Handle red/blue needed?
+    }
+
     public double getGyroYaw() {
         double angle = navx.getYaw() + gyroOffset;
         while (angle > 180) {
@@ -573,15 +572,11 @@ public class Drivetrain extends SubsystemBase {
         while (angle < -180) {
             angle += 360;
         }
-        return angle;
+        return angle; // Navx is opposite sign from everything else
     }
 
     public void setGyroOffset(double offset) {
         gyroOffset = offset;
-    }
-
-    public double getRobotPitch() {
-        return -1 * (navx.getRoll() + Constants.DrivetrainConstants.gyroRollOffset);
     }
 
     public Pose2d getLatestSwervePose() {
