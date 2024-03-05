@@ -25,12 +25,13 @@ public class AutoShoot extends Command {
   private Elevator mElevator;
   private ShooterPivot mPivot;
   private Shooter mShooter;
+  private double mWaitTime;
 
   private Timer timer;
 
   /** Creates a new AutoShoot. */
   public AutoShoot(Intake intake, Feeder feeder, MyRobotState state, Elevator elevator,
-      ShooterPivot pivot, Shooter shooter) {
+      ShooterPivot pivot, Shooter shooter, double waitTime) {
     // Use addRequirements() here to declare subsystem dependencies.
     mIntake = intake;
     mFeeder = feeder;
@@ -38,6 +39,7 @@ public class AutoShoot extends Command {
     mElevator = elevator;
     mPivot = pivot;
     mShooter = shooter;
+    mWaitTime = waitTime;
     addRequirements(mIntake, mFeeder);
   }
 
@@ -55,7 +57,7 @@ public class AutoShoot extends Command {
       case Speaker:
       case DefaultSpeaker:
       case Auto: {
-        if (timer.get() > 1.0 ||
+        if (timer.get() > mWaitTime ||
             (mElevator.atPosition() && mPivot.atTarget() && mShooter.atShooterRPM())) {
           mIntake.setIntakeSpeed(Constants.Intake.Speeds.intakingPieceSpeed);
           mFeeder.setBeamBreakControl(false);

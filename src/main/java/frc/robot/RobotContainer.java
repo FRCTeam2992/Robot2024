@@ -112,7 +112,8 @@ public class RobotContainer {
         mShooter, mRobotState, mNoteInterpolator, mDrivetrain));
     // controller0.leftTrigger(0.3).whileTrue(new AutoRotateBot(mDrivetrain, true));
     controller0.rightTrigger(0.3)
-        .whileTrue(new AutoShoot(mIntake, mFeeder, mRobotState, mElevator, mShooterPivot, mShooter));
+        .whileTrue(new AutoShoot(mIntake, mFeeder, mRobotState, mElevator, mShooterPivot,
+            mShooter, 1.0));
     // Bumpers
     controller0.leftBumper().onTrue(new InstantCommand(
         () -> {
