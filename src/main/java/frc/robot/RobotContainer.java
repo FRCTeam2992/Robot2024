@@ -113,6 +113,8 @@ public class RobotContainer {
     configureBindings();
     configureSmartDashboard();
 
+    registerAutoCommandNames();
+    
     autoChooser = AutoBuilder.buildAutoChooser("NothingCenter");
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
