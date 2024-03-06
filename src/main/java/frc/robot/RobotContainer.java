@@ -33,7 +33,9 @@ import frc.robot.commands.MoveShooter;
 import frc.robot.commands.MoveShooterPivot;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.SetElevatorTargetPosition;
+import frc.robot.commands.SetPivotTargetAngle;
 import frc.robot.commands.SetPivotToTargetAngle;
+import frc.robot.commands.SetShooterSpeedTarget;
 import frc.robot.commands.SetSwerveAngle;
 import frc.robot.commands.StartShooter;
 import frc.robot.commands.StopElevator;
@@ -117,20 +119,20 @@ public class RobotContainer {
     // Bumpers
     controller0.leftBumper().onTrue(new InstantCommand(
         () -> {
-          // mDrivetrain.setDoFieldOreint(false);
+          mDrivetrain.setDoFieldOrient(false);
         }));// Disable Field Orient
     controller0.leftBumper().onFalse(new InstantCommand(
         () -> {
-          // mDrivetrain.setDoFieldOreint(true);
+          mDrivetrain.setDoFieldOrient(true);
         }));// Disable Field Orient
 
     controller0.rightBumper().onTrue(new InstantCommand(
         () -> {
-          // mDrivetrain.setInSlowMode(true);
+          mDrivetrain.setInSlowMode(true);
         })); // Slow Mode
     controller0.rightBumper().onFalse(new InstantCommand(
         () -> {
-          // mDrivetrain.setInSlowMode(false);
+          mDrivetrain.setInSlowMode(false);
         })); // Slow Mode
 
     // ABXY
@@ -154,14 +156,21 @@ public class RobotContainer {
     controller1.leftBumper().onTrue(new InstantCommand(() -> {
       mRobotState.setRobotMode(RobotModeState.DefaultSpeaker);
     }));
-    controller1.rightBumper().onTrue(new AutoIntake(mFeeder, mIntake, mShooterPivot));
+    controller1.rightBumper()
+        .onTrue(new SetPivotTargetAngle(mShooterPivot, Constants.ShooterPivot.Positions.intakingPiece)
+            .andThen(new SetPivotToTargetAngle(mShooterPivot).withTimeout(2.0)));
+    controller1.rightBumper().onTrue(new AutoIntake(mFeeder, mIntake));
     controller1.rightBumper().onTrue(
         new SetElevatorTargetPosition(mElevator, Constants.Elevator.Positions.intakingPiece)
             .andThen(new MoveElevatorToTarget(mElevator)));
 
     // POV
     controller1.povUp().whileTrue(new MoveShooterPivot(mShooterPivot, 0.1));
-    controller1.povDown().whileTrue(new MoveShooterPivot(mShooterPivot, -0.04));
+    controller1.povDown().whileTrue(new MoveShooterPivot(mShooterPivot, -0.04));    
+    controller1.povLeft().onTrue(new SetShooterSpeedTarget(mShooter, mShooter.getShooterTargetRPM() - 100).andThen(new StartShooter(mShooter)));
+    controller1.povRight().onTrue(new SetShooterSpeedTarget(mShooter, mShooter.getShooterTargetRPM() + 100).andThen(new StartShooter(mShooter)));
+
+
 
     // ABXY
     controller1.a().onTrue(new InstantCommand(() -> {
@@ -170,9 +179,10 @@ public class RobotContainer {
     controller1.b().onTrue(new InstantCommand(() -> {
       mRobotState.setRobotMode(RobotModeState.Amp);
     }));
-    controller1.y().onTrue(new InstantCommand(() -> {
-      mRobotState.setRobotMode(RobotModeState.Endgame);
-    }));
+    // controller1.y().onTrue(new InstantCommand(() -> {
+    //   mRobotState.setRobotMode(RobotModeState.Endgame);
+    // }));
+    controller1.x().onTrue(new SetShooterSpeedTarget(mShooter, 0).andThen(new StartShooter(mShooter)));
 
     controller0.povUp().whileTrue(new MoveElevator(mElevator, mShooterPivot, 0.15));
     controller0.povDown().whileTrue(new MoveElevator(mElevator, mShooterPivot, -0.05));
@@ -181,6 +191,11 @@ public class RobotContainer {
         .whileTrue(new ElevatorSticks(mElevator, mShooterPivot));
     controller1.axisLessThan(1, -Constants.Elevator.Climb.joyStickDeadBand)
         .whileTrue(new ElevatorSticks(mElevator, mShooterPivot));
+
+    //middle buttos
+    controller1.start().onTrue(new InstantCommand(() -> {mShooterPivot.zeroPivotEncoder();}));    
+    controller1.back().onTrue(new InstantCommand(() -> {mElevator.zeroElevatorEncoders();}));
+
 
   }
 
@@ -194,6 +209,8 @@ public class RobotContainer {
   }
 
   private void configureSmartDashboard() {
+    SmartDashboard.putData("Override Mode", new InstantCommand(()-> {mRobotState.setRobotMode(RobotModeState.Override);}));
+
     SmartDashboard.putNumber("Set Shooter RPM", 0.0);
     SmartDashboard.putNumber("Set Pivot angle", 0.0);
     SmartDashboard.putData("Move pivot to position", new SetPivotToTargetAngle(mShooterPivot));
