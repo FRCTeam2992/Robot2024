@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
 
     mRobotContainer.mElevator.zeroElevatorEncoders();
 
-    CameraServer.startAutomaticCapture();
+    // CameraServer.startAutomaticCapture();
   }
 
   @Override
@@ -35,6 +35,10 @@ public class Robot extends TimedRobot {
     // SmartDashboard.putNumber("Elevator Current Out",
     // mRobotContainer.mPDH.getCurrent(6));
     SmartDashboard.putString("Robot State", mRobotContainer.mRobotState.getRobotMode().toString());
+    SmartDashboard.putBoolean("Speaker", mRobotContainer.mRobotState.isSpeakerMode());
+    SmartDashboard.putBoolean("Amp", mRobotContainer.mRobotState.isAmpMode());
+    SmartDashboard.putBoolean("Overried", mRobotContainer.mRobotState.IsOverrideMode());
+    SmartDashboard.putBoolean("Default", mRobotContainer.mRobotState.isDefaultSpeakerMode());
 
   }
 

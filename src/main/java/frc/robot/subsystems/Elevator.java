@@ -91,6 +91,7 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
 
+
     if (checkIfAtHardStop()){
       // zeroElevatorEncoders();
       // new HoldElevator(this).schedule();
