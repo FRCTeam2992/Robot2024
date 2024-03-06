@@ -197,7 +197,8 @@ public class RobotContainer {
     // controller1.y().onTrue(new InstantCommand(() -> {
     //   mRobotState.setRobotMode(RobotModeState.Endgame);
     // }));
-    controller1.x().onTrue(new SetShooterSpeedTarget(mShooter, 0).andThen(new StartShooter(mShooter)));
+    // controller1.x().whileTrue(new SetShooterSpeedTarget(mShooter, 500));
+    controller1.x().onTrue(new MoveShooter(mShooter, 0.1));
 
     controller0.povUp().whileTrue(new MoveElevator(mElevator, mShooterPivot, 0.15));
     controller0.povDown().whileTrue(new MoveElevator(mElevator, mShooterPivot, -0.05));
