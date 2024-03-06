@@ -4,8 +4,14 @@
 
 package frc.robot;
 
+import com.fasterxml.jackson.databind.deser.impl.NullsAsEmptyProvider;
+import com.fasterxml.jackson.databind.util.Named;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -68,6 +74,8 @@ public class RobotContainer {
   public CommandXboxController controller0;
   public CommandXboxController controller1;
 
+  private final SendableChooser<Command> autoChooser;
+
   public RobotContainer() {
 
     mRobotState = new MyRobotState();
@@ -104,6 +112,11 @@ public class RobotContainer {
 
     configureBindings();
     configureSmartDashboard();
+
+    registerAutoCommandNames();
+    
+    autoChooser = AutoBuilder.buildAutoChooser("NothingCenter");
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   private void configureBindings() {
@@ -182,7 +195,8 @@ public class RobotContainer {
     // controller1.y().onTrue(new InstantCommand(() -> {
     //   mRobotState.setRobotMode(RobotModeState.Endgame);
     // }));
-    controller1.x().onTrue(new SetShooterSpeedTarget(mShooter, 0).andThen(new StartShooter(mShooter)));
+    // controller1.x().whileTrue(new SetShooterSpeedTarget(mShooter, 500));
+    controller1.x().onTrue(new MoveShooter(mShooter, 0.1));
 
     controller0.povUp().whileTrue(new MoveElevator(mElevator, mShooterPivot, 0.15));
     controller0.povDown().whileTrue(new MoveElevator(mElevator, mShooterPivot, -0.05));
@@ -246,7 +260,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    return autoChooser.getSelected();
   }
 
   public CommandXboxController getController0() {
@@ -264,5 +278,17 @@ public class RobotContainer {
     mNoteInterpolator.addDataPoint(new NoteDataPoint(109, 4200, 28.5));
     mNoteInterpolator.addDataPoint(new NoteDataPoint(134, 3250, 28.5));
 
+  }
+
+  private void registerAutoCommandNames() {
+    NamedCommands.registerCommand("autoAim",
+        new AutoAim(mElevator, mShooterPivot, mShooter, mRobotState, mNoteInterpolator, mDrivetrain));
+    NamedCommands.registerCommand("autoShoot",
+        new AutoShoot(mIntake, mFeeder, mRobotState, mElevator, mShooterPivot, mShooter, 0).withTimeout(1.0));
+    NamedCommands.registerCommand("autoIntake", new AutoIntake(mFeeder, mIntake));
+    NamedCommands.registerCommand("stopShooter", new StopShooter(mShooter));
+    NamedCommands.registerCommand("stopIntake", new StopIntake(mIntake));
+    NamedCommands.registerCommand("stopFeeder", new MoveFeeder(mFeeder, 0, false));
+    NamedCommands.registerCommand("stopPivot", new StopShooterPivot(mShooterPivot));
   }
 }

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.drive.swerve.SwerveModuleFalconFalcon;
+import frc.lib.vision.LimeLight.CoordinateSpace;
 import frc.robot.Constants;
 import frc.robot.MyRobotState;
 import frc.robot.Robot;
@@ -227,16 +228,25 @@ public class DriveSticks extends Command {
                 // botY = mDriveTrain.latestSwervePose.getY();
                 botX = mDriveTrain.latestSwervePose.getX();
                 botY = mDriveTrain.latestSwervePose.getY();
-                goalX = Constants.DrivetrainConstants.Field.goalX;
 
                 if (DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == DriverStation.Alliance.Red) {
+                    goalX = Constants.DrivetrainConstants.Field.redGoalX;
                     goalY = Constants.DrivetrainConstants.Field.redGoalY;
                 } else {
+                    goalX = Constants.DrivetrainConstants.Field.blueGoalX;
                     goalY = Constants.DrivetrainConstants.Field.blueGoalY;
                 }
 
                 targetAngle = -Math.atan2((botY - goalY), (botX - goalX));
                 targetAngle = targetAngle * 180.0 / Math.PI;
+
+                // Have to transform this angle to gyro coordinate space for Red
+                if (mDriveTrain.getAllianceCoordinateSpace() == CoordinateSpace.Red) {
+                    targetAngle += 180.0;
+                    if (targetAngle > 180.0) {
+                        targetAngle -= 360.0;
+                    }
+                }
 
                 SmartDashboard.putNumber("Speaker Target Angle", targetAngle);
                 x2 = mDriveTrain.getGyroYaw() - targetAngle;
@@ -265,16 +275,16 @@ public class DriveSticks extends Command {
 
             if (mRobotState.isAmpMode() && mDriveTrain.isAutoRotate()) {
                 targetAngle = -90.0;
-                if (DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == DriverStation.Alliance.Red) {
+                if (DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red) {
                     targetAngle *= -1.0;
                 }
 
                 SmartDashboard.putNumber("Amp target angle", targetAngle);
                 x2 = mDriveTrain.getGyroYaw() - targetAngle;
                 if (x2 > 180) {
-                x2 -= 360;
+                    x2 -= 360;
                 } else if (x2 < -180) {
-                x2 += 360;
+                    x2 += 360;
                 }
                 x2 = x2 * Constants.DrivetrainConstants.driveRotationP;
 
@@ -284,28 +294,28 @@ public class DriveSticks extends Command {
                 gyroTargetRecorded = false;
             }
 
-            if (mRobotState.isEndgameMode() && mDriveTrain.isAutoRotate()
-                    && mDriveTrain.limeLightCameraBack.getTargetID() > 10
-                    && mDriveTrain.limeLightCameraBack.getTargetID() < 17) {
+            // if (mRobotState.isEndgameMode() && mDriveTrain.isAutoRotate()
+            // && mDriveTrain.limeLightCameraBack.getTargetID() > 10
+            // && mDriveTrain.limeLightCameraBack.getTargetID() < 17) {
 
-                targetAngle = Constants.DrivetrainConstants.StageAngles.angles[(Math
-                        .toIntExact(mDriveTrain.limeLightCameraBack.getTargetID()) - 11)];
+            // targetAngle = Constants.DrivetrainConstants.StageAngles.angles[(Math
+            // .toIntExact(mDriveTrain.limeLightCameraBack.getTargetID()) - 11)];
 
-                SmartDashboard.putNumber("Endgame target angle", targetAngle);
-                // x2 = mDriveTrain.getGyroYaw() - targetAngle;
-                // if (x2 > 180) {
-                // x2 -= 360;
-                // } else if (x2 < -180) {
-                // x2 += 360;
-                // }
+            // SmartDashboard.putNumber("Endgame target angle", targetAngle);
+            // x2 = mDriveTrain.getGyroYaw() - targetAngle;
+            // if (x2 > 180) {
+            // x2 -= 360;
+            // } else if (x2 < -180) {
+            // x2 += 360;
+            // }
 
-                // x2 = x2 * Constants.DrivetrainConstants.driveRotationP;
+            // x2 = x2 * Constants.DrivetrainConstants.driveRotationP;
 
-                // x2 = Math.min(x2, .90);
-                // x2 = Math.max(x2, -.90);
+            // x2 = Math.min(x2, .90);
+            // x2 = Math.max(x2, -.90);
 
-                gyroTargetRecorded = false;
-            }
+            // gyroTargetRecorded = false;
+            // }
 
             // scoreYController.reset(mDriveTrain.getLatestSwervePose().getY(),
             // x1 * Constants.DrivetrainConstants.swerveMaxSpeed);
