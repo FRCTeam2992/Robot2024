@@ -88,9 +88,9 @@ public class Constants {
         public static final double driveBaseRadius = 0.43984;
 
         // Swerve Translation Correction PID (Path Following)
-        public static final double xyCorrectionP = 10.0;
-        public static final double xyCorrectionI = 0.0;
-        public static final double xyCorrectionD = 0.0;
+        public static final double xCorrectionP = 10.0;
+        public static final double xCorrectionI = 0.0;
+        public static final double xCorrectionD = 0.0;
 
         // Swerve Theta Axis Correction PID (Path Following)
         public static final double thetaCorrectionP = 1.0;
