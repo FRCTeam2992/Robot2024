@@ -438,9 +438,12 @@ public class Drivetrain extends SubsystemBase {
                 SmartDashboard.putNumber("Gyro Yaw (adj deg)", getGyroYaw());
 
                 SmartDashboard.putBoolean("IsAutoRotate", isAutoRotate());
+
+                SmartDashboard.putData("Drivetrain", this);
             }
 
             if (Constants.debugDashboard) {
+                SmartDashboard.putNumber("Wheel speed (m)", frontLeftModule.getWheelSpeedMeters());
                 SmartDashboard.putBoolean("Limelight Back Pose OK?", limelightBackBotPose.length <= 7);
                 SmartDashboard.putBoolean("Limelight Seeing Target?", limeLightCameraBack.getTargetID() != -1);
                 SmartDashboard.putBoolean("Latest Vision Pose OK?", latestVisionPose != null);
