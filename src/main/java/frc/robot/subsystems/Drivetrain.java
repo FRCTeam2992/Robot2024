@@ -21,7 +21,10 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 // import com.ctre.phoenix.motorcontrol.can.TalonFX;
 // import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.kauailabs.navx.frc.AHRS;
-import com.pathplanner.lib.path.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 /**
  * Use a bugfix posted on ChiefDelphi by Programming4907 instead of the origin dependency
@@ -45,6 +48,7 @@ import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -119,12 +123,11 @@ public class Drivetrain extends SubsystemBase {
 
     private DataLog mDataLog;
 
-    private DoubleArrayLogEntry navxLog;
     private DoubleArrayLogEntry swerveCANCoderLog;
 
     // Robot Gyro
-    public AHRS navx;
-    public double gyroOffset = 0.0;
+    private AHRS navx;
+    private double gyroOffset = 0.0;
 
     public Pose2d latestSwervePose = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0));
     public Pose2d latestVisionPose = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0));
@@ -143,11 +146,6 @@ public class Drivetrain extends SubsystemBase {
     };
 
     public Transform2d moved;
-
-    // public PathPlannerTrajectory testPath;
-    public PathPlannerTrajectory driveStraight;
-    public PathPlannerTrajectory curvePath;
-    public PathPlannerTrajectory testPath;
 
     // State Variables
     private boolean inSlowMode = false;
@@ -288,9 +286,6 @@ public class Drivetrain extends SubsystemBase {
                 Constants.DrivetrainConstants.swerveLength,
                 Constants.DrivetrainConstants.swerveWidth);
 
-        // Load Motion Paths
-        loadMotionPaths();
-
         // Limelight
         limeLightCameraBack = new LimeLight("limelight-back");
         limelightBackBotPose = new double[7];
@@ -304,7 +299,6 @@ public class Drivetrain extends SubsystemBase {
 
         if (Constants.dataLogging) {
             mDataLog = DataLogManager.getLog();
-            navxLog = new DoubleArrayLogEntry(mDataLog, "/Drivetrain/navx/positions");
             swerveCANCoderLog = new DoubleArrayLogEntry(mDataLog, "/Drivetrain/Swerve/CANCoders");
         }
 
@@ -333,6 +327,46 @@ public class Drivetrain extends SubsystemBase {
                 MatBuilder.fill(Nat.N3(), Nat.N1(), 0.002, 0.002, 0.01),
                 // Global measurement standard deviations. X, Y, and theta.
                 MatBuilder.fill(Nat.N3(), Nat.N1(), 0.01, 0.01, .9999));
+
+        // Configure AutoBuilder last
+        AutoBuilder.configureHolonomic(
+                this::getLatestSwervePose, // Robot pose supplier
+                this::scheduleOdometryReset, // Method to reset odometry (will be called if your auto has a starting
+                                             // pose)
+                this::getRobotChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                this::driveRobotFromChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE
+                                                   // ChassisSpeeds
+                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your
+                                                 // Constants class
+                        // Translation PID constants
+                        new PIDConstants(
+                                Constants.DrivetrainConstants.xyCorrectionP,
+                                Constants.DrivetrainConstants.xyCorrectionI,
+                                Constants.DrivetrainConstants.xyCorrectionD),
+                        // Rotation PID constants
+                        new PIDConstants(
+                                Constants.DrivetrainConstants.thetaCorrectionP,
+                                Constants.DrivetrainConstants.thetaCorrectionI,
+                                Constants.DrivetrainConstants.thetaCorrectionD),
+                        3.0, // Max module speed, in m/s
+                        Constants.DrivetrainConstants.driveBaseRadius, // Drive base radius in meters. Distance from
+                                                                       // robot center to furthest module.
+                        new ReplanningConfig() // Default path replanning config. See the API for the options here
+                ),
+                () -> {
+                    // Boolean supplier that controls when the path will be mirrored for the red
+                    // alliance
+                    // This will flip the path being followed to the red side of the field.
+                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+                    var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                        return alliance.get() == DriverStation.Alliance.Red;
+                    }
+                    return false;
+                },
+                this // Reference to this subsystem to set requirements
+        );
+
     }
 
     private void initTalonFX(TalonFX motorContollerName, TalonFXConfiguration configs, InvertedValue motorDirection) {
@@ -360,8 +394,7 @@ public class Drivetrain extends SubsystemBase {
                     calculateBlendedVisionPose();
                     if (latestVisionPoseValid) {
                         swerveDrivePoseEstimator.addVisionMeasurement(
-                            latestVisionPose, Timer.getFPGATimestamp() - limeLightBlendedLatency / 1000
-                        );
+                                latestVisionPose, Timer.getFPGATimestamp() - limeLightBlendedLatency / 1000);
                     }
                 }
 
@@ -376,8 +409,6 @@ public class Drivetrain extends SubsystemBase {
         }
 
         if (Constants.dataLogging && DriverStation.isEnabled()) {
-            double[] navxReading = { navx.getYaw(), navx.getPitch(), navx.getRoll() };
-            navxLog.append(navxReading);
 
             double[] canReadings = { frontLeftModule.getEncoderAngle(), frontRightModule.getEncoderAngle(),
                     rearLeftModule.getEncoderAngle(), rearRightModule.getEncoderAngle() };
@@ -404,13 +435,15 @@ public class Drivetrain extends SubsystemBase {
                 SmartDashboard.putNumber("Back Right Encoder Angle", rearRightModule.getEncoderAngle());
 
                 SmartDashboard.putNumber("Gyro Yaw (raw deg)", navx.getYaw());
-                SmartDashboard.putNumber("Gyro Yaw (adj deg)", -getGyroYaw());
-                SmartDashboard.putNumber("Robot Gyro Pitch (raw deg)", getRobotPitch()); // Navx Roll
+                SmartDashboard.putNumber("Gyro Yaw (adj deg)", getGyroYaw());
 
                 SmartDashboard.putBoolean("IsAutoRotate", isAutoRotate());
+
+                SmartDashboard.putData("Drivetrain", this);
             }
 
             if (Constants.debugDashboard) {
+                SmartDashboard.putNumber("Wheel speed (m)", frontLeftModule.getWheelSpeedMeters());
                 SmartDashboard.putBoolean("Limelight Back Pose OK?", limelightBackBotPose.length <= 7);
                 SmartDashboard.putBoolean("Limelight Seeing Target?", limeLightCameraBack.getTargetID() != -1);
                 SmartDashboard.putBoolean("Latest Vision Pose OK?", latestVisionPose != null);
@@ -452,7 +485,7 @@ public class Drivetrain extends SubsystemBase {
         if (!DriverStation.getAlliance().isPresent()) {
             return CoordinateSpace.Field;
         }
-        if (DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == DriverStation.Alliance.Red) {
+        if (DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red) {
             return CoordinateSpace.Red;
         }
         return CoordinateSpace.Blue;
@@ -534,6 +567,17 @@ public class Drivetrain extends SubsystemBase {
 
     }
 
+    public void resetGyro() {
+        navx.zeroYaw(); // This is always relative to which alliance station we are in.
+        setGyroOffset(0.0);
+    }
+
+    public void resetGyro(double offset) {
+        // Reset the gyro but set an offset
+        navx.zeroYaw();
+        setGyroOffset(offset);
+    }
+
     public double getGyroYaw() {
         double angle = navx.getYaw() + gyroOffset;
         while (angle > 180) {
@@ -542,15 +586,15 @@ public class Drivetrain extends SubsystemBase {
         while (angle < -180) {
             angle += 360;
         }
-        return angle;
+        return angle; // Navx is opposite sign from everything else
+    }
+
+    public double getGyroOffset() {
+        return gyroOffset;
     }
 
     public void setGyroOffset(double offset) {
         gyroOffset = offset;
-    }
-
-    public double getRobotPitch() {
-        return -1 * (navx.getRoll() + Constants.DrivetrainConstants.gyroRollOffset);
     }
 
     public Pose2d getLatestSwervePose() {
@@ -603,11 +647,22 @@ public class Drivetrain extends SubsystemBase {
                     Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions,
                     new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(-getGyroYaw())));
         } else {
-            setGyroOffset(navx.getYaw() - resetPose.getRotation().getDegrees());
+            double newGyroOffset = navx.getYaw() - resetPose.getRotation().getDegrees();
+            if (getAllianceCoordinateSpace() == CoordinateSpace.Blue) {
+                // Blue so just set gyro offset normally
+                setGyroOffset(newGyroOffset);
+            } else {
+                // Red so we have to flip gyro by 180
+                newGyroOffset += 180.0;
+                if (newGyroOffset > 180) {
+                    newGyroOffset -= 360.0;
+                }
+                setGyroOffset(newGyroOffset);
+            }
             swerveDrivePoseEstimator.resetPosition(
-                Rotation2d.fromDegrees(-getGyroYaw()),
-                swerveDriveModulePositions,
-                resetPose);
+                    Rotation2d.fromDegrees(-getGyroYaw()),
+                    swerveDriveModulePositions,
+                    resetPose);
             latestSwervePose = resetPose;
         }
     }
@@ -631,16 +686,6 @@ public class Drivetrain extends SubsystemBase {
         setDriveNeutralMode(NeutralModeValue.Coast);
         setTurnNeutralMode(NeutralModeValue.Coast);
         stopDrive();
-    }
-
-    private void loadMotionPaths() {
-        // testPath = PathPlanner.loadPath("Test Path", new PathConstraints(2, 1.5));
-        // driveStraight = PathPlanner.loadPath("DriveStraight", new PathConstraints(.5,
-        // .5));
-        // curvePath = PathPlanner.loadPath("CurvePath", new PathConstraints(.5, .5));
-        // testPath = PathPlanner.loadPath("TestPath", new PathConstraints(.5, .5));
-        // NOTE: Motion paths used in autonomous sequences have been moved to
-        // frc.lib.autonomous.AutonomousTrajectory.
     }
 
     public Command XWheels() {
@@ -672,7 +717,9 @@ public class Drivetrain extends SubsystemBase {
         }
 
         SmartDashboard.putString("Alliance Color", getAllianceCoordinateSpace().toString());
-        limelightBackBotPose = limeLightCameraBack.getBotPose(getAllianceCoordinateSpace());
+        // ALWAYS use blue coordinate space even if red to be compatible with
+        // Pathplanner
+        limelightBackBotPose = limeLightCameraBack.getBotPose(CoordinateSpace.Blue);
 
         if (limelightBackBotPose != null && limeLightCameraBack.getTargetID() != -1) {
             limelightTotalArea = limeLightCameraBack.getTargetArea();
@@ -755,5 +802,20 @@ public class Drivetrain extends SubsystemBase {
                 Timer.getFPGATimestamp(),
                 Rotation2d.fromDegrees(-getGyroYaw()),
                 modulePositions);
+    }
+
+    public ChassisSpeeds getRobotChassisSpeeds() {
+        SwerveModuleState[] moduleStates = {
+                frontLeftModule.getState(),
+                frontRightModule.getState(),
+                rearLeftModule.getState(),
+                rearRightModule.getState()
+        };
+        return swerveDriveKinematics.toChassisSpeeds(moduleStates);
+    }
+
+    public void driveRobotFromChassisSpeeds(ChassisSpeeds speeds) {
+        SwerveModuleState[] states = swerveDriveKinematics.toSwerveModuleStates(speeds);
+        setModuleStates(states);
     }
 }

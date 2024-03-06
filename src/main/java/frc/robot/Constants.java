@@ -36,7 +36,7 @@ public class Constants {
         public static final double swerveLength = 0.61595;
 
         // Max Swerve Speed (Velocity Control)
-        public static final double swerveMaxSpeed = 4.5; // (Meters per Second)(2 Slow, 4.5 normal)
+        public static final double swerveMaxSpeed = 5.0; // (Meters per Second)(2 Slow, 5.0 normal)
 
         // Swerve Wheels and Gear Ratio
         public static final double driveGearRatio = 6.12;// 6.12:1
@@ -51,14 +51,14 @@ public class Constants {
 
         public static class PIDConstants {
             // Swerve Drive PID (Velocity Control)
-            public static final double driveP = 0.05;// .05
-            public static final double driveI = 0.0;// .0
+            public static final double driveP = 0.05;
+            public static final double driveI = 0.0;
             public static final double driveD = 0.01;
             public static final double driveV = 0.047;
 
             // Swerve Turn PIDs
-            public static final double turnP = 0.013; // .013
-            public static final double turnI = 0.0;// .0
+            public static final double turnP = 0.013;
+            public static final double turnI = 0.0;
             public static final double turnD = 0.00005;
         }
 
@@ -74,16 +74,6 @@ public class Constants {
         // Gyro P
         public static final double driveGyroP = 0.005;
 
-        // Gyro balancing constants
-        public static final double gyroRollOffset = -1.9; // degrees -- its robot pitch but navx roll
-        public static final double pitchTolerance = 2.0; // degrees -- level if Abs() less than this
-        public static final double pitchDeltaTolerance = 0.08; // degrees/20ms robot cycle
-        public static final double balanceMoveSpeed = 0.75; // m/sec -- max speed to crawl for final balance
-        public static final double balanceWaitTimer = 1.0; // How long to wait before declaring balanced
-        public static final double balanceP = 0.03;
-        public static final double balanceI = 0.0;
-        public static final double balanceD = 0.006;
-
         // Drive Rotation P
         public static final double driveRotationP = .005;
         public static final double autoAngleThreshold = 0.3;
@@ -98,12 +88,12 @@ public class Constants {
         public static final double driveBaseRadius = 0.43984;
 
         // Swerve Translation Correction PID (Path Following)
-        public static final double xCorrectionP = 10.0;
-        public static final double xCorrectionI = 0.0;
-        public static final double xCorrectionD = 0.0;
+        public static final double xyCorrectionP = 10.0;
+        public static final double xyCorrectionI = 0.0;
+        public static final double xyCorrectionD = 0.0;
 
         // Swerve Theta Axis Correction PID (Path Following)
-        public static final double thetaCorrectionP = 150.0;
+        public static final double thetaCorrectionP = 1.0;
         public static final double thetaCorrectionI = 0.0;
         public static final double thetaCorrectionD = 0.0;
 
@@ -137,13 +127,15 @@ public class Constants {
 
         // Field Coordinates
         public static class Field {
+            // All in blue field coordiantes
             public static double FIELD_WIDTH_METERS = 8.02;
             public static double FIELD_LENGTH_METERS = 16.522;
-            public static double goalX = 0.2286;
+            public static double blueGoalX = 0.2286;
             public static double blueGoalY = 5.43;
-            public static double redGoalY = 2.66;
-            public static Translation2d redGoalTarget = new Translation2d(goalX, redGoalY);
-            public static Translation2d blueGoalTarget = new Translation2d(goalX, blueGoalY);
+            public static double redGoalX = FIELD_LENGTH_METERS - blueGoalX;
+            public static double redGoalY = blueGoalY;
+            public static Translation2d redGoalTarget = new Translation2d(redGoalX, redGoalY);
+            public static Translation2d blueGoalTarget = new Translation2d(blueGoalX, blueGoalY);
         }
 
         public static class StageAngles{
