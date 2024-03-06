@@ -51,14 +51,14 @@ public class Constants {
 
         public static class PIDConstants {
             // Swerve Drive PID (Velocity Control)
-            public static final double driveP = 0.05;// .05
-            public static final double driveI = 0.0;// .0
+            public static final double driveP = 0.05;
+            public static final double driveI = 0.0;
             public static final double driveD = 0.01;
             public static final double driveV = 0.047;
 
             // Swerve Turn PIDs
-            public static final double turnP = 0.013; // .013
-            public static final double turnI = 0.0;// .0
+            public static final double turnP = 0.013;
+            public static final double turnI = 0.0;
             public static final double turnD = 0.00005;
         }
 
@@ -88,7 +88,7 @@ public class Constants {
         public static final double driveBaseRadius = 0.43984;
 
         // Swerve Translation Correction PID (Path Following)
-        public static final double xyCorrectionP = 1.0;
+        public static final double xyCorrectionP = 10.0;
         public static final double xyCorrectionI = 0.0;
         public static final double xyCorrectionD = 0.0;
 
