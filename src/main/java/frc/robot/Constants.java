@@ -133,7 +133,7 @@ public class Constants {
             public static double blueGoalX = 0.2286;
             public static double blueGoalY = 5.43;
             public static double redGoalX = FIELD_LENGTH_METERS - blueGoalX;
-            public static double redGoalY = FIELD_WIDTH_METERS - blueGoalY;
+            public static double redGoalY = blueGoalY;
             public static Translation2d redGoalTarget = new Translation2d(redGoalX, redGoalY);
             public static Translation2d blueGoalTarget = new Translation2d(blueGoalX, blueGoalY);
         }
