@@ -35,6 +35,7 @@ import frc.robot.commands.ResetGyro;
 import frc.robot.commands.SetElevatorTargetPosition;
 import frc.robot.commands.SetPivotTargetAngle;
 import frc.robot.commands.SetPivotToTargetAngle;
+import frc.robot.commands.SetShooterSpeedTarget;
 import frc.robot.commands.SetSwerveAngle;
 import frc.robot.commands.StartShooter;
 import frc.robot.commands.StopElevator;
@@ -166,14 +167,9 @@ public class RobotContainer {
     // POV
     controller1.povUp().whileTrue(new MoveShooterPivot(mShooterPivot, 0.1));
     controller1.povDown().whileTrue(new MoveShooterPivot(mShooterPivot, -0.04));    
-    controller1.povLeft().onTrue(new InstantCommand(() -> {
-      mShooter.setShooterTargetRPM(mShooter.getShooterTargetRPM() - 100);
-      mShooter.setShooterToTargetRPM();
-    }));
-    controller1.povRight().onTrue(new InstantCommand(() -> {
-      mShooter.setShooterTargetRPM(mShooter.getShooterTargetRPM() + 100);
-      mShooter.setShooterToTargetRPM();
-    }));
+    controller1.povLeft().onTrue(new SetShooterSpeedTarget(mShooter, mShooter.getShooterTargetRPM() - 100).andThen(new StartShooter(mShooter)));
+    controller1.povRight().onTrue(new SetShooterSpeedTarget(mShooter, mShooter.getShooterTargetRPM() + 100).andThen(new StartShooter(mShooter)));
+
 
 
     // ABXY
@@ -186,10 +182,7 @@ public class RobotContainer {
     // controller1.y().onTrue(new InstantCommand(() -> {
     //   mRobotState.setRobotMode(RobotModeState.Endgame);
     // }));
-    controller1.x().onTrue(new InstantCommand(() -> {
-      mShooter.setShooterTargetRPM(0.0);
-      mShooter.setShooterToTargetRPM();
-    }));
+    controller1.x().onTrue(new SetShooterSpeedTarget(mShooter, 0).andThen(new StartShooter(mShooter)));
 
     controller0.povUp().whileTrue(new MoveElevator(mElevator, mShooterPivot, 0.15));
     controller0.povDown().whileTrue(new MoveElevator(mElevator, mShooterPivot, -0.05));
@@ -216,7 +209,7 @@ public class RobotContainer {
   }
 
   private void configureSmartDashboard() {
-    SmartDashboard.putData("Override Mode", new InstantCommand(()-> {mRobotState.setRobotMode(RobotModeState.Endgame);}));
+    SmartDashboard.putData("Override Mode", new InstantCommand(()-> {mRobotState.setRobotMode(RobotModeState.Override);}));
 
     SmartDashboard.putNumber("Set Shooter RPM", 0.0);
     SmartDashboard.putNumber("Set Pivot angle", 0.0);
