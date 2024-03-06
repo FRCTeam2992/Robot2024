@@ -111,9 +111,13 @@ public class Drivetrain extends SubsystemBase {
 
     // Limelights
     public final LimeLight limeLightCameraBack;
+    public final LimeLight limeLightCameraLeft;
+    public final LimeLight limeLightCameraRight;
     public final ArrayList<LimeLight> limelightList;
     public double limeLightBlendedLatency = 0.0;
     private double[] limelightBackBotPose;
+    private double[] limelightLeftBotPose;
+    private double[] limelightRightBotPose;
     private boolean isUpdatingLimelightOdometry = true;
     private double limelightTotalArea = 0.0;
     private int limelightCalculationsCount = 0;
@@ -290,8 +294,16 @@ public class Drivetrain extends SubsystemBase {
         limeLightCameraBack = new LimeLight("limelight-back");
         limelightBackBotPose = new double[7];
 
+        limeLightCameraLeft = new LimeLight("limelight-left");
+        limelightLeftBotPose = new double[7];
+
+        limeLightCameraRight = new LimeLight("limelight-right");
+        limelightRightBotPose = new double[7];
+
         limelightList = new ArrayList<LimeLight>();
         limelightList.add(limeLightCameraBack);
+        limelightList.add(limeLightCameraLeft);
+        limelightList.add(limeLightCameraRight);
 
         limelightXMedianFilter = new MedianFilter(1);
         limelightYMedianFilter = new MedianFilter(1);
@@ -462,6 +474,34 @@ public class Drivetrain extends SubsystemBase {
                             limeLightCameraBack.getTargetID());
                     SmartDashboard.putNumber("Limelight Back Ta",
                             limeLightCameraBack.getTargetArea());
+                }
+                if (limelightLeftBotPose != null) {
+                    SmartDashboard.putNumber("Limelight Left Pose X (m)",
+                            limelightLeftBotPose[0]);
+                    SmartDashboard.putNumber("Limelight Left Pose Y (m)",
+                            limelightLeftBotPose[1]);
+                    SmartDashboard.putNumber("Limelight Left Pose Yaw (deg)",
+                            limelightLeftBotPose[5]);
+                    // SmartDashboard.putNumber("Limelight Left Pose Latency (ms)",
+                    // limelightLeftBotPose[6]);
+                    SmartDashboard.putNumber("Limelight Left Tid",
+                            limeLightCameraLeft.getTargetID());
+                    SmartDashboard.putNumber("Limelight Left Ta",
+                            limeLightCameraLeft.getTargetArea());
+                }
+                if (limelightRightBotPose != null) {
+                    SmartDashboard.putNumber("Limelight Right Pose X (m)",
+                            limelightRightBotPose[0]);
+                    SmartDashboard.putNumber("Limelight Right Pose Y (m)",
+                            limelightRightBotPose[1]);
+                    SmartDashboard.putNumber("Limelight Right Pose Yaw (deg)",
+                            limelightRightBotPose[5]);
+                    // SmartDashboard.putNumber("Limelight Right Pose Latency (ms)",
+                    // limelightRightBotPose[6]);
+                    SmartDashboard.putNumber("Limelight Right Tid",
+                            limeLightCameraRight.getTargetID());
+                    SmartDashboard.putNumber("Limelight Right Ta",
+                            limeLightCameraRight.getTargetArea());
                 }
 
                 if (latestVisionPose != null) {
@@ -706,49 +746,64 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void calculateBlendedVisionPose() {
+        double x = 0.0;
+        double y = 0.0;
+        double theta = 0.0;
+        limelightTotalArea = 0.0;
+        limeLightBlendedLatency = 0.0;
+        latestVisionPoseValid = false;
 
-        if (!DriverStation.getAlliance().isPresent()) {
+        SmartDashboard.putString("Alliance Color", getAllianceCoordinateSpace().toString());
+        limelightBackBotPose = limeLightCameraBack.getBotPose(CoordinateSpace.Blue);
+        limelightLeftBotPose = limeLightCameraLeft.getBotPose(CoordinateSpace.Blue);
+        limelightRightBotPose = limeLightCameraRight.getBotPose(CoordinateSpace.Blue);
+
+        if (limelightBackBotPose != null && limeLightCameraBack.getTargetID() != -1) {
+            limelightTotalArea += limeLightCameraBack.getTargetArea();
+            x += limelightBackBotPose[0];
+            y += limelightBackBotPose[1];
+            theta += limelightBackBotPose[5];
+            limeLightBlendedLatency += limelightBackBotPose[6];
+        }
+        if (limelightLeftBotPose != null && limeLightCameraLeft.getTargetID() != -1) {
+            limelightTotalArea += limeLightCameraLeft.getTargetArea();
+            x += limelightLeftBotPose[0];
+            y += limelightLeftBotPose[1];
+            theta += limelightLeftBotPose[5];
+            limeLightBlendedLatency += limelightLeftBotPose[6];
+        }
+        if (limelightRightBotPose != null && limeLightCameraRight.getTargetID() != -1) {
+            limelightTotalArea += limeLightCameraRight.getTargetArea();
+            x += limelightRightBotPose[0];
+            y += limelightRightBotPose[1];
+            theta += limelightRightBotPose[5];
+            limeLightBlendedLatency += limelightRightBotPose[6];
+        }
+
+        if (limelightTotalArea <= 0.05) {
             limeLightBlendedLatency = 0.0;
             latestVisionPoseValid = false;
             limelightXMedianFilter.reset();
             limelightYMedianFilter.reset();
             limelightAngleMedianFilter.reset();
             return;
-        }
-
-        SmartDashboard.putString("Alliance Color", getAllianceCoordinateSpace().toString());
-        // ALWAYS use blue coordinate space even if red to be compatible with
-        // Pathplanner
-        limelightBackBotPose = limeLightCameraBack.getBotPose(CoordinateSpace.Blue);
-
-        if (limelightBackBotPose != null && limeLightCameraBack.getTargetID() != -1) {
-            limelightTotalArea = limeLightCameraBack.getTargetArea();
-
+        } else {
             limelightCalculationsCount++;
             latestVisionPoseValid = true;
-
-            if (limelightTotalArea <= 0.05) {
-                limeLightBlendedLatency = 0.0;
-                latestVisionPoseValid = false;
-                limelightXMedianFilter.reset();
-                limelightYMedianFilter.reset();
-                limelightAngleMedianFilter.reset();
-                return;
-            }
-
             isUpdatingLimelightOdometry = true;
-            limeLightBlendedLatency = limelightBackBotPose[6];
+
+            x /= limelightTotalArea;
+            y /= limelightTotalArea;
+            theta /= limelightTotalArea;
+ 
+            limeLightBlendedLatency /= limelightTotalArea;
 
             latestVisionPose = new Pose2d(
-                    limelightXMedianFilter.calculate(limelightBackBotPose[0]),
-                    limelightYMedianFilter.calculate(limelightBackBotPose[1]),
-                    Rotation2d.fromDegrees(limelightAngleMedianFilter.calculate(limelightBackBotPose[5])));
+                    limelightXMedianFilter.calculate(x),
+                    limelightYMedianFilter.calculate(y),
+                    Rotation2d.fromDegrees(limelightAngleMedianFilter.calculate(theta)));
             isUpdatingLimelightOdometry = false;
-        } else {
-            limelightXMedianFilter.reset();
-            limelightYMedianFilter.reset();
-            limelightAngleMedianFilter.reset();
-            latestVisionPoseValid = false;
+            return;
         }
     }
 
