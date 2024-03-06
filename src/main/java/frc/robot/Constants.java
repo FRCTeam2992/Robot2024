@@ -226,7 +226,7 @@ public class Constants {
             public static final double minPivotAngle = 1.5; // PlaceHolder
             public static final double maxPivotAngle = 60.0; // PlaceHolder
 
-            public static final double maxPivotAmp = 10.0; // Max pivot angle when in Amp mode
+            public static final double maxPivotAmp = 29.0; // Max pivot angle when in Amp mode
             public static final double maxPivotEndgame = 1.5; // Max pivot angle in in Endgame mode
 
             public static final double pivotCollisionZone = 10.0; // PlaceHolder
@@ -280,7 +280,7 @@ public class Constants {
         public static final double elevatorHeightToleranceInch = 0.5; // Place holder
 
         public static class Limits {
-            public static final double softStopBottom = 1.0; // bottom soft stop (in) //Place holder
+            public static final double softStopBottom = 0.0; // bottom soft stop (in) //Place holder
             public static final double softStopTop = 23.0; // bottom soft stop (in) //PlaceHolder
             public static final double hardStopTop = 24.0; // bottom soft stop (in) //Place holder
 
