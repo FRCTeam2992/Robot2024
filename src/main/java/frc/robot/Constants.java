@@ -36,7 +36,7 @@ public class Constants {
         public static final double swerveLength = 0.61595;
 
         // Max Swerve Speed (Velocity Control)
-        public static final double swerveMaxSpeed = 4.5; // (Meters per Second)(2 Slow, 4.5 normal)
+        public static final double swerveMaxSpeed = 5.0; // (Meters per Second)(2 Slow, 5.0 normal)
 
         // Swerve Wheels and Gear Ratio
         public static final double driveGearRatio = 6.12;// 6.12:1
