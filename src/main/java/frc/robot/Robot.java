@@ -22,7 +22,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     mRobotContainer = new RobotContainer();
 
-    mRobotContainer.mDrivetrain.navx.zeroYaw();
+    mRobotContainer.mDrivetrain.resetGyro();
 
     mRobotContainer.mElevator.zeroElevatorEncoders();
 
@@ -71,7 +71,7 @@ public class Robot extends TimedRobot {
     mRobotContainer.mDrivetrain.setDriveCurrentLimit(60.0, 60.0);
 
         // Zero the gyro
-    mRobotContainer.mDrivetrain.navx.zeroYaw();
+        mRobotContainer.mDrivetrain.resetGyro();
 
         // Set the Drive Motors Ramp Rate
     mRobotContainer.mDrivetrain.setDriveRampRate(0.0);
