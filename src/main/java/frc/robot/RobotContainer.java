@@ -165,7 +165,16 @@ public class RobotContainer {
 
     // POV
     controller1.povUp().whileTrue(new MoveShooterPivot(mShooterPivot, 0.1));
-    controller1.povDown().whileTrue(new MoveShooterPivot(mShooterPivot, -0.04));
+    controller1.povDown().whileTrue(new MoveShooterPivot(mShooterPivot, -0.04));    
+    controller1.povLeft().onTrue(new InstantCommand(() -> {
+      mShooter.setShooterTargetRPM(mShooter.getShooterTargetRPM() - 100);
+      mShooter.setShooterToTargetRPM();
+    }));
+    controller1.povRight().onTrue(new InstantCommand(() -> {
+      mShooter.setShooterTargetRPM(mShooter.getShooterTargetRPM() + 100);
+      mShooter.setShooterToTargetRPM();
+    }));
+
 
     // ABXY
     controller1.a().onTrue(new InstantCommand(() -> {
@@ -174,8 +183,12 @@ public class RobotContainer {
     controller1.b().onTrue(new InstantCommand(() -> {
       mRobotState.setRobotMode(RobotModeState.Amp);
     }));
-    controller1.y().onTrue(new InstantCommand(() -> {
-      mRobotState.setRobotMode(RobotModeState.Endgame);
+    // controller1.y().onTrue(new InstantCommand(() -> {
+    //   mRobotState.setRobotMode(RobotModeState.Endgame);
+    // }));
+    controller1.x().onTrue(new InstantCommand(() -> {
+      mShooter.setShooterTargetRPM(0.0);
+      mShooter.setShooterToTargetRPM();
     }));
 
     controller0.povUp().whileTrue(new MoveElevator(mElevator, mShooterPivot, 0.15));
@@ -203,6 +216,8 @@ public class RobotContainer {
   }
 
   private void configureSmartDashboard() {
+    SmartDashboard.putData("Override Mode", new InstantCommand(()-> {mRobotState.setRobotMode(RobotModeState.Endgame);}));
+
     SmartDashboard.putNumber("Set Shooter RPM", 0.0);
     SmartDashboard.putNumber("Set Pivot angle", 0.0);
     SmartDashboard.putData("Move pivot to position", new SetPivotToTargetAngle(mShooterPivot));

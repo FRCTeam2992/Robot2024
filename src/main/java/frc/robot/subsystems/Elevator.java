@@ -7,6 +7,9 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkPIDController;
 
@@ -90,6 +93,7 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
+
 
     if (checkIfAtHardStop()){
       // zeroElevatorEncoders();
