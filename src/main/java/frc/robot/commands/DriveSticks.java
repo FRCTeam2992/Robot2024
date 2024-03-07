@@ -70,6 +70,10 @@ public class DriveSticks extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        if (DriverStation.isAutonomous()) {
+            return;
+        }
+
         // Joystick Inputs (x1 = Strafe, y1 = Speed, x2 = Rotation)
         double x1;
         double y1;
@@ -375,6 +379,8 @@ public class DriveSticks extends Command {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        mDriveTrain.stopDrive();
+        if (!DriverStation.isAutonomous()) {
+            mDriveTrain.stopDrive();
+        }
     }
 }
