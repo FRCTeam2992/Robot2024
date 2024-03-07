@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
@@ -22,7 +23,9 @@ public class AutoIntake extends SequentialCommandGroup {
             new MoveIntake(mIntake,
                 Constants.Intake.Speeds.intakingPieceSpeed)
         ),
-        new MoveIntake(mIntake, Constants.Intake.Speeds.outakingPieceSpeed).withTimeout(0.5));
+        new WaitCommand(0.5),
+
+        new MoveIntake(mIntake, Constants.Intake.Speeds.outakingPieceSpeed).withTimeout(1.0));
 
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
