@@ -68,8 +68,8 @@ public class RobotContainer {
   public Drivetrain mDrivetrain;
   public final Shooter mShooter;
   private Intake mIntake;
-  private Feeder mFeeder;
-  private ShooterPivot mShooterPivot;
+  public Feeder mFeeder;
+  public ShooterPivot mShooterPivot;
   public final Elevator mElevator;
   public final PowerDistribution mPDH;
 
@@ -275,7 +275,7 @@ public class RobotContainer {
   private void initNoteInterp() {
     mNoteInterpolator = new NoteInterpolator();
 
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 3300, 49));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 2700, 56));
     mNoteInterpolator.addDataPoint(new NoteDataPoint(53, 3500, 42));
     mNoteInterpolator.addDataPoint(new NoteDataPoint(64, 4200, 38.0));
     mNoteInterpolator.addDataPoint(new NoteDataPoint(75, 4200, 36.0));
@@ -288,6 +288,7 @@ public class RobotContainer {
   private void registerAutoCommandNames() {
     NamedCommands.registerCommand("autoAim",
         new AutoAim(mElevator, mShooterPivot, mShooter, mRobotState, mNoteInterpolator, mDrivetrain));
+    NamedCommands.registerCommand("pivot1stShot", new SetPivotTargetAngle(mShooterPivot, 56));
     NamedCommands.registerCommand("autoShoot",
         new AutoShoot(mIntake, mFeeder, mRobotState, mElevator, mShooterPivot, mShooter, 0).withTimeout(1.0));
     NamedCommands.registerCommand("autoIntake", new AutoIntake(mFeeder, mIntake));

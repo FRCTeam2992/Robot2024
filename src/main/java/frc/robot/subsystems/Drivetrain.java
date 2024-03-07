@@ -61,6 +61,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -758,12 +759,12 @@ public class Drivetrain extends SubsystemBase {
         // Calculate the Swerve States
         double[] swerveStates;
 
-        double y1 = velocity / Constants.DrivetrainConstants.swerveMaxSpeed;
-        if (!forward) {
-            y1 *= -1;
-        }
+        // double y1 = velocity / Constants.DrivetrainConstants.swerveMaxSpeed;
+        // if (!forward) {
+        // y1 *= -1;
+        // }
 
-        swerveStates = swerveController.calculate(0.0, y1, 0.0);
+        // swerveStates = swerveController.calculate(0.0, y1, 0.0);
 
         // Get the Swerve Modules
         SwerveModuleFalconFalcon frontLeft = frontLeftModule;
@@ -772,10 +773,14 @@ public class Drivetrain extends SubsystemBase {
         SwerveModuleFalconFalcon rearRight = rearRightModule;
 
         // Command the Swerve Modules
-        frontLeft.setDriveVelocity(swerveStates[0], swerveStates[1]);
-        frontRight.setDriveVelocity(swerveStates[2], swerveStates[3]);
-        rearLeft.setDriveVelocity(swerveStates[4], swerveStates[5]);
-        rearRight.setDriveVelocity(swerveStates[6], swerveStates[7]);
+        // frontLeft.setDriveVelocity(swerveStates[0], swerveStates[1]);
+        // frontRight.setDriveVelocity(swerveStates[2], swerveStates[3]);
+        // rearLeft.setDriveVelocity(swerveStates[4], swerveStates[5]);
+        // rearRight.setDriveVelocity(swerveStates[6], swerveStates[7]);
+        // frontLeft.setDrive(velocity, 0);
+        // frontRight.setDrive(velocity, 0);
+        // rearLeft.setDrive(velocity, 0);
+        // rearRight.setDrive(velocity, 0);
     }
     
     public void turnRobot( double heading) {
