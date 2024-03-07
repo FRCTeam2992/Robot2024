@@ -124,4 +124,10 @@ public class Shooter extends SubsystemBase {
   public boolean atShooterRPM() {
     return (Math.abs(getShooterTargetRPM() - getShooterRPM()) < 200.0);
   }
+
+  public void resetSubsystemState() {
+    shooterTargetRPM = 200.0;
+    medianFilter.reset();
+    setShooterSpeed(0.0);
+  }
 }

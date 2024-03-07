@@ -65,11 +65,11 @@ public class RobotContainer {
 
   public OdometryThread mOdometryThread;
 
-  public Drivetrain mDrivetrain;
+  public final Drivetrain mDrivetrain;
   public final Shooter mShooter;
-  private Intake mIntake;
-  public Feeder mFeeder;
-  public ShooterPivot mShooterPivot;
+  public final Intake mIntake;
+  public final Feeder mFeeder;
+  public final ShooterPivot mShooterPivot;
   public final Elevator mElevator;
   public final PowerDistribution mPDH;
 
@@ -283,6 +283,15 @@ public class RobotContainer {
     mNoteInterpolator.addDataPoint(new NoteDataPoint(109, 4200, 28.5));
     mNoteInterpolator.addDataPoint(new NoteDataPoint(134, 3250, 28.5));
 
+  }
+
+  public void resetAllSubsystemState() {
+    mDrivetrain.resetSubsystemState();
+    mElevator.resetSubsystemState();
+    mFeeder.resetSubsystemState();
+    mIntake.resetSubsystemState();
+    mShooter.resetSubsystemState();
+    mShooterPivot.resetSubsystemState();
   }
 
   private void registerAutoCommandNames() {

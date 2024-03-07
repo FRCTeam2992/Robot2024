@@ -28,6 +28,7 @@ public class Robot extends TimedRobot {
     mRobotContainer.mElevator.zeroElevatorEncoders();
 
     mRobotContainer.mShooterPivot.zeroPivotEncoder();
+    mRobotContainer.resetAllSubsystemState();
 
     // CameraServer.startAutomaticCapture();
   }
@@ -70,17 +71,19 @@ public class Robot extends TimedRobot {
     mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralModeValue.Brake);
         mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralModeValue.Brake);
 
-        // Set the Drive Motors Current Limit
+    // Set the Drive Motors Current Limit
     mRobotContainer.mDrivetrain.setDriveCurrentLimit(60.0, 60.0);
 
-        // Zero the gyro
-        mRobotContainer.mDrivetrain.resetGyro();
+    // Zero the gyro
+    mRobotContainer.mDrivetrain.resetGyro();
 
-        // Reset encoders
-        mRobotContainer.mShooterPivot.zeroPivotEncoder();
-        mRobotContainer.mElevator.zeroElevatorEncoders();
+    mRobotContainer.resetAllSubsystemState();
 
-        // Set the Drive Motors Ramp Rate
+    // Reset encoders
+    mRobotContainer.mShooterPivot.zeroPivotEncoder();
+    mRobotContainer.mElevator.zeroElevatorEncoders();
+
+    // Set the Drive Motors Ramp Rate
     mRobotContainer.mDrivetrain.setDriveRampRate(0.0);
 
     CommandScheduler.getInstance().schedule(
@@ -106,6 +109,13 @@ public class Robot extends TimedRobot {
 
     mRobotContainer.mDrivetrain.setDriveCurrentLimit(40.0, 40.0);
         mRobotContainer.mDrivetrain.setDriveRampRate(0.25);
+
+    // Reset state of all subsystems EXCEPT Shooter
+    mRobotContainer.mDrivetrain.resetSubsystemState();
+    mRobotContainer.mIntake.resetSubsystemState();
+    mRobotContainer.mFeeder.resetSubsystemState();
+    mRobotContainer.mElevator.resetSubsystemState();
+    mRobotContainer.mShooterPivot.resetSubsystemState();
 
     CommandScheduler.getInstance().schedule(
               new SetLimeLightOdometryUpdates(mRobotContainer.mDrivetrain, true));
