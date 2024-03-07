@@ -832,6 +832,59 @@ public class Drivetrain extends SubsystemBase {
         rearLeft.setDriveVelocity(swerveStates[4], swerveStates[5]);
         rearRight.setDriveVelocity(swerveStates[6], swerveStates[7]);
     }
+    
+    public void turnRobot( double heading) {
+
+        // Calculate the Swerve States
+        double[] swerveStates;
+
+        double x2 = getGyroYaw() - heading;
+
+        if (x2 > 180) {
+             x2 -= 360;
+        } else if (x2 < -180) {
+            x2 += 360;
+        }
+        if (Math.abs(x2 - heading) > Constants.DrivetrainConstants.autoAngleThreshold) {
+            x2 = x2 * Constants.DrivetrainConstants.driveRotationP;
+        } else {
+            x2 = 0.0;
+        }
+
+    x2 = Math.min(x2, .90);
+    x2 = Math.max(x2, -.90);
+
+
+        swerveStates = swerveController.calculate(0.0, 0.0, x2);
+
+        // Get the Swerve Modules
+        SwerveModuleFalconFalcon frontLeft = frontLeftModule;
+        SwerveModuleFalconFalcon frontRight = frontRightModule;
+        SwerveModuleFalconFalcon rearLeft = rearLeftModule;
+        SwerveModuleFalconFalcon rearRight = rearRightModule;
+
+        // Command the Swerve Modules
+        frontLeft.setDriveVelocity(swerveStates[0], swerveStates[1]);
+        frontRight.setDriveVelocity(swerveStates[2], swerveStates[3]);
+        rearLeft.setDriveVelocity(swerveStates[4], swerveStates[5]);
+        rearRight.setDriveVelocity(swerveStates[6], swerveStates[7]);
+    }
+
+    // x2 = mDriveTrain.getGyroYaw() - targetAngle;
+
+    // if (x2 > 180) {
+    //     x2 -= 360;
+    // } else if (x2 < -180) {
+    //     x2 += 360;
+    // }
+    // if (Math.abs(x2 - targetAngle) > Constants.DrivetrainConstants.autoAngleThreshold) {
+    //     x2 = x2 * Constants.DrivetrainConstants.driveRotationP;
+    // } else {
+    //     x2 = 0.0;
+    // }
+
+    // x2 = Math.min(x2, .90);
+    // x2 = Math.max(x2, -.90);
 
     public boolean useLimeLightForOdometry() {
         return useLimelightOdometryUpdates;

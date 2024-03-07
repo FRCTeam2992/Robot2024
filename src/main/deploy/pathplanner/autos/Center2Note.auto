@@ -48,18 +48,24 @@
                             }
                           },
                           {
-                            "type": "path",
+                            "type": "named",
                             "data": {
-                              "pathName": "CenterToCenterRing"
+                              "name": "autoIntake"
                             }
                           },
                           {
                             "type": "named",
                             "data": {
-                              "name": "autoIntake"
+                              "name": "moveFwd1.5s"
                             }
                           }
                         ]
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "driveStop"
                       }
                     },
                     {
@@ -72,12 +78,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "SecondMove"
           }
         },
         {

@@ -96,7 +96,8 @@ public class Elevator extends SubsystemBase {
       // zeroElevatorEncoders();
       // new HoldElevator(this).schedule();
     }
-    setElevatorTargetPosition(SmartDashboard.getNumber("Set Elevator Position", 0.0));
+    // setElevatorTargetPosition(SmartDashboard.getNumber("Set Elevator Position",
+    // 0.0));
 
     SmartDashboard.putNumber("Elevator Inches", getElevatorInches());
     SmartDashboard.putNumber("Elevator Motor Position", getElevatorPosition()[0]);
@@ -170,11 +171,11 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setElevatorSpeed(double speed) {
+    elevatorMode = ElevatorModeState.ManualMovement;
     holdPositionRecorded = false;
 
     switch (mRobotState.getRobotMode()) {
-      
-      case Override:
+
       case Auto: {
         // Do nothing -- shouldn't ever be calling for manual moves in Auto mode
         elevatorMode = ElevatorModeState.Stopped;
@@ -197,6 +198,11 @@ public class Elevator extends SubsystemBase {
 
       case Endgame: {
         break;
+      }
+
+      case Override: {
+        leadMotor.set(speed);
+        return;
       }
     }
 

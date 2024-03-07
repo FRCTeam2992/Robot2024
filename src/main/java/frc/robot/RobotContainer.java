@@ -24,7 +24,9 @@ import frc.lib.range.NoteInterpolator;
 import frc.robot.MyRobotState.RobotModeState;
 import frc.robot.commands.AutoAim;
 import frc.robot.commands.AutoIntake;
+import frc.robot.commands.AutoMoveForwardBack;
 import frc.robot.commands.AutoRotateBot;
+import frc.robot.commands.AutoRotateToHeading;
 import frc.robot.commands.AutoShoot;
 import frc.robot.commands.DisableFieldOrientToggle;
 import frc.robot.commands.DriveSticks;
@@ -225,6 +227,9 @@ public class RobotContainer {
   private void configureSmartDashboard() {
     SmartDashboard.putData("Override Mode", new InstantCommand(()-> {mRobotState.setRobotMode(RobotModeState.Override);}));
 
+    SmartDashboard.putData("Move Robot Foward", new AutoMoveForwardBack(mDrivetrain, true, 1.0));
+    SmartDashboard.putData("turn robot to 90", new AutoRotateToHeading(mDrivetrain, 90));
+
     SmartDashboard.putNumber("Set Shooter RPM", 0.0);
     SmartDashboard.putNumber("Set Pivot angle", 0.0);
     SmartDashboard.putData("Move pivot to position", new SetPivotToTargetAngle(mShooterPivot));
@@ -290,5 +295,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("stopIntake", new StopIntake(mIntake));
     NamedCommands.registerCommand("stopFeeder", new MoveFeeder(mFeeder, 0, false));
     NamedCommands.registerCommand("stopPivot", new StopShooterPivot(mShooterPivot));
+    NamedCommands.registerCommand("moveFwd1.5s", new AutoMoveForwardBack(mDrivetrain, true, 1).withTimeout(2.5));
+    NamedCommands.registerCommand("driveStop", new AutoMoveForwardBack(mDrivetrain, true, 0).withTimeout(0.5));
   }
 }
