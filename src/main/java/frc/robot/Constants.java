@@ -10,7 +10,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 /** Add your docs here. */
 public class Constants {
-    public static final boolean dataLogging = true;
+    public static final boolean dataLogging = false;
     public static final boolean debugDashboard = true;
 
     public static class DrivetrainConstants {
