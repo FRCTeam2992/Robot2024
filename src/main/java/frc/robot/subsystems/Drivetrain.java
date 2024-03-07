@@ -459,7 +459,7 @@ public class Drivetrain extends SubsystemBase {
                 SmartDashboard.putBoolean("Limelight Seeing Target?", limeLightCameraBack.getTargetID() != -1);
                 SmartDashboard.putBoolean("Latest Vision Pose OK?", latestVisionPose != null);
 
-                if (limelightBackBotPose != null) {
+                if (limelightBackBotPose != null && limelightBackBotPose.length >= 6) {
                     SmartDashboard.putNumber("Limelight Back Pose X (m)",
                             limelightBackBotPose[0]);
                     SmartDashboard.putNumber("Limelight Back Pose Y (m)",
@@ -473,7 +473,7 @@ public class Drivetrain extends SubsystemBase {
                     SmartDashboard.putNumber("Limelight Back Ta",
                             limeLightCameraBack.getTargetArea());
                 }
-                if (limelightLeftBotPose != null) {
+                if (limelightLeftBotPose != null && limelightLeftBotPose.length >= 6) {
                     SmartDashboard.putNumber("Limelight Left Pose X (m)",
                             limelightLeftBotPose[0]);
                     SmartDashboard.putNumber("Limelight Left Pose Y (m)",
@@ -487,7 +487,7 @@ public class Drivetrain extends SubsystemBase {
                     SmartDashboard.putNumber("Limelight Left Ta",
                             limeLightCameraLeft.getTargetArea());
                 }
-                if (limelightRightBotPose != null) {
+                if (limelightRightBotPose != null && limelightRightBotPose.length >= 6) {
                     SmartDashboard.putNumber("Limelight Right Pose X (m)",
                             limelightRightBotPose[0]);
                     SmartDashboard.putNumber("Limelight Right Pose Y (m)",
