@@ -171,7 +171,7 @@ public class Constants {
             public static int shooterMotorID = 8;
         }
 
-        public static final double defaultShooterSpeed = 2500; // RPM
+        public static final double defaultShooterSpeed = 2700; // RPM
 
         public static class ShooterPIDConstants {
             public static final boolean useCodePID = true; // Whether to overwrite PID values in motor
