@@ -402,8 +402,8 @@ public class Elevator extends SubsystemBase {
   }
 
   public void resetSubsystemState() {
-    targetPosition = Constants.Elevator.Positions.speakerShooting;
-    holdPosition = Constants.Elevator.Positions.speakerShooting;
+    targetPosition = 0.0;
+    holdPosition = 0.0;
     holdPositionRecorded = false;
     elevatorMode = ElevatorModeState.Stopped;
     setElevatorSpeed(0.0);

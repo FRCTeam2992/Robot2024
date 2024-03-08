@@ -297,7 +297,7 @@ public class Constants {
         public static class Positions {
             public static final double intakingPiece = 0.0; // Place holder
             public static final double safeZoneTop = 7.5; // placeholder
-            public static final double speakerShooting = 0.0;
+            public static final double speakerShooting = 1.0;
             public static final double ampScoring = 20.0; // placeholder
             public static final double trapScoring = 20.0; // placeholder
         }
