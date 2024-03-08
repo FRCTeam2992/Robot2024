@@ -810,12 +810,12 @@ public class Drivetrain extends SubsystemBase {
         // Calculate the Swerve States
         double[] swerveStates;
 
-        // double y1 = velocity / Constants.DrivetrainConstants.swerveMaxSpeed;
-        // if (!forward) {
-        // y1 *= -1;
-        // }
+        double y1 = velocity / Constants.DrivetrainConstants.swerveMaxSpeed;
+        if (!forward) {
+            y1 *= -1;
+        }
 
-        // swerveStates = swerveController.calculate(0.0, y1, 0.0);
+        swerveStates = swerveController.calculate(0.0, y1, 0.0);
 
         // Get the Swerve Modules
         SwerveModuleFalconFalcon frontLeft = frontLeftModule;
@@ -824,10 +824,10 @@ public class Drivetrain extends SubsystemBase {
         SwerveModuleFalconFalcon rearRight = rearRightModule;
 
         // Command the Swerve Modules
-        // frontLeft.setDriveVelocity(swerveStates[0], swerveStates[1]);
-        // frontRight.setDriveVelocity(swerveStates[2], swerveStates[3]);
-        // rearLeft.setDriveVelocity(swerveStates[4], swerveStates[5]);
-        // rearRight.setDriveVelocity(swerveStates[6], swerveStates[7]);
+        frontLeft.setDriveVelocity(swerveStates[0], swerveStates[1]);
+        frontRight.setDriveVelocity(swerveStates[2], swerveStates[3]);
+        rearLeft.setDriveVelocity(swerveStates[4], swerveStates[5]);
+        rearRight.setDriveVelocity(swerveStates[6], swerveStates[7]);
         // frontLeft.setDrive(velocity, 0);
         // frontRight.setDrive(velocity, 0);
         // rearLeft.setDrive(velocity, 0);

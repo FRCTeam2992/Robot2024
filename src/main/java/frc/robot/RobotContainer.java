@@ -301,11 +301,11 @@ public class RobotContainer {
     NamedCommands.registerCommand("autoShoot",
         new AutoShoot(mIntake, mFeeder, mRobotState, mElevator, mShooterPivot, mShooter, 0).withTimeout(1.0));
     NamedCommands.registerCommand("autoIntake", new AutoIntake(mFeeder, mIntake));
-    NamedCommands.registerCommand("stopShooter", new StopShooter(mShooter));
-    NamedCommands.registerCommand("stopIntake", new StopIntake(mIntake));
+    NamedCommands.registerCommand("stopShooter", new StopShooter(mShooter).withTimeout(0.1));
+    NamedCommands.registerCommand("stopIntake", new StopIntake(mIntake).withTimeout(0.1));
     NamedCommands.registerCommand("stopFeeder", new MoveFeeder(mFeeder, 0, false));
-    NamedCommands.registerCommand("stopPivot", new StopShooterPivot(mShooterPivot));
-    NamedCommands.registerCommand("moveFwd1.5s", new AutoMoveForwardBack(mDrivetrain, true, 1).withTimeout(2.5));
+    NamedCommands.registerCommand("stopPivot", new StopShooterPivot(mShooterPivot).withTimeout(0.1));
+    NamedCommands.registerCommand("moveFwd1.5s", new AutoMoveForwardBack(mDrivetrain, true, 1));
     NamedCommands.registerCommand("driveStop", new AutoMoveForwardBack(mDrivetrain, true, 0).withTimeout(0.5));
   }
 }
