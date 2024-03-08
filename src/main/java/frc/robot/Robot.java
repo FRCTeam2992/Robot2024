@@ -86,6 +86,8 @@ public class Robot extends TimedRobot {
     // Set the Drive Motors Ramp Rate
     mRobotContainer.mDrivetrain.setDriveRampRate(0.0);
 
+    CommandScheduler.getInstance().cancelAll();
+
     CommandScheduler.getInstance().schedule(
           new SetLimeLightOdometryUpdates(mRobotContainer.mDrivetrain, true));
 
