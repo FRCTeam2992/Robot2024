@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.69,
-      "y": 6.7
+      "x": 0.94,
+      "y": 6.786
     },
     "rotation": 60.0
   },
