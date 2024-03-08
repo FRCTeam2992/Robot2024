@@ -51,4 +51,8 @@ public class Intake extends SubsystemBase {
     // intakeFollowMotor.setControl(percentOutControlRequest.withOutput(speed));
 
   }
+
+  public void resetSubsystemState() {
+    setIntakeSpeed(0.0);
+  }
 }
