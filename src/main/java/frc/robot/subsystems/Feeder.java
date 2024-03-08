@@ -26,17 +26,17 @@ public class Feeder extends SubsystemBase {
   private TalonFXConfiguration feedMotorConfigs;
   private DutyCycleOut percentOutControlRequest;
 
-
   public Feeder() {
     feedMotor = new TalonFX(Constants.Feeder.feederMotorID);
     feedMotorConfigs = new TalonFXConfiguration();
 
     feedMotorConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     feedMotorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    feedMotorConfigs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin; //Not sure if sensor settings are correct
+    feedMotorConfigs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin; // Not sure if
+                                                                                                      // sensor settings
+                                                                                                      // are correct
     feedMotorConfigs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue.NormallyOpen;
     feedMotorConfigs.HardwareLimitSwitch.ReverseLimitEnable = true;
-
 
     feedMotor.getConfigurator().apply(feedMotorConfigs);
 
@@ -52,21 +52,27 @@ public class Feeder extends SubsystemBase {
   }
 
   public void setFeederSpeed(double speed) {
-      feedMotor.setControl(percentOutControlRequest.withOutput(-speed));
+    feedMotor.setControl(percentOutControlRequest.withOutput(-speed));
   }
 
   public boolean getBeamBreakTriggered() {
     switch (feedMotor.getReverseLimit().refresh().getValue()) {
-      case ClosedToGround: return true;
-      case Open: return false;
-      default: return true;
+      case ClosedToGround:
+        return true;
+      case Open:
+        return false;
+      default:
+        return true;
     }
-    
-}
 
-public void setBeamBreakControl(boolean isBeamEnabled){
-  feedMotorConfigs.HardwareLimitSwitch.ReverseLimitEnable = isBeamEnabled;
-  feedMotor.getConfigurator().apply(feedMotorConfigs);
-}
-  
+  }
+
+  public void setBeamBreakControl(boolean isBeamEnabled) {
+    feedMotorConfigs.HardwareLimitSwitch.ReverseLimitEnable = isBeamEnabled;
+    feedMotor.getConfigurator().apply(feedMotorConfigs);
+  }
+
+  public void resetSubsystemState() {
+    setFeederSpeed(0.0);
+  }
 }
