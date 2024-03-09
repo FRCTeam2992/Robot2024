@@ -79,9 +79,9 @@ public class AutoAim extends Command {
       }
 
       case Passing: {
-        mShooter.setShooterTargetRPM(1000);
+        mShooter.setShooterTargetRPM(3300);
         mShooter.setShooterToTargetRPM();
-        mShooterPivot.setPivotTarget(30);
+        mShooterPivot.setPivotTarget(32);
         mShooterPivot.setPivotToPID();
         mElevator.setElevatorTargetPosition(Constants.Elevator.Positions.speakerShooting); // All the way down
         mElevator.moveElevatorToTargetPosition();
