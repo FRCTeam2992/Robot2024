@@ -197,6 +197,7 @@ public class ShooterPivot extends SubsystemBase {
       case Override:
       case DefaultSpeaker:
       case Speaker:
+      case Passing:
       case Auto: {
         // In these cases use normal top limit
         position = Math.min(position, Constants.ShooterPivot.Limits.maxPivotAngle);
@@ -277,6 +278,7 @@ public class ShooterPivot extends SubsystemBase {
       }
 
       case DefaultSpeaker:
+      case Passing:
       case Speaker: {
         pivotMode = PivotModeState.ManualMovement;
         // Enforce soft top and bottom limits
@@ -321,6 +323,7 @@ public class ShooterPivot extends SubsystemBase {
       case Override:
       case DefaultSpeaker:
       case Auto:
+      case Passing:
       case Speaker: {
         // Just do the "normal" checks in these modes
         targetAngle = Math.min(targetAngle, Constants.ShooterPivot.Limits.maxPivotAngle);
@@ -365,6 +368,7 @@ public class ShooterPivot extends SubsystemBase {
       case Auto:
       case DefaultSpeaker:
       case Speaker:
+      case Passing:
       case Override: {
         // Just use the normal hold to current position -- don't need to do anything
         angle = Math.min(angle, Constants.ShooterPivot.Limits.maxPivotAngle);
