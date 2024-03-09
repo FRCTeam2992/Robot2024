@@ -226,7 +226,7 @@ public class DriveSticks extends Command {
                 gyroTargetRecorded = false;
             }
             // Adjust the rotation to align to score
-            if (mRobotState.isSpeakerMode() && mDriveTrain.isAutoRotate()) {
+            if ((mRobotState.isSpeakerMode() || mRobotState.isPassing()) && mDriveTrain.isAutoRotate()) {
 
                 // botX = mDriveTrain.latestVisionPose.getX();
                 // botY = mDriveTrain.latestSwervePose.getY();
