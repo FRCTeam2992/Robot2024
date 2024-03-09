@@ -65,11 +65,11 @@ public class RobotContainer {
 
   public OdometryThread mOdometryThread;
 
-  public Drivetrain mDrivetrain;
+  public final Drivetrain mDrivetrain;
   public final Shooter mShooter;
-  private Intake mIntake;
-  private Feeder mFeeder;
-  private ShooterPivot mShooterPivot;
+  public final Intake mIntake;
+  public final Feeder mFeeder;
+  public final ShooterPivot mShooterPivot;
   public final Elevator mElevator;
   public final PowerDistribution mPDH;
 
@@ -185,8 +185,6 @@ public class RobotContainer {
     controller1.povLeft().onTrue(new InstantCommand(() -> { mRobotState.setRobotMode(RobotModeState.DefaultSpeaker); }));
     controller1.povRight().onTrue(new InstantCommand(() -> { mRobotState.setRobotMode(RobotModeState.DefaultSpeaker); }));
 
-
-
     // ABXY
     controller1.a().onTrue(new InstantCommand(() -> {
       mRobotState.setRobotMode(RobotModeState.Speaker);
@@ -275,27 +273,37 @@ public class RobotContainer {
   private void initNoteInterp() {
     mNoteInterpolator = new NoteInterpolator();
 
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 3300, 49));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(53, 3500, 42));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(64, 4200, 38.0));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(75, 4200, 36.0));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(86, 4200, 33.0));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(109, 4200, 28.5));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(134, 3250, 28.5));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 2700, 56.0));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(53, 3500, 44.0));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(64, 4200, 40.0));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(75, 4200, 38.0));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(86, 4200, 35.0));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(109, 4200, 30.5));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(134, 3250, 30.5));
 
+  }
+
+  public void resetAllSubsystemState() {
+    mDrivetrain.resetSubsystemState();
+    mElevator.resetSubsystemState();
+    mFeeder.resetSubsystemState();
+    mIntake.resetSubsystemState();
+    mShooter.resetSubsystemState();
+    mShooterPivot.resetSubsystemState();
   }
 
   private void registerAutoCommandNames() {
     NamedCommands.registerCommand("autoAim",
         new AutoAim(mElevator, mShooterPivot, mShooter, mRobotState, mNoteInterpolator, mDrivetrain));
+    NamedCommands.registerCommand("pivot1stShot", new SetPivotTargetAngle(mShooterPivot, 56));
     NamedCommands.registerCommand("autoShoot",
         new AutoShoot(mIntake, mFeeder, mRobotState, mElevator, mShooterPivot, mShooter, 0).withTimeout(1.0));
     NamedCommands.registerCommand("autoIntake", new AutoIntake(mFeeder, mIntake));
-    NamedCommands.registerCommand("stopShooter", new StopShooter(mShooter));
-    NamedCommands.registerCommand("stopIntake", new StopIntake(mIntake));
+    NamedCommands.registerCommand("stopShooter", new StopShooter(mShooter).withTimeout(0.1));
+    NamedCommands.registerCommand("stopIntake", new StopIntake(mIntake).withTimeout(0.1));
     NamedCommands.registerCommand("stopFeeder", new MoveFeeder(mFeeder, 0, false));
-    NamedCommands.registerCommand("stopPivot", new StopShooterPivot(mShooterPivot));
-    NamedCommands.registerCommand("moveFwd1.5s", new AutoMoveForwardBack(mDrivetrain, true, 1).withTimeout(2.5));
+    NamedCommands.registerCommand("stopPivot", new StopShooterPivot(mShooterPivot).withTimeout(0.1));
+    NamedCommands.registerCommand("moveFwd1.5s", new AutoMoveForwardBack(mDrivetrain, true, 1));
     NamedCommands.registerCommand("driveStop", new AutoMoveForwardBack(mDrivetrain, true, 0).withTimeout(0.5));
   }
 }

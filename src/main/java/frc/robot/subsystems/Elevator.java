@@ -405,7 +405,13 @@ public class Elevator extends SubsystemBase {
     elevatorMode = ElevatorModeState.ManualMovement;
   }
 
-  
+  public void resetSubsystemState() {
+    targetPosition = 0.0;
+    holdPosition = 0.0;
+    holdPositionRecorded = false;
+    elevatorMode = ElevatorModeState.Stopped;
+    setElevatorSpeed(0.0);
+  }
 
 
 }

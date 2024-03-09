@@ -84,7 +84,7 @@ public class SwerveModuleFalconFalcon {
 
     public void setVelocityMeters(double speed) {
         double RPM = (speed * wheelGearRatio * 60) / (wheelDiameter * Math.PI);
-        velocityControlRequest.Velocity = RPM / (60 * 1.6);
+        velocityControlRequest.Velocity = RPM / 60;
         driveMotor.setControl(velocityControlRequest);
     }
 

@@ -47,9 +47,9 @@ public class ElevatorSticks extends Command {
       // climbY = climbY*climbY*climbY;
       // mElevator.setElevatorVelocity(climbY * 60);
     if (climbY > 0.0){
-      mElevator.setElevatorSpeed((climbY / 2) - 0.1);
+      mElevator.setElevatorSpeed((climbY / 2.5) + 0.03);
     } else {
-      mElevator.setElevatorSpeed(climbY / 1.3);
+      mElevator.setElevatorSpeed(climbY / 2.5);
     }
     
   }

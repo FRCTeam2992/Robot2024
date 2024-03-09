@@ -40,6 +40,10 @@ public class Shooter extends SubsystemBase {
 
     shooterMotorConfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     shooterMotorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    shooterMotorConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
+    shooterMotorConfigs.CurrentLimits.SupplyCurrentThreshold = 80.0;
+    shooterMotorConfigs.CurrentLimits.SupplyTimeThreshold = 0.2;
+    shooterMotorConfigs.CurrentLimits.SupplyCurrentLimit = 40.0;
 
     if (!Constants.Shooter.ShooterPIDConstants.useCodePID) {
       // Make sure we copy old PID values in motor over so we don't lose them
@@ -123,5 +127,11 @@ public class Shooter extends SubsystemBase {
 
   public boolean atShooterRPM() {
     return (Math.abs(getShooterTargetRPM() - getShooterRPM()) < 200.0);
+  }
+
+  public void resetSubsystemState() {
+    shooterTargetRPM = 200.0;
+    medianFilter.reset();
+    setShooterSpeed(0.0);
   }
 }

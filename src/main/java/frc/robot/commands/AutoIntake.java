@@ -5,6 +5,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
@@ -12,13 +14,20 @@ import frc.robot.subsystems.Intake;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AutoIntake extends ParallelRaceGroup {
+public class AutoIntake extends SequentialCommandGroup {
   /** Creates a new AutoIntake. */
   public AutoIntake(Feeder mFeeder, Intake mIntake) {
     addCommands(
-        new MoveFeeder(mFeeder, Constants.Feeder.Speeds.intakingPieceSpeed, true),
-        new MoveIntake(mIntake, Constants.Intake.Speeds.intakingPieceSpeed)
-    );
+        new ParallelRaceGroup(
+            new MoveFeeder(mFeeder, Constants.Feeder.Speeds.intakingPieceSpeed, true),
+            new MoveIntake(mIntake,
+                Constants.Intake.Speeds.intakingPieceSpeed)
+        ),
+        new MoveFeeder(mFeeder, .15, false).withTimeout(0.5),
+        new WaitCommand(0.5));
+
+        // new MoveIntake(mIntake, Constants.Intake.Speeds.outakingPieceSpeed).withTimeout(1.0));
+
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
   }
