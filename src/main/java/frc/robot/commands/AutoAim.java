@@ -79,9 +79,9 @@ public class AutoAim extends Command {
       }
 
       case Amp: {
-        mShooter.setShooterSpeed(0.0);
-        mShooterPivot.setPivotTarget(0.0);
-        mShooterPivot.setPivotToPID();
+        // mShooter.setShooterSpeed(0.0);
+        // mShooterPivot.setPivotTarget(0.0);
+        // mShooterPivot.setPivotToPID();
         mElevator.setElevatorTargetPosition(Constants.Elevator.Positions.ampScoring);
         mElevator.moveElevatorToTargetPosition();
         break;
@@ -131,7 +131,7 @@ public class AutoAim extends Command {
         mShooterPivot.setPivotToPID();
         mElevator.setElevatorTargetPosition(Constants.Elevator.Positions.intakingPiece);
         mElevator.moveElevatorToTargetPosition();
-        mShooter.setShooterSpeed(0.0);
+        // mShooter.setShooterSpeed(0.0);
         break;
       }
 
