@@ -275,13 +275,13 @@ public class RobotContainer {
   private void initNoteInterp() {
     mNoteInterpolator = new NoteInterpolator();
 
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 2700, 56));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(53, 3500, 42));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(64, 4200, 38.0));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(75, 4200, 36.0));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(86, 4200, 33.0));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(109, 4200, 28.5));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(134, 3250, 28.5));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 2700, 56.0));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(53, 3500, 44.0));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(64, 4200, 40.0));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(75, 4200, 38.0));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(86, 4200, 35.0));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(109, 4200, 30.5));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(134, 3250, 30.5));
 
   }
 

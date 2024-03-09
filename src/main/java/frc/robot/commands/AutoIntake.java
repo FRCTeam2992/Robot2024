@@ -24,9 +24,9 @@ public class AutoIntake extends SequentialCommandGroup {
                 Constants.Intake.Speeds.intakingPieceSpeed)
         ),
         new MoveFeeder(mFeeder, .15, false).withTimeout(0.5),
-        new WaitCommand(0.5),
+        new WaitCommand(0.5));
 
-        new MoveIntake(mIntake, Constants.Intake.Speeds.outakingPieceSpeed).withTimeout(1.0));
+        // new MoveIntake(mIntake, Constants.Intake.Speeds.outakingPieceSpeed).withTimeout(1.0));
 
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
