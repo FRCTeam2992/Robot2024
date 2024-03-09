@@ -13,7 +13,8 @@ public class MyRobotState {
         Speaker,
         Amp,
         Endgame,
-        DefaultSpeaker
+        DefaultSpeaker,
+        Passing
     }
 
     private RobotModeState robotMode = RobotModeState.Speaker;
@@ -52,6 +53,10 @@ public class MyRobotState {
 
     public boolean isDefaultSpeakerMode() {
         return robotMode == RobotModeState.DefaultSpeaker;
+    }
+
+    public boolean isPassing() {
+        return robotMode == RobotModeState.Passing;
     }
     
 }

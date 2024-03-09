@@ -169,7 +169,7 @@ public class RobotContainer {
 
     // Bumpers
     controller1.leftBumper().onTrue(new InstantCommand(() -> {
-      mRobotState.setRobotMode(RobotModeState.DefaultSpeaker);
+      mRobotState.setRobotMode(RobotModeState.Passing);
     }));
     controller1.rightBumper()
         .onTrue(new SetPivotTargetAngle(mShooterPivot, Constants.ShooterPivot.Positions.intakingPiece)
@@ -180,10 +180,10 @@ public class RobotContainer {
             .andThen(new MoveElevatorToTarget(mElevator)));
 
     // POV
-    controller1.povUp().whileTrue(new MoveShooterPivot(mShooterPivot, 0.1));
-    controller1.povDown().whileTrue(new MoveShooterPivot(mShooterPivot, -0.04));    
-    controller1.povLeft().onTrue(new SetShooterSpeedTarget(mShooter, mShooter.getShooterTargetRPM() - 100).andThen(new StartShooter(mShooter)));
-    controller1.povRight().onTrue(new SetShooterSpeedTarget(mShooter, mShooter.getShooterTargetRPM() + 100).andThen(new StartShooter(mShooter)));
+    controller1.povUp().whileTrue(new MoveShooterPivot(mShooterPivot, 0.13));
+    controller1.povDown().whileTrue(new MoveShooterPivot(mShooterPivot, -0.10));
+    controller1.povLeft().onTrue(new InstantCommand(() -> { mRobotState.setRobotMode(RobotModeState.DefaultSpeaker); }));
+    controller1.povRight().onTrue(new InstantCommand(() -> { mRobotState.setRobotMode(RobotModeState.DefaultSpeaker); }));
 
 
 
