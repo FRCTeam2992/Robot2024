@@ -30,7 +30,7 @@ public class Robot extends TimedRobot {
     mRobotContainer.mShooterPivot.zeroPivotEncoder();
     mRobotContainer.resetAllSubsystemState();
 
-    // CameraServer.startAutomaticCapture();
+    CameraServer.startAutomaticCapture();
   }
 
   @Override

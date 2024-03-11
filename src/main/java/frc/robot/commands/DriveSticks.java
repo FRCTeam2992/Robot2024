@@ -146,8 +146,7 @@ public class DriveSticks extends Command {
         // Lock Rotation to 0 for scoring
 
         // Check for Movement or autoDriveMode
-        if (Math.abs(x1) > 0.00 || Math.abs(y1) > 0.00 || Math.abs(x2) > 0.00 || mDriveTrain.isAutoRotate()
-                || mRobotState.isAmpMode()) {
+        if (Math.abs(x1) > 0.00 || Math.abs(y1) > 0.00 || Math.abs(x2) > 0.00 || mDriveTrain.isAutoRotate()) {
 
             // if (Constants.DemoMode.isDemoMode) {
             // // Demo Slow Mode
@@ -337,9 +336,7 @@ public class DriveSticks extends Command {
                 }
             }
 
-            // We are out of auto score align mode, but keep pid current
-            ampXController.reset(mDriveTrain.getLatestSwervePose().getX(),
-                    y1 * Constants.DrivetrainConstants.swerveMaxSpeed);
+            
 
             // if (mRobotState.isEndgameMode() && mDriveTrain.isAutoRotate()
             // && mDriveTrain.limeLightCameraBack.getTargetID() > 10
