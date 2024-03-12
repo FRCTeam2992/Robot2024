@@ -51,10 +51,10 @@ public class Constants {
 
         public static class PIDConstants {
             // Swerve Drive PID (Velocity Control)
-            public static final double driveP = 0.05;
+            public static final double driveP = 0.015;
             public static final double driveI = 0.0;
-            public static final double driveD = 0.01;
-            public static final double driveV = 0.047;
+            public static final double driveD = 0.001;
+            public static final double driveV = 0.0094;
 
             // Swerve Turn PIDs
             public static final double turnP = 0.013;
@@ -88,12 +88,12 @@ public class Constants {
         public static final double driveBaseRadius = 0.43984;
 
         // Swerve Translation Correction PID (Path Following)
-        public static final double xyCorrectionP = 10.0;
+        public static final double xyCorrectionP = 0.4;
         public static final double xyCorrectionI = 0.0;
         public static final double xyCorrectionD = 0.0;
 
         // Swerve Theta Axis Correction PID (Path Following)
-        public static final double thetaCorrectionP = 1.0;
+        public static final double thetaCorrectionP = 0.04;
         public static final double thetaCorrectionI = 0.0;
         public static final double thetaCorrectionD = 0.0;
 
@@ -171,7 +171,7 @@ public class Constants {
             public static int shooterMotorID = 8;
         }
 
-        public static final double defaultShooterSpeed = 2500; // RPM
+        public static final double defaultShooterSpeed = 2700; // RPM
 
         public static class ShooterPIDConstants {
             public static final boolean useCodePID = true; // Whether to overwrite PID values in motor
@@ -297,7 +297,7 @@ public class Constants {
         public static class Positions {
             public static final double intakingPiece = 0.0; // Place holder
             public static final double safeZoneTop = 7.5; // placeholder
-            public static final double speakerShooting = 0.0;
+            public static final double speakerShooting = 1.0;
             public static final double ampScoring = 20.0; // placeholder
             public static final double trapScoring = 20.0; // placeholder
         }

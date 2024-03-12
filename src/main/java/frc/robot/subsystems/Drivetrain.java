@@ -6,8 +6,6 @@ package frc.robot.subsystems;
 
 import java.util.ArrayList;
 
-import javax.print.attribute.standard.Media;
-
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -18,8 +16,6 @@ import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-// import com.ctre.phoenix.motorcontrol.can.TalonFX;
-// import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -61,6 +57,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -831,6 +828,10 @@ public class Drivetrain extends SubsystemBase {
         frontRight.setDriveVelocity(swerveStates[2], swerveStates[3]);
         rearLeft.setDriveVelocity(swerveStates[4], swerveStates[5]);
         rearRight.setDriveVelocity(swerveStates[6], swerveStates[7]);
+        // frontLeft.setDrive(velocity, 0);
+        // frontRight.setDrive(velocity, 0);
+        // rearLeft.setDrive(velocity, 0);
+        // rearRight.setDrive(velocity, 0);
     }
     
     public void turnRobot( double heading) {
@@ -926,4 +927,14 @@ public class Drivetrain extends SubsystemBase {
         SwerveModuleState[] states = swerveDriveKinematics.toSwerveModuleStates(speeds);
         setModuleStates(states);
     }
+
+    public void resetSubsystemState() {
+        inSlowMode = false;
+        doFieldOrient = Constants.DrivetrainConstants.isFieldCentric;
+        autoRotate = false;
+        loadingMode = false;
+        limelightXMedianFilter.reset();
+        limelightYMedianFilter.reset();
+        limelightAngleMedianFilter.reset();
+   }
 }

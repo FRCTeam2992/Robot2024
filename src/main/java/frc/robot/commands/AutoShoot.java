@@ -61,6 +61,7 @@ public class AutoShoot extends Command {
         break;
 
       }
+      case Passing:
       case Speaker:
       case DefaultSpeaker:
       case Auto: {

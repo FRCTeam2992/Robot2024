@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.387443986,
-      "y": 5.550651182520641
+      "x": 0.94,
+      "y": 4.3
     },
-    "rotation": 0.0
+    "rotation": -60.0
   },
   "command": {
     "type": "sequential",
@@ -56,10 +56,16 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "CenterToCenterRing"
+                              "pathName": "SourceToSource1Ring"
                             }
                           }
                         ]
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Source1RingToShoot"
                       }
                     },
                     {

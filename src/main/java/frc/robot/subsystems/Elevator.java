@@ -184,6 +184,7 @@ public class Elevator extends SubsystemBase {
       }
 
       case DefaultSpeaker:
+      case Passing:
       case Speaker: {
         // Enforce soft top and bottom limits
         if (getElevatorInches() > Constants.Elevator.Limits.maxElevatorSpeaker && speed > 0.0) {
@@ -221,6 +222,7 @@ public class Elevator extends SubsystemBase {
       case Override:
       case DefaultSpeaker:
       case Speaker:
+      case Passing:
       case Auto: {
         // In these cases use normal top limit
         position = Math.min(position, Constants.Elevator.Limits.maxElevatorSpeaker);
@@ -257,6 +259,7 @@ public class Elevator extends SubsystemBase {
       case Override:
       case DefaultSpeaker:
       case Speaker:
+      case Passing:
       case Auto: {
         // In these cases use normal top limit
         position = Math.min(position, Constants.Elevator.Limits.maxElevatorSpeaker);
@@ -337,6 +340,7 @@ public class Elevator extends SubsystemBase {
       }
 
       case DefaultSpeaker:
+      case Passing:
       case Speaker: {
         // Enforce soft top and bottom limits
         if (getElevatorInches() > Constants.Elevator.Limits.maxElevatorSpeaker && velocity > 0.0) {
@@ -401,7 +405,13 @@ public class Elevator extends SubsystemBase {
     elevatorMode = ElevatorModeState.ManualMovement;
   }
 
-  
+  public void resetSubsystemState() {
+    targetPosition = 0.0;
+    holdPosition = 0.0;
+    holdPositionRecorded = false;
+    elevatorMode = ElevatorModeState.Stopped;
+    setElevatorSpeed(0.0);
+  }
 
 
 }

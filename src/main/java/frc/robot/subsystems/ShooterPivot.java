@@ -22,6 +22,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.MyRobotState;
@@ -196,6 +197,7 @@ public class ShooterPivot extends SubsystemBase {
       case Override:
       case DefaultSpeaker:
       case Speaker:
+      case Passing:
       case Auto: {
         // In these cases use normal top limit
         position = Math.min(position, Constants.ShooterPivot.Limits.maxPivotAngle);
@@ -276,6 +278,7 @@ public class ShooterPivot extends SubsystemBase {
       }
 
       case DefaultSpeaker:
+      case Passing:
       case Speaker: {
         pivotMode = PivotModeState.ManualMovement;
         // Enforce soft top and bottom limits
@@ -320,6 +323,7 @@ public class ShooterPivot extends SubsystemBase {
       case Override:
       case DefaultSpeaker:
       case Auto:
+      case Passing:
       case Speaker: {
         // Just do the "normal" checks in these modes
         targetAngle = Math.min(targetAngle, Constants.ShooterPivot.Limits.maxPivotAngle);
@@ -364,6 +368,7 @@ public class ShooterPivot extends SubsystemBase {
       case Auto:
       case DefaultSpeaker:
       case Speaker:
+      case Passing:
       case Override: {
         // Just use the normal hold to current position -- don't need to do anything
         angle = Math.min(angle, Constants.ShooterPivot.Limits.maxPivotAngle);
@@ -412,4 +417,12 @@ public class ShooterPivot extends SubsystemBase {
     pivotMotor.setPosition(0.0);
   }
 
+  public void resetSubsystemState() {
+    stopPivotMotor();
+    pivotMedianFilter.reset();
+    holdPositionRecorded = true;
+    pivotMode = PivotModeState.Hold;
+    pivotTarget = Constants.ShooterPivot.Positions.intakingPiece;
+    holdPosition = Constants.ShooterPivot.Positions.intakingPiece;
+  }
 }
