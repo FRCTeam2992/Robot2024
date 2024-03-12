@@ -164,6 +164,9 @@ public class RobotContainer {
     // Controller 1 (B)
 
     // Triggers
+    controller1.rightTrigger(0.3)
+        .onTrue(new SetPivotTargetAngle(mShooterPivot, Constants.ShooterPivot.Positions.intakingPiece - 15.0)
+            .andThen(new SetPivotToTargetAngle(mShooterPivot).withTimeout(2.0)));
     controller1.rightTrigger(0.3).whileTrue(new MoveIntake(mIntake, Constants.Intake.Speeds.outakingPieceSpeed)
         .alongWith(new MoveFeeder(mFeeder, Constants.Feeder.Speeds.outakingPieceSpeed, false)));
 
