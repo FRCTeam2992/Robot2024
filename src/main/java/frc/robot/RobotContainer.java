@@ -225,7 +225,7 @@ public class RobotContainer {
   private void configureSmartDashboard() {
     SmartDashboard.putData("Override Mode", new InstantCommand(()-> {mRobotState.setRobotMode(RobotModeState.Override);}));
 
-    SmartDashboard.putData("Move Robot Foward", new AutoMoveForwardBack(mDrivetrain, true, 1.0));
+    SmartDashboard.putData("Move Robot Foward", new AutoMoveForwardBack(mDrivetrain, true, 2.0));
     SmartDashboard.putData("turn robot to 90", new AutoRotateToHeading(mDrivetrain, 90));
 
     SmartDashboard.putNumber("Set Shooter RPM", 0.0);

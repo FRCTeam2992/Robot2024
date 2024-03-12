@@ -106,7 +106,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
 
-    mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralModeValue.Coast);
+    mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralModeValue.Brake);
         mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralModeValue.Brake);
 
     mRobotContainer.mDrivetrain.setDriveCurrentLimit(40.0, 40.0);
