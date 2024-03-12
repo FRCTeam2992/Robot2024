@@ -217,7 +217,7 @@ public class Drivetrain extends SubsystemBase {
         setDriveNeutralMode(NeutralModeValue.Coast);
         setTurnNeutralMode(NeutralModeValue.Brake);
 
-        setDriveCurrentLimit(40.0, 40.0);
+        setDriveCurrentLimit(40.0, 60.0);
         setTurnCurrentLimit(60.0); // potentially unused
 
         frontLeftController = new PIDController(Constants.DrivetrainConstants.PIDConstants.turnP,
@@ -550,7 +550,7 @@ public class Drivetrain extends SubsystemBase {
         driveMotorConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
         driveMotorConfigs.CurrentLimits.SupplyCurrentLimit = currentLimit;
         driveMotorConfigs.CurrentLimits.SupplyCurrentThreshold = triggerCurrent;
-        driveMotorConfigs.CurrentLimits.SupplyTimeThreshold = 0;
+        driveMotorConfigs.CurrentLimits.SupplyTimeThreshold = 0.2;
 
         frontLeftDrive.getConfigurator().apply(driveMotorConfigs);
         frontRightDrive.getConfigurator().apply(driveMotorConfigs);
