@@ -242,7 +242,7 @@ public class RobotContainer {
     SmartDashboard.putData("Feeder Foward", new MoveFeeder(mFeeder, 0.45, false)); // 2:1
     SmartDashboard.putData("feedforward limited", new MoveFeeder(mFeeder, 0.45, true));
     SmartDashboard.putData("Feeder Reverse", new MoveFeeder(mFeeder, -0.45, false));
-    SmartDashboard.putData("Feeder Shoot", new MoveFeeder(mFeeder, 1.0, false).alongWith(new MoveIntake(mIntake, 0.4)));
+    SmartDashboard.putData("Feeder Shoot", new MoveFeeder(mFeeder, 0.5, false).alongWith(new MoveIntake(mIntake, 0.4)));
 
     SmartDashboard.putData("Pivot Foward", new MoveShooterPivot(mShooterPivot, 0.05));
     SmartDashboard.putData("Pivot Reverse", new MoveShooterPivot(mShooterPivot, -0.05));
@@ -276,17 +276,20 @@ public class RobotContainer {
   private void initNoteInterp() {
     mNoteInterpolator = new NoteInterpolator();
 
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 2700, 56.0));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(53, 3500, 44.0));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(64, 4200, 40.0));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(75, 4200, 38.0));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(86, 4200, 35.0));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(109, 4200, 30.5));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(134, 3250, 30.5));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 2700, 56.0, 0.0));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(53, 2800, 49.0, 0.0));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(64, 2800, 44.0, 0.0));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(75, 3100, 41, 0.0));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(86, 3100, 38, 0.0));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(98, 3300, 35.0, 0.0));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(109, 3700, 33.0, 0.0));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(122, 4000, 31.0, 0.0));
+    mNoteInterpolator.addDataPoint(new NoteDataPoint(134, 4000, 28.5, 0.0));
 
   }
 
   public void resetAllSubsystemState() {
+
     mDrivetrain.resetSubsystemState();
     mElevator.resetSubsystemState();
     mFeeder.resetSubsystemState();
