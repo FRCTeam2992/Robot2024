@@ -89,12 +89,12 @@ public class Constants {
         public static final double driveBaseRadius = 0.43984;
 
         // Swerve Translation Correction PID (Path Following)
-        public static final double xyCorrectionP = 7.0;
+        public static final double xyCorrectionP = 2.0;
         public static final double xyCorrectionI = 0.0;
         public static final double xyCorrectionD = 0.0;
 
         // Swerve Theta Axis Correction PID (Path Following)
-        public static final double thetaCorrectionP = 7.0;
+        public static final double thetaCorrectionP = 3.0;
         public static final double thetaCorrectionI = 0.0;
         public static final double thetaCorrectionD = 0.0;
 
@@ -298,7 +298,7 @@ public class Constants {
         public static class Positions {
             public static final double intakingPiece = 0.0; // Place holder
             public static final double safeZoneTop = 7.5; // placeholder
-            public static final double speakerShooting = 1.0;
+            public static final double speakerShooting = 0.0;
             public static final double ampScoring = 20.0; // placeholder
             public static final double trapScoring = 20.0; // placeholder
         }

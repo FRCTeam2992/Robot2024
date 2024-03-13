@@ -103,7 +103,7 @@ public class NoteInterpolator {
             }
         }
 
-        // SmartDashboard.putNumber("Hood Position", tempHoodPosition);
+         SmartDashboard.putNumber("Hood Position", tempHoodPosition);
 
         return tempHoodPosition;
     }

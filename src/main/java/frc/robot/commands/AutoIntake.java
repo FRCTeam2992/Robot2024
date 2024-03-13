@@ -25,7 +25,7 @@ public class AutoIntake extends SequentialCommandGroup {
         ),
 
         new ParallelRaceGroup(
-            new MoveFeeder(mFeeder, 0.15, false).withTimeout(0.5),
+            new MoveFeeder(mFeeder, 0.15, false).withTimeout(0.35),
             new MoveIntake(mIntake, -0.01)
         )
         
