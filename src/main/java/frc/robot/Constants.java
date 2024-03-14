@@ -111,7 +111,7 @@ public class Constants {
         public static final double maxTurnToX = 20.0; // degrees/sec
 
         // Amp Auto Align
-        public static final double maxAmpAutoAlignError = 1.8; //Meters
+        public static final double maxAmpAutoAlignError = 1.0; //Meters
 
         public static class CanIDs {
             public static int frontLeftDrive = 2;
