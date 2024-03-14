@@ -42,8 +42,8 @@ public class NoteInterpolator {
         if (dataPointList.size() == 1) {
             tempMainSpeed = dataPointList.get(0).getMainShooterSpeed();
         } else if (dataPointList.size() > 1) {
-            NoteDataPoint upperDataPoint = new NoteDataPoint(-1.0, 0.0, 0.0);
-            NoteDataPoint lowerDataPoint = new NoteDataPoint(-1.0, 0.0, 0.0);
+            NoteDataPoint upperDataPoint = new NoteDataPoint(-1.0, 0.0, 0.0, 0.0);
+            NoteDataPoint lowerDataPoint = new NoteDataPoint(-1.0, 0.0, 0.0, 0.0);
 
             for (int i = 0; i < dataPointList.size(); i++) {
                 if (dataPointList.get(i).getDistance() >= distance) {
@@ -78,8 +78,8 @@ public class NoteInterpolator {
         if (dataPointList.size() == 1) {
             tempHoodPosition = dataPointList.get(0).getPivotPosition();
         } else if (dataPointList.size() > 1) {
-            NoteDataPoint upperDataPoint = new NoteDataPoint(-1.0, 0.0, 0.0);
-            NoteDataPoint lowerDataPoint = new NoteDataPoint(-1.0, 0.0, 0.0);
+            NoteDataPoint upperDataPoint = new NoteDataPoint(-1.0, 0.0, 0.0, 0.0);
+            NoteDataPoint lowerDataPoint = new NoteDataPoint(-1.0, 0.0, 0.0, 0.0);
 
             for (int i = 0; i < dataPointList.size(); i++) {
                 if (dataPointList.get(i).getDistance() >= distance) {
@@ -103,9 +103,43 @@ public class NoteInterpolator {
             }
         }
 
-        // SmartDashboard.putNumber("Hood Position", tempHoodPosition);
+         SmartDashboard.putNumber("Hood Position", tempHoodPosition);
 
         return tempHoodPosition;
+    }
+
+     public double calcElevatorHeight(double distance) {
+        double tempElevatorHeight = 0.0;
+
+        if (dataPointList.size() == 1) {
+            tempElevatorHeight = dataPointList.get(0).getElevatorHeight();
+        } else if (dataPointList.size() > 1) {
+            NoteDataPoint upperDataPoint = new NoteDataPoint(-1.0, 0.0, 0.0, 0.0);
+            NoteDataPoint lowerDataPoint = new NoteDataPoint(-1.0, 0.0, 0.0, 0.0);
+
+            for (int i = 0; i < dataPointList.size(); i++) {
+                if (dataPointList.get(i).getDistance() >= distance) {
+                    upperDataPoint = dataPointList.get(i);
+
+                    break;
+                }
+
+                lowerDataPoint = dataPointList.get(i);
+            }
+            if (lowerDataPoint.getDistance() == -1.0) {
+                tempElevatorHeight = upperDataPoint.getElevatorHeight();
+            } else if (upperDataPoint.getDistance() == -1.0) {
+                tempElevatorHeight = lowerDataPoint.getElevatorHeight();
+            } else {
+                double upperElevatorHeight = upperDataPoint.getElevatorHeight();
+                double lowerElevatorHeight = lowerDataPoint.getElevatorHeight();
+
+                tempElevatorHeight = lerp(lowerElevatorHeight, upperElevatorHeight, (distance - lowerDataPoint.getDistance())
+                        / (upperDataPoint.getDistance() - lowerDataPoint.getDistance()));
+            }
+        }
+
+        return tempElevatorHeight;
     }
 
     private double lerp(double start, double end, double count) {

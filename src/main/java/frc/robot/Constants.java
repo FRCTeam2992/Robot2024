@@ -40,21 +40,22 @@ public class Constants {
 
         // Swerve Wheels and Gear Ratio
         public static final double driveGearRatio = 6.12;// 6.12:1
-        public static final double driveWheelDiameter = 0.1016; // 0.098552 (Tread) 0.1016 (Colson)
+        public static final double driveWheelDiameter = 0.09927
+        ; // 0.098552 (Tread) 0.1016 (Colson)
 
         // Analog Encoder Offsets (Degrees) - Opposite of Raw Reading - Bevel Gear to
         // Right
-        public static final double frontLeftOffset = 26.9; // -174.3;
-        public static final double frontRightOffset = 159.3; // 95.0; //90.8
-        public static final double rearLeftOffset = -160.4; // 180.6;//170.6
-        public static final double rearRightOffset = -24.08; // 28.3;//31.0
+        public static final double frontLeftOffset = 31.3; // -174.3;
+        public static final double frontRightOffset = 159.7; // 95.0; //90.8
+        public static final double rearLeftOffset = -161.0; // 180.6;//170.6
+        public static final double rearRightOffset = -20.92; // 28.3;//31.0
 
         public static class PIDConstants {
             // Swerve Drive PID (Velocity Control)
-            public static final double driveP = 0.015;
+            public static final double driveP = 0.02;
             public static final double driveI = 0.0;
-            public static final double driveD = 0.001;
-            public static final double driveV = 0.0094;
+            public static final double driveD = 0.00;
+            public static final double driveV = 0.012;
 
             // Swerve Turn PIDs
             public static final double turnP = 0.013;
@@ -88,12 +89,12 @@ public class Constants {
         public static final double driveBaseRadius = 0.43984;
 
         // Swerve Translation Correction PID (Path Following)
-        public static final double xyCorrectionP = 0.4;
+        public static final double xyCorrectionP = 2.0;
         public static final double xyCorrectionI = 0.0;
         public static final double xyCorrectionD = 0.0;
 
         // Swerve Theta Axis Correction PID (Path Following)
-        public static final double thetaCorrectionP = 0.04;
+        public static final double thetaCorrectionP = 3.0;
         public static final double thetaCorrectionI = 0.0;
         public static final double thetaCorrectionD = 0.0;
 
@@ -177,15 +178,15 @@ public class Constants {
             public static int shooterMotorID = 8;
         }
 
-        public static final double defaultShooterSpeed = 2700; // RPM
+        public static final double defaultShooterSpeed = 3300; // RPM
 
         public static class ShooterPIDConstants {
             public static final boolean useCodePID = true; // Whether to overwrite PID values in motor
 
-            public static double P = 0.045; // Place holder
+            public static double P = 0.05; // Place holder
             public static double I = 0.0; // Place holder
             public static double D = 0.0; // Place holder
-            public static double V = 0.0102; // Place holder
+            public static double V = 0.01007; // Place holder
             public static double S = 0.00;
             public static double acceleration = 50; // Place holder
             public static double jerk = 50;
@@ -303,7 +304,7 @@ public class Constants {
         public static class Positions {
             public static final double intakingPiece = 0.0; // Place holder
             public static final double safeZoneTop = 7.5; // placeholder
-            public static final double speakerShooting = 1.0;
+            public static final double speakerShooting = 0.0;
             public static final double ampScoring = 20.0; // placeholder
             public static final double trapScoring = 20.0; // placeholder
         }

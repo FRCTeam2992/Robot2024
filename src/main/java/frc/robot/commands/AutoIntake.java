@@ -23,10 +23,13 @@ public class AutoIntake extends SequentialCommandGroup {
             new MoveIntake(mIntake,
                 Constants.Intake.Speeds.intakingPieceSpeed)
         ),
-        new MoveFeeder(mFeeder, .15, false).withTimeout(0.5),
-        new WaitCommand(0.5));
 
-        // new MoveIntake(mIntake, Constants.Intake.Speeds.outakingPieceSpeed).withTimeout(1.0));
+        new ParallelRaceGroup(
+            new MoveFeeder(mFeeder, 0.15, false).withTimeout(0.3),
+            new MoveIntake(mIntake, -0.01)
+        )
+        
+    );
 
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());

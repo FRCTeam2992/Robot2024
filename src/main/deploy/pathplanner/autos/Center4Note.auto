@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.94,
-      "y": 4.3
+      "x": 1.39,
+      "y": 5.45
     },
-    "rotation": -60.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -28,7 +28,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 2.0
+                        "waitTime": 1.4
                       }
                     },
                     {
@@ -44,7 +44,7 @@
                           {
                             "type": "wait",
                             "data": {
-                              "waitTime": 3.0
+                              "waitTime": 2.2
                             }
                           },
                           {
@@ -56,22 +56,16 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "SourceToSourceRing"
+                              "pathName": "CenterToCenterRing"
                             }
                           }
                         ]
                       }
                     },
                     {
-                      "type": "named",
-                      "data": {
-                        "name": "driveStop"
-                      }
-                    },
-                    {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 0.0
                       }
                     },
                     {
@@ -87,7 +81,7 @@
                           {
                             "type": "wait",
                             "data": {
-                              "waitTime": 4.5
+                              "waitTime": 3.8
                             }
                           },
                           {
@@ -99,22 +93,16 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "SourceRingToSource1Ring"
+                              "pathName": "CenterRingtoSourceRing"
                             }
                           }
                         ]
                       }
                     },
                     {
-                      "type": "named",
-                      "data": {
-                        "name": "driveStop"
-                      }
-                    },
-                    {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 0.0
                       }
                     },
                     {
@@ -124,21 +112,34 @@
                       }
                     },
                     {
-                      "type": "path",
+                      "type": "deadline",
                       "data": {
-                        "pathName": "Source1RingToSpeaker"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "driveStop"
+                        "commands": [
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 3.5
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "autoIntake"
+                            }
+                          },
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "SourceRingtoAmpRing"
+                            }
+                          }
+                        ]
                       }
                     },
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 0.0
                       }
                     },
                     {
@@ -151,30 +152,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stopShooter"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stopPivot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stopIntake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stopFeeder"
           }
         }
       ]
