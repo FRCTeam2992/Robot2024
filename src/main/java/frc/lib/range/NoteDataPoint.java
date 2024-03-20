@@ -7,16 +7,18 @@ public class NoteDataPoint implements Comparable<NoteDataPoint> {
 
     private double mainShooterSpeed;
     private double pivotPosition;
+    private double elevatorHeight;
 
-    public NoteDataPoint(double distance, double mainShooterSpeed, double pivotAngle) {
+    public NoteDataPoint(double distance, double mainShooterSpeed, double pivotAngle, double elevatorHeight) {
         // Save the Variables
         this.distance = distance;
         this.mainShooterSpeed = mainShooterSpeed;
         this.pivotPosition = pivotAngle;
+        this.elevatorHeight = elevatorHeight;
     }
 
     public NoteDataPoint() {
-        this(0.0, 0.0, 0.0);
+        this(0.0, 0.0, 0.0, 0.0);
     }
 
     public void setDistance(double distance) {
@@ -41,6 +43,14 @@ public class NoteDataPoint implements Comparable<NoteDataPoint> {
 
     public double getPivotPosition() {
         return pivotPosition;
+    }
+
+    public void setElevatorHeight(double height) {
+        this.elevatorHeight = height;
+    }
+
+    public double getElevatorHeight() {
+        return elevatorHeight;
     }
 
     @Override
