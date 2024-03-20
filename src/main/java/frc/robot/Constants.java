@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.util.Color;
 
 /** Add your docs here. */
 public class Constants {
@@ -305,6 +306,20 @@ public class Constants {
         public static class Climb {
             public static final double joyStickDeadBand = 0.1;
 
+        }
+    }
+
+    public static class LEDs {
+        public static class Colors { // Free to change as you feel
+            public static final Color auto = new Color(255, 0, 255); // Magenta
+            public static final Color override = new Color(255, 255, 255); // White
+            public static final Color speaker = new Color(0, 255, 255); // Cyan
+            public static final Color amp = new Color(255, 255, 0); // Yellow
+            public static final Color endgame = new Color(255, 0, 0); // Red
+            public static final Color defaultSpeaker = new Color(0, 0, 255); // Blue
+            public static final Color passing = new Color(255, 128, 0); // Orange
+
+            public static final Color intakeSuccess = new Color(0, 255, 0); // Lime
         }
     }
 }

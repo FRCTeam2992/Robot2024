@@ -41,6 +41,7 @@ import frc.robot.commands.MoveShooter;
 import frc.robot.commands.MoveShooterPivot;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.SetElevatorTargetPosition;
+import frc.robot.commands.SetLEDStripColor;
 import frc.robot.commands.SetPivotTargetAngle;
 import frc.robot.commands.SetPivotToTargetAngle;
 import frc.robot.commands.SetShooterSpeedTarget;
@@ -55,6 +56,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ShooterPivot;
 
@@ -72,6 +74,9 @@ public class RobotContainer {
   public final ShooterPivot mShooterPivot;
   public final Elevator mElevator;
   public final PowerDistribution mPDH;
+
+  public final LEDs intakeLEDs;
+  public final LEDs modeLEDs;
 
   public CommandXboxController controller0;
   public CommandXboxController controller1;
@@ -108,6 +113,9 @@ public class RobotContainer {
     mElevator.setDefaultCommand(new HoldElevatorPosition(mElevator));
 
     mPDH = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
+
+    intakeLEDs = new LEDs();
+    modeLEDs = new LEDs();
 
     controller0 = new CommandXboxController(0);
     controller1 = new CommandXboxController(1);
@@ -170,7 +178,7 @@ public class RobotContainer {
     // Bumpers
     controller1.leftBumper().onTrue(new InstantCommand(() -> {
       mRobotState.setRobotMode(RobotModeState.Passing);
-    }));
+    }).alongWith(new SetLEDStripColor(modeLEDs, Constants.LEDs.Colors.passing)));
     controller1.rightBumper()
         .onTrue(new SetPivotTargetAngle(mShooterPivot, Constants.ShooterPivot.Positions.intakingPiece)
             .andThen(new SetPivotToTargetAngle(mShooterPivot).withTimeout(2.0)));
@@ -182,19 +190,19 @@ public class RobotContainer {
     // POV
     controller1.povUp().whileTrue(new MoveShooterPivot(mShooterPivot, 0.13));
     controller1.povDown().whileTrue(new MoveShooterPivot(mShooterPivot, -0.10));
-    controller1.povLeft().onTrue(new InstantCommand(() -> { mRobotState.setRobotMode(RobotModeState.DefaultSpeaker); }));
-    controller1.povRight().onTrue(new InstantCommand(() -> { mRobotState.setRobotMode(RobotModeState.DefaultSpeaker); }));
+    controller1.povLeft().onTrue(new InstantCommand(() -> { mRobotState.setRobotMode(RobotModeState.DefaultSpeaker); }).alongWith(new SetLEDStripColor(modeLEDs, Constants.LEDs.Colors.defaultSpeaker)));
+    controller1.povRight().onTrue(new InstantCommand(() -> { mRobotState.setRobotMode(RobotModeState.DefaultSpeaker); }).alongWith(new SetLEDStripColor(modeLEDs, Constants.LEDs.Colors.defaultSpeaker)));
 
     // ABXY
     controller1.a().onTrue(new InstantCommand(() -> {
       mRobotState.setRobotMode(RobotModeState.Speaker);
-    }));
+    }).alongWith(new SetLEDStripColor(modeLEDs, Constants.LEDs.Colors.speaker)));
     controller1.b().onTrue(new InstantCommand(() -> {
       mRobotState.setRobotMode(RobotModeState.Amp);
-    }));
+    }).alongWith(new SetLEDStripColor(modeLEDs, Constants.LEDs.Colors.amp)));
     // controller1.y().onTrue(new InstantCommand(() -> {
     //   mRobotState.setRobotMode(RobotModeState.Endgame);
-    // }));
+    // }).alongWith(new SetLEDStripColor(modeLEDs, Constants.LEDs.Colors.endgame)));
     // controller1.x().whileTrue(new SetShooterSpeedTarget(mShooter, 500));
     controller1.x().onTrue(new MoveShooter(mShooter, 0.1));
 
@@ -223,7 +231,7 @@ public class RobotContainer {
   }
 
   private void configureSmartDashboard() {
-    SmartDashboard.putData("Override Mode", new InstantCommand(()-> {mRobotState.setRobotMode(RobotModeState.Override);}));
+    SmartDashboard.putData("Override Mode", new InstantCommand(()-> {mRobotState.setRobotMode(RobotModeState.Override);}).alongWith(new SetLEDStripColor(modeLEDs, Constants.LEDs.Colors.override)));
 
     SmartDashboard.putData("Move Robot Foward", new AutoMoveForwardBack(mDrivetrain, true, 1.0));
     SmartDashboard.putData("turn robot to 90", new AutoRotateToHeading(mDrivetrain, 90));
