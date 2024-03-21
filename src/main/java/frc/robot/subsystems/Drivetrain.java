@@ -551,7 +551,7 @@ public class Drivetrain extends SubsystemBase {
         driveMotorConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
         driveMotorConfigs.CurrentLimits.SupplyCurrentLimit = currentLimit;
         driveMotorConfigs.CurrentLimits.SupplyCurrentThreshold = triggerCurrent;
-        driveMotorConfigs.CurrentLimits.SupplyTimeThreshold = 0.2;
+        driveMotorConfigs.CurrentLimits.SupplyTimeThreshold = 0.0;
 
         frontLeftDrive.getConfigurator().apply(driveMotorConfigs);
         frontRightDrive.getConfigurator().apply(driveMotorConfigs);
