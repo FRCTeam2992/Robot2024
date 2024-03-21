@@ -48,6 +48,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
 import edu.wpi.first.util.datalog.IntegerLogEntry;
@@ -132,6 +134,10 @@ public class Drivetrain extends SubsystemBase {
     public Pose2d latestSwervePose = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0));
     public Pose2d latestVisionPose = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0));
     public boolean latestVisionPoseValid = false; // Do we have a current vision sighting?
+
+    // AdvantageScope pose logging
+    StructPublisher<Pose2d> odometryPosePublisher = NetworkTableInstance.getDefault().getStructTopic("RobotOdometryPose", Pose2d.struct).publish();
+    StructPublisher<Pose2d> limelightPosePublisher = NetworkTableInstance.getDefault().getStructTopic("RobotLimelightBlendedPose", Pose2d.struct).publish();
 
     // Swerve Drive Kinematics
     public final SwerveDriveKinematics swerveDriveKinematics;
@@ -551,7 +557,7 @@ public class Drivetrain extends SubsystemBase {
         driveMotorConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
         driveMotorConfigs.CurrentLimits.SupplyCurrentLimit = currentLimit;
         driveMotorConfigs.CurrentLimits.SupplyCurrentThreshold = triggerCurrent;
-        driveMotorConfigs.CurrentLimits.SupplyTimeThreshold = 0.0;
+        driveMotorConfigs.CurrentLimits.SupplyTimeThreshold = 0.02;
 
         frontLeftDrive.getConfigurator().apply(driveMotorConfigs);
         frontRightDrive.getConfigurator().apply(driveMotorConfigs);
@@ -700,6 +706,8 @@ public class Drivetrain extends SubsystemBase {
                     swerveDriveModulePositions,
                     resetPose);
             latestSwervePose = resetPose;
+
+            odometryPosePublisher.set(resetPose);
         }
     }
 
@@ -802,6 +810,8 @@ public class Drivetrain extends SubsystemBase {
                     limelightYMedianFilter.calculate(y),
                     Rotation2d.fromDegrees(limelightAngleMedianFilter.calculate(theta)));
             isUpdatingLimelightOdometry = false;
+
+            limelightPosePublisher.set(latestVisionPose);
             return;
         }
     }
@@ -913,6 +923,8 @@ public class Drivetrain extends SubsystemBase {
                 Timer.getFPGATimestamp(),
                 Rotation2d.fromDegrees(-getGyroYaw()),
                 modulePositions);
+        
+        odometryPosePublisher.set(this.latestSwervePose);
     }
 
     public ChassisSpeeds getRobotChassisSpeeds() {
