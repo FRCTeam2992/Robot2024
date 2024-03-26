@@ -21,12 +21,12 @@ public class AutoIntake extends SequentialCommandGroup {
         new ParallelRaceGroup(
             new MoveFeeder(mFeeder, Constants.Feeder.Speeds.intakingPieceSpeed, true),
             new MoveIntake(mIntake,
-                Constants.Intake.Speeds.intakingPieceSpeed)
+                Constants.Intake.Speeds.intakingPieceSpeed, false)
         ),
 
         new ParallelRaceGroup(
             new MoveFeeder(mFeeder, 0.15, false).withTimeout(0.3),
-            new MoveIntake(mIntake, -0.01)
+            new MoveIntake(mIntake, -0.01, false)
         )
         
     );
