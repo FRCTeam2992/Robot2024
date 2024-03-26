@@ -147,6 +147,7 @@ public class Constants {
     public static class Intake {
         public static final int intakeLeadMotorID = 10;
         public static final int intakeFollowMotorID = 11;
+        public static final int intakeBeamBreakID = 0;
 
         public static class Speeds {
             public static final double intakingPieceSpeed = 0.35;

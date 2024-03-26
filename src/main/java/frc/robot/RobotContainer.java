@@ -25,6 +25,7 @@ import frc.robot.MyRobotState.RobotModeState;
 import frc.robot.commands.AutoAim;
 import frc.robot.commands.AutoIntake;
 import frc.robot.commands.AutoMoveForwardBack;
+import frc.robot.commands.AutoResetNote;
 import frc.robot.commands.AutoRotateBot;
 import frc.robot.commands.AutoRotateToHeading;
 import frc.robot.commands.AutoShoot;
@@ -153,7 +154,7 @@ public class RobotContainer {
     // ABXY
     controller0.a().whileTrue(new AutoRotateBot(mDrivetrain, true));
     // controller0.x().whileTrue(new XWheels());
-    controller0.y().whileTrue(new MoveIntake(mIntake, Constants.Intake.Speeds.outakingPieceSpeed)
+    controller0.y().whileTrue(new MoveIntake(mIntake, Constants.Intake.Speeds.outakingPieceSpeed, false)
         .alongWith(new MoveFeeder(mFeeder, Constants.Feeder.Speeds.outakingPieceSpeed, false)));
 
     // Start/Back
@@ -167,7 +168,7 @@ public class RobotContainer {
     controller1.rightTrigger(0.3)
         .onTrue(new SetPivotTargetAngle(mShooterPivot, Constants.ShooterPivot.Positions.intakingPiece - 15.0)
             .andThen(new SetPivotToTargetAngle(mShooterPivot).withTimeout(2.0)));
-    controller1.rightTrigger(0.3).whileTrue(new MoveIntake(mIntake, Constants.Intake.Speeds.outakingPieceSpeed)
+    controller1.rightTrigger(0.3).whileTrue(new MoveIntake(mIntake, Constants.Intake.Speeds.outakingPieceSpeed, false)
         .alongWith(new MoveFeeder(mFeeder, Constants.Feeder.Speeds.outakingPieceSpeed, false)));
 
     // Bumpers
@@ -185,9 +186,9 @@ public class RobotContainer {
     // POV
     controller1.povUp().whileTrue(new MoveShooterPivot(mShooterPivot, 0.13));
     controller1.povDown().whileTrue(new MoveShooterPivot(mShooterPivot, -0.10));
-    controller1.povLeft().whileTrue(new MoveFeeder(mFeeder, 0.4, false));
-    controller1.povLeft().whileTrue(new MoveIntake(mIntake, 0.3));
-    controller1.povRight().whileTrue(new MoveIntake(mIntake, 0.4));
+    controller1.povRight().whileTrue(new MoveFeeder(mFeeder, 0.4, false));
+    controller1.povRight().whileTrue(new MoveIntake(mIntake, 0.3, false));
+    controller1.povLeft().onTrue( new AutoResetNote(mFeeder, mIntake));
 
     // ABXY
     controller1.a().onTrue(new InstantCommand(() -> {
@@ -238,13 +239,13 @@ public class RobotContainer {
     SmartDashboard.putData("Move pivot to position", new SetPivotToTargetAngle(mShooterPivot));
     // SmartDashboard.putData("Start Shooter", new StartShooter(mShooter));
 
-    SmartDashboard.putData("Intake Foward", new MoveIntake(mIntake, 0.40)); // 2.25
-    SmartDashboard.putData("Intake Reverse", new MoveIntake(mIntake, -0.40));
+    SmartDashboard.putData("Intake Foward", new MoveIntake(mIntake, 0.40, false)); // 2.25
+    SmartDashboard.putData("Intake Reverse", new MoveIntake(mIntake, -0.40, false));
 
     SmartDashboard.putData("Feeder Foward", new MoveFeeder(mFeeder, 0.45, false)); // 2:1
     SmartDashboard.putData("feedforward limited", new MoveFeeder(mFeeder, 0.45, true));
     SmartDashboard.putData("Feeder Reverse", new MoveFeeder(mFeeder, -0.45, false));
-    SmartDashboard.putData("Feeder Shoot", new MoveFeeder(mFeeder, 0.5, false).alongWith(new MoveIntake(mIntake, 0.4)));
+    SmartDashboard.putData("Feeder Shoot", new MoveFeeder(mFeeder, 0.5, false).alongWith(new MoveIntake(mIntake, 0.4, false)));
 
     SmartDashboard.putData("Pivot Foward", new MoveShooterPivot(mShooterPivot, 0.05));
     SmartDashboard.putData("Pivot Reverse", new MoveShooterPivot(mShooterPivot, -0.05));
@@ -252,8 +253,8 @@ public class RobotContainer {
     SmartDashboard.putData("Start Shooter", new StartShooter(mShooter));
     SmartDashboard.putData("StopShooter", new MoveShooter(mShooter, 0.0));
 
-    SmartDashboard.putData("AutoIntake", new MoveIntake(mIntake, 0.15).alongWith(new MoveFeeder(mFeeder, 0.20, false)));
-    SmartDashboard.putData("AutoIntakeStop", new MoveIntake(mIntake, 0).alongWith(new MoveFeeder(mFeeder, 0, false)));
+    SmartDashboard.putData("AutoIntake", new MoveIntake(mIntake, 0.15, false).alongWith(new MoveFeeder(mFeeder, 0.20, false)));
+    SmartDashboard.putData("AutoIntakeStop", new MoveIntake(mIntake, 0, false).alongWith(new MoveFeeder(mFeeder, 0, false)));
 
     SmartDashboard.putData("Zero pivot encoder", new InstantCommand(() -> {
       mShooterPivot.zeroPivotEncoder();

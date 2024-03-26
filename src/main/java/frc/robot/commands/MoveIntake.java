@@ -11,10 +11,12 @@ public class MoveIntake extends Command {
   /** Creates a new MoveIntake. */
   private Intake mIntake;
   private double mSpeed;
-  public MoveIntake(Intake subsystem, double speed) {
+  private boolean mIsLimited;
+  public MoveIntake(Intake subsystem, double speed, boolean isLimited) {
     // Use addRequirements() here to declare subsystem dependencies.
     mIntake = subsystem;
     mSpeed = speed;
+    mIsLimited = isLimited;
     addRequirements(mIntake);
   }
 
@@ -30,11 +32,17 @@ public class MoveIntake extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    mIntake.setIntakeSpeed(0.0);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+
+    if (mIsLimited){
+      return mIntake.isBeamBreakLimited();
+    }
     return false;
   }
 }
