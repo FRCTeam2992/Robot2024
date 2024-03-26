@@ -143,11 +143,11 @@ public class RobotContainer {
 
     controller0.rightBumper().onTrue(new InstantCommand(
         () -> {
-          mDrivetrain.setInSlowMode(true);
+          mDrivetrain.setInSlowMode(false);
         })); // Slow Mode
     controller0.rightBumper().onFalse(new InstantCommand(
         () -> {
-          mDrivetrain.setInSlowMode(false);
+          mDrivetrain.setInSlowMode(true);
         })); // Slow Mode
 
     // ABXY
