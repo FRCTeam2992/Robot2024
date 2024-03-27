@@ -4,10 +4,13 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
+import frc.robot.MyRobotState;
+import frc.robot.MyRobotState.LEDModeState;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
 
@@ -16,9 +19,10 @@ import frc.robot.subsystems.Intake;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutoIntake extends SequentialCommandGroup {
   /** Creates a new AutoIntake. */
-  public AutoIntake(Feeder mFeeder, Intake mIntake) {
+  public AutoIntake(Feeder mFeeder, Intake mIntake, MyRobotState mRobotState) {
     addCommands(
         new ParallelRaceGroup(
+            new InstantCommand(() -> {mRobotState.setLEDMode(LEDModeState.intaking);}),
             new MoveFeeder(mFeeder, Constants.Feeder.Speeds.intakingPieceSpeed, true),
             new MoveIntake(mIntake,
                 Constants.Intake.Speeds.intakingPieceSpeed)

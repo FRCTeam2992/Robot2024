@@ -114,8 +114,8 @@ public class RobotContainer {
 
     mPDH = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
 
-    intakeLEDs = new LEDs();
-    modeLEDs = new LEDs();
+    intakeLEDs = new LEDs(mIntake, mFeeder, mShooter, mElevator, mShooterPivot, mRobotState);
+    // modeLEDs = new LEDs();
 
     controller0 = new CommandXboxController(0);
     controller1 = new CommandXboxController(1);
@@ -182,7 +182,7 @@ public class RobotContainer {
     controller1.rightBumper()
         .onTrue(new SetPivotTargetAngle(mShooterPivot, Constants.ShooterPivot.Positions.intakingPiece)
             .andThen(new SetPivotToTargetAngle(mShooterPivot).withTimeout(2.0)));
-    controller1.rightBumper().onTrue(new AutoIntake(mFeeder, mIntake));
+    controller1.rightBumper().onTrue(new AutoIntake(mFeeder, mIntake, mRobotState));
     controller1.rightBumper().onTrue(
         new SetElevatorTargetPosition(mElevator, Constants.Elevator.Positions.intakingPiece)
             .andThen(new MoveElevatorToTarget(mElevator)));
@@ -306,7 +306,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("pivot1stShot", new SetPivotTargetAngle(mShooterPivot, 56));
     NamedCommands.registerCommand("autoShoot",
         new AutoShoot(mIntake, mFeeder, mRobotState, mElevator, mShooterPivot, mShooter, 0).withTimeout(1.0));
-    NamedCommands.registerCommand("autoIntake", new AutoIntake(mFeeder, mIntake));
+    NamedCommands.registerCommand("autoIntake", new AutoIntake(mFeeder, mIntake, mRobotState));
     NamedCommands.registerCommand("stopShooter", new StopShooter(mShooter).withTimeout(0.1));
     NamedCommands.registerCommand("stopIntake", new StopIntake(mIntake).withTimeout(0.1));
     NamedCommands.registerCommand("stopFeeder", new MoveFeeder(mFeeder, 0, false));
