@@ -14,15 +14,6 @@ public class Constants {
     public static final boolean dataLogging = false;
     public static final boolean debugDashboard = true;
 
-    public static class LEDColors {
-        public static final Color purple = new Color(210, 75, 230);
-        public static final Color yellow = new Color(255, 160, 0);
-        public static final Color blue = new Color(0, 0, 255);
-        public static final Color red = new Color(255, 0, 0);
-        public static final Color orange = new Color(255, 80, 0);
-        public static final Color white = new Color(210, 200, 180);
-        public static final Color off = new Color(0, 0, 0);
-    }
 
     public static class DrivetrainConstants {
         // Drive Variables
@@ -331,7 +322,19 @@ public class Constants {
             public static final Color defaultSpeaker = new Color(0, 0, 255); // Blue
             public static final Color passing = new Color(255, 128, 0); // Orange
 
+            public static final Color aiming = new Color(0, 0, 0);
+            public static final Color onTarget = new Color(0, 0, 0);
+            public static final Color shooting = new Color(0, 0, 0);
+
             public static final Color intakeSuccess = new Color(0, 255, 0); // Lime
+            public static final Color purple = new Color(210, 75, 230);
+            public static final Color yellow = new Color(255, 160, 0);
+            public static final Color blue = new Color(0, 0, 255);
+            public static final Color red = new Color(255, 0, 0);
+            public static final Color orange = new Color(255, 80, 0);
+            public static final Color white = new Color(210, 200, 180);
+            public static final Color off = new Color(0, 0, 0);
+    
         }
     }
 }

@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.MyRobotState;
+import frc.robot.MyRobotState.LEDModeState;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
@@ -85,11 +86,14 @@ public class AutoShoot extends Command {
       }
     }
 
+    mState.setLEDMode(LEDModeState.shooting);
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    mState.setLEDMode(LEDModeState.idle);
   }
 
   // Returns true when the command should end.

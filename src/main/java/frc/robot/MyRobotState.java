@@ -76,14 +76,20 @@ public class MyRobotState {
         return LEDMode;
     }
 
-    private boolean robotHasNote = false;
-
-    public void setHasNote(boolean hasNote){
-        robotHasNote = hasNote;
+    public static enum RobotNoteLocation {
+        intake,
+        shooter,
+        noNote
     }
 
-    public boolean hasNote(){
-        return robotHasNote;
+    private RobotNoteLocation noteLocation = RobotNoteLocation.noNote;
+
+    public void setNoteLocation(RobotNoteLocation note){
+        noteLocation = note;
+    }
+
+    public RobotNoteLocation getNoteLocation(){
+        return noteLocation;
     }
 
     private boolean robotOnTarget = false;
@@ -92,7 +98,7 @@ public class MyRobotState {
         robotOnTarget = onTarget;
     }
 
-    public boolean onTarget(){
+    public boolean isOnTarget(){
         return robotOnTarget;
     }
 }

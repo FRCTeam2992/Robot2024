@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.commands.SetLimeLightOdometryUpdates;
+import frc.robot.commands.SetOnTarget;
 import frc.robot.commands.AutoMoveForwardBack;
 import frc.robot.commands.SetElevatorTargetPosition;
 
@@ -29,6 +30,9 @@ public class Robot extends TimedRobot {
 
     mRobotContainer.mShooterPivot.zeroPivotEncoder();
     mRobotContainer.resetAllSubsystemState();
+
+    CommandScheduler.getInstance().schedule(mRobotContainer.setOnTargetCommand);
+    CommandScheduler.getInstance().schedule(mRobotContainer.setNoteLocationCommand);
 
     // CameraServer.startAutomaticCapture();
   }

@@ -22,11 +22,12 @@ public class AutoIntake extends SequentialCommandGroup {
   public AutoIntake(Feeder mFeeder, Intake mIntake, MyRobotState mRobotState) {
     addCommands(
         new ParallelRaceGroup(
-            new InstantCommand(() -> {mRobotState.setLEDMode(LEDModeState.intaking);}),
+            new InstantCommand(() -> {if (mRobotState.getLEDMode() == LEDModeState.idle){mRobotState.setLEDMode(LEDModeState.intaking);}}),
             new MoveFeeder(mFeeder, Constants.Feeder.Speeds.intakingPieceSpeed, true),
             new MoveIntake(mIntake,
                 Constants.Intake.Speeds.intakingPieceSpeed, false)
         ),
+        new InstantCommand(() -> {if (mRobotState.getLEDMode() == LEDModeState.idle){mRobotState.setLEDMode(LEDModeState.idle);}}),
 
         new ParallelRaceGroup(
             new MoveFeeder(mFeeder, 0.15, false).withTimeout(0.3),
