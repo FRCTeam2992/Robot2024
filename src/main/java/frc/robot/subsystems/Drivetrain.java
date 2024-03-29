@@ -217,7 +217,7 @@ public class Drivetrain extends SubsystemBase {
         setDriveNeutralMode(NeutralModeValue.Coast);
         setTurnNeutralMode(NeutralModeValue.Brake);
 
-        setDriveCurrentLimit(40.0, 40.0);
+        setDriveCurrentLimit(40.0, 60.0);
         setTurnCurrentLimit(60.0); // potentially unused
 
         frontLeftController = new PIDController(Constants.DrivetrainConstants.PIDConstants.turnP,
@@ -454,7 +454,7 @@ public class Drivetrain extends SubsystemBase {
                 SmartDashboard.putNumber("Wheel speed (m)", frontLeftModule.getWheelSpeedMeters());
                 SmartDashboard.putBoolean("Limelight Back Pose OK?", limelightBackBotPose.length <= 7);
                 SmartDashboard.putBoolean("Limelight Seeing Target?", limeLightCameraBack.getTargetID() != -1);
-                SmartDashboard.putBoolean("Latest Vision Pose OK?", latestVisionPose != null);
+                SmartDashboard.putBoolean("Latest Vision Pose OK?", latestVisionPoseValid);
 
                 if (limelightBackBotPose != null && limelightBackBotPose.length >= 6) {
                     SmartDashboard.putNumber("Limelight Back Pose X (m)",
@@ -509,6 +509,7 @@ public class Drivetrain extends SubsystemBase {
 
                 SmartDashboard.putBoolean("Updating odometry from LimeLight", isUpdatingLimelightOdometry);
                 SmartDashboard.putBoolean("Latest Vision Pose Valid?", latestVisionPoseValid);
+                SmartDashboard.putNumber("AprilTagArea", limelightTotalArea);
                 SmartDashboard.putNumber("LimeLight Total Area", limelightTotalArea);
 
             }
@@ -550,7 +551,7 @@ public class Drivetrain extends SubsystemBase {
         driveMotorConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
         driveMotorConfigs.CurrentLimits.SupplyCurrentLimit = currentLimit;
         driveMotorConfigs.CurrentLimits.SupplyCurrentThreshold = triggerCurrent;
-        driveMotorConfigs.CurrentLimits.SupplyTimeThreshold = 0;
+        driveMotorConfigs.CurrentLimits.SupplyTimeThreshold = 0.2;
 
         frontLeftDrive.getConfigurator().apply(driveMotorConfigs);
         frontRightDrive.getConfigurator().apply(driveMotorConfigs);
@@ -718,8 +719,8 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void onDisable() {
-        setDriveNeutralMode(NeutralModeValue.Coast);
-        setTurnNeutralMode(NeutralModeValue.Coast);
+        setDriveNeutralMode(NeutralModeValue.Brake);    
+        setTurnNeutralMode(NeutralModeValue.Brake);
         stopDrive();
     }
 
@@ -778,9 +779,10 @@ public class Drivetrain extends SubsystemBase {
             limeLightBlendedLatency += limelightRightBotPose[6];
         }
 
-        if (limelightTotalArea <= 0.05) {
+        if (limelightTotalArea <= 0.2) {
             limeLightBlendedLatency = 0.0;
             latestVisionPoseValid = false;
+            isUpdatingLimelightOdometry = false;
             limelightXMedianFilter.reset();
             limelightYMedianFilter.reset();
             limelightAngleMedianFilter.reset();

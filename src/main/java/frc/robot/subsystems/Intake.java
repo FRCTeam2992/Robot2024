@@ -11,6 +11,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -18,24 +19,28 @@ import frc.robot.Constants;
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
   private TalonFX intakeLeadMotor;
-  private TalonFX intakeFollowMotor;
+  // private TalonFX intakeFollowMotor;
+
+  private DigitalInput beamBreak;
 
   private TalonFXConfiguration intakeMotorConfigs;
   private DutyCycleOut percentOutControlRequest;
 
   public Intake() {
     intakeLeadMotor = new TalonFX(Constants.Intake.intakeLeadMotorID, "CanBus2");
-    intakeFollowMotor = new TalonFX(Constants.Intake.intakeFollowMotorID, "CanBus2");
+    // intakeFollowMotor = new TalonFX(Constants.Intake.intakeFollowMotorID, "CanBus2");
     intakeMotorConfigs = new TalonFXConfiguration();
 
     intakeMotorConfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     intakeMotorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
     intakeLeadMotor.getConfigurator().apply(intakeMotorConfigs);
-    intakeFollowMotor.getConfigurator().apply(intakeMotorConfigs);
+    // intakeFollowMotor.getConfigurator().apply(intakeMotorConfigs);
 
-    intakeFollowMotor.setControl(new Follower(Constants.Intake.intakeLeadMotorID,
-        false));
+    // intakeFollowMotor.setControl(new Follower(Constants.Intake.intakeLeadMotorID,
+        // false));
+
+    beamBreak = new DigitalInput(Constants.Intake.intakeBeamBreakID);
 
     percentOutControlRequest = new DutyCycleOut(0.0).withEnableFOC(false);
   }
@@ -54,5 +59,9 @@ public class Intake extends SubsystemBase {
 
   public void resetSubsystemState() {
     setIntakeSpeed(0.0);
+  }
+
+  public boolean isBeamBreakLimited() {
+    return beamBreak.get();
   }
 }

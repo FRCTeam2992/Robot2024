@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.387443986,
-      "y": 5.45
+      "x": 1.39,
+      "y": 5.55
     },
-    "rotation": 0.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -79,6 +79,80 @@
                       "data": {
                         "name": "autoShoot"
                       }
+                    },
+                    {
+                      "type": "deadline",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 4.25
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "autoIntake"
+                            }
+                          },
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "CenterRingButtonHookForSourceRing"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "autoShoot"
+                      }
+                    },
+                    {
+                      "type": "deadline",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 5.0
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "autoIntake"
+                            }
+                          },
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "CenterShootSweepToAmpRing"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "driveStop"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "autoShoot"
+                      }
                     }
                   ]
                 }
@@ -95,6 +169,12 @@
         {
           "type": "named",
           "data": {
+            "name": "stopFeeder"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "stopPivot"
           }
         },
@@ -102,12 +182,6 @@
           "type": "named",
           "data": {
             "name": "stopIntake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stopFeeder"
           }
         }
       ]
