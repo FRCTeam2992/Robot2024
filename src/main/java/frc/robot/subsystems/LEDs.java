@@ -6,8 +6,9 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.leds.Color;
 import frc.robot.Constants;
 import frc.robot.MyRobotState;
 import frc.robot.MyRobotState.LEDModeState;
@@ -27,6 +28,17 @@ public class LEDs extends SubsystemBase {
 
   private MyRobotState mRobotState;
 
+  private int intakeFrameCounter = 0;
+  private int intakeFrameTimer = 0;
+
+  private int colorChaseFrameCounter = 0;
+  private int colorChaseFrameTimer = 0;
+
+  private boolean noNoteColorFrame = true;
+  private int noNoteFrameTimer = 0;
+
+  private boolean repeatLEDCheck = false;
+
   public LEDs(MyRobotState robotState) {
     m_led = new AddressableLED(0); //~
     m_ledBuffer = new AddressableLEDBuffer(17); //~ Copied from Stingray's code
@@ -40,30 +52,37 @@ public class LEDs extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putString("LED State (in LEDs)", mLEDMode.toString());
+
     if (mLEDMode == LEDModeState.intaking && noteLocation != RobotNoteLocation.noNote ) {
       mRobotState.setLEDMode(LEDModeState.idle);
     }
 
     if (mLEDMode != mRobotState.getLEDMode() || noteLocation != mRobotState.getNoteLocation()
-    ||  isOnTarget != mRobotState.isOnTarget()){
+    ||  isOnTarget != mRobotState.isOnTarget() || repeatLEDCheck){
       
       noteLocation = mRobotState.getNoteLocation();
       isOnTarget = mRobotState.isOnTarget();
       mLEDMode = mRobotState.getLEDMode();
       mRobotMode = mRobotState.getRobotMode();
+      repeatLEDCheck = false;
       // hasNoteInIntake
       
       switch (mRobotState.getLEDMode()) {
         case idle: {
+          setLEDIdleMode();
           break;
         }
         case intaking: {
+          setLEDIntakingMode();
           break;
         }
         case aiming: {
+          setLEDAimingMode();
           break;
         }
         case shooting: {
+          setLEDShootingMode();
           break;
         }    
       }
@@ -73,11 +92,30 @@ public class LEDs extends SubsystemBase {
   }
 
   public void setSingleLEDColor(int pixel, Color color) {
-      m_ledBuffer.setLED(pixel, color);
+      m_ledBuffer.setRGB(pixel, color.r(), color.b(), color.g());
   }
 
   public void setLEDIntakingColorChase(Color color){
-
+    if (intakeFrameTimer == 5) {
+      int fractionedLEDLength = (m_ledBuffer.getLength() / Constants.LEDs.numberOfIntakingChasers);
+      for (int i = 1; i < (Constants.LEDs.numberOfIntakingChasers + 1); i++){
+        for (int j = 0; j < (fractionedLEDLength); j++){
+          int pixel = j + (m_ledBuffer.getLength() - (fractionedLEDLength * i)) + intakeFrameCounter;
+          if (pixel >= fractionedLEDLength * i){
+            pixel = pixel - fractionedLEDLength;
+          }
+          m_ledBuffer.setRGB(pixel, color.r() / (fractionedLEDLength - j), color.b() / (fractionedLEDLength - j), color.r() / (fractionedLEDLength - j));
+        }
+      }
+      intakeFrameCounter ++;
+      if (intakeFrameCounter >= fractionedLEDLength) {
+        intakeFrameCounter = 0;
+      }
+      m_led.setData(m_ledBuffer);
+      intakeFrameTimer = 0;
+    }
+    repeatLEDCheck = true;
+    intakeFrameTimer++;
   }
 
   public void setLEDStripColor(Color color) {
@@ -88,8 +126,49 @@ public class LEDs extends SubsystemBase {
     m_led.setData(m_ledBuffer);
   }
 
-  public void setLEDNoNote(Color color) {
+   public void setLEDTwoColorChase(Color color1, Color color2){
+    if (colorChaseFrameTimer == 5) {
+      int fractionedLEDLength = (m_ledBuffer.getLength() / Constants.LEDs.numberOfChaserChasers);
+      for (int i = 1; i < (Constants.LEDs.numberOfChaserChasers + 1); i++){
+        for (int j = 0; j < (fractionedLEDLength); j++){
+          int pixel = j + (m_ledBuffer.getLength() - (fractionedLEDLength * i)) + colorChaseFrameCounter;
+          if (pixel >= fractionedLEDLength * i){
+            pixel = pixel - fractionedLEDLength;
+          }
+          if (j >= fractionedLEDLength / 2){
+             m_ledBuffer.setRGB(pixel, color1.r() / (fractionedLEDLength - j), color1.b() / (fractionedLEDLength - j), color1.r() / (fractionedLEDLength - j));
+          } else{
+             m_ledBuffer.setRGB(pixel, color2.r() / (fractionedLEDLength - j), color2.b() / (fractionedLEDLength - j), color2.r() / (fractionedLEDLength - j));
+          }
+        }
+      }
+      colorChaseFrameCounter ++;
+      if (colorChaseFrameCounter >= fractionedLEDLength) {
+        colorChaseFrameCounter = 0;
+      }
+      m_led.setData(m_ledBuffer);
+      colorChaseFrameTimer = 0;
+    }
+    repeatLEDCheck = true;
+    colorChaseFrameTimer++;
+  }
 
+
+  public void setLEDNoNote(Color color) {
+    if (noNoteFrameTimer == 5){
+      if (noNoteColorFrame){
+        setLEDStripColor(color);
+        noNoteColorFrame = false;
+      } else if (mLEDMode != LEDModeState.aiming){
+        setLEDStripColor(Constants.LEDs.Colors.white);
+        noNoteColorFrame = true;
+      } else {
+        setLEDStripColor(new Color(0, 0, 0));
+      }
+      noNoteFrameTimer = 0;
+    }
+  noNoteFrameTimer ++;
+  repeatLEDCheck = true;
   }
 
   public void setLEDIdleMode(){
@@ -175,8 +254,10 @@ public class LEDs extends SubsystemBase {
         break;
       }
 
-      case Auto:
-      break;
+      case Auto: {
+        setLEDTwoColorChase(Constants.LEDs.Colors.white, Constants.LEDs.Colors.blue);
+        break;
+      }
     }
   }
 
@@ -263,8 +344,10 @@ public class LEDs extends SubsystemBase {
         break;
       }
 
-      case Auto:
-      break;
+      case Auto: {
+        setLEDTwoColorChase(Constants.LEDs.Colors.white, Constants.LEDs.Colors.blue);
+        break;
+      }
     }
   }
 

@@ -48,6 +48,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Overried", mRobotContainer.mRobotState.IsOverrideMode());
     SmartDashboard.putBoolean("Default", mRobotContainer.mRobotState.isDefaultSpeakerMode());
 
+    SmartDashboard.putString("LED State (in Robot)", mRobotContainer.mRobotState.getLEDMode().toString());
+
   }
 
   @Override
