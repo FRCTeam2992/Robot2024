@@ -38,7 +38,7 @@ public class Intake extends SubsystemBase {
     intakeFollowMotor.getConfigurator().apply(intakeMotorConfigs);
 
     intakeFollowMotor.setControl(new Follower(Constants.Intake.intakeLeadMotorID,
-        false));
+        true));
 
     beamBreak = new DigitalInput(Constants.Intake.intakeBeamBreakID);
 

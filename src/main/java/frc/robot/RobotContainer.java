@@ -253,7 +253,7 @@ public class RobotContainer {
     SmartDashboard.putData("Start Shooter", new StartShooter(mShooter));
     SmartDashboard.putData("StopShooter", new MoveShooter(mShooter, 0.0));
 
-    SmartDashboard.putData("AutoIntake", new MoveIntake(mIntake, 0.15, false).alongWith(new MoveFeeder(mFeeder, 0.20, false)));
+    SmartDashboard.putData("AutoIntake", new MoveIntake(mIntake, 0.35, false).alongWith(new MoveFeeder(mFeeder, 0.40, false)));
     SmartDashboard.putData("AutoIntakeStop", new MoveIntake(mIntake, 0, false).alongWith(new MoveFeeder(mFeeder, 0, false)));
 
     SmartDashboard.putData("Zero pivot encoder", new InstantCommand(() -> {
