@@ -19,7 +19,7 @@ import frc.robot.Constants;
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
   private TalonFX intakeLeadMotor;
-  // private TalonFX intakeFollowMotor;
+  private TalonFX intakeFollowMotor;
 
   private DigitalInput beamBreak;
 
@@ -28,17 +28,17 @@ public class Intake extends SubsystemBase {
 
   public Intake() {
     intakeLeadMotor = new TalonFX(Constants.Intake.intakeLeadMotorID, "CanBus2");
-    // intakeFollowMotor = new TalonFX(Constants.Intake.intakeFollowMotorID, "CanBus2");
+    intakeFollowMotor = new TalonFX(Constants.Intake.intakeFollowMotorID, "CanBus2");
     intakeMotorConfigs = new TalonFXConfiguration();
 
     intakeMotorConfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     intakeMotorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
     intakeLeadMotor.getConfigurator().apply(intakeMotorConfigs);
-    // intakeFollowMotor.getConfigurator().apply(intakeMotorConfigs);
+    intakeFollowMotor.getConfigurator().apply(intakeMotorConfigs);
 
-    // intakeFollowMotor.setControl(new Follower(Constants.Intake.intakeLeadMotorID,
-        // false));
+    intakeFollowMotor.setControl(new Follower(Constants.Intake.intakeLeadMotorID,
+        false));
 
     beamBreak = new DigitalInput(Constants.Intake.intakeBeamBreakID);
 
