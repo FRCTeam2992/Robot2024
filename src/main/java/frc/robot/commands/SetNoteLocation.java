@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.MyRobotState;
 import frc.robot.MyRobotState.RobotNoteLocation;
@@ -38,6 +39,7 @@ public class SetNoteLocation extends Command {
       mRobotState.setNoteLocation(RobotNoteLocation.noNote);
     }
 
+    SmartDashboard.putString("Note Location", mRobotState.getNoteLocation().toString());
   }
 
   // Called once the command ends or is interrupted.

@@ -318,13 +318,13 @@ public class Constants {
             public static final Color override = new Color(255, 0, 0); // Red
             public static final Color speaker = new Color(0, 0, 255); // Blue
             public static final Color amp = new Color(255, 160, 0); // Yellow
-            public static final Color endgame = new Color(255, 40, 255); // purple
-            public static final Color defaultSpeaker = new Color(255, 60, 0); // orange
-            public static final Color passing = new Color(255, 120, 120); // Pink
+            public static final Color endgame = new Color(255, 0, 255); // purple
+            public static final Color defaultSpeaker = new Color(255, 40, 0); // orange
+            public static final Color passing = new Color(255, 40, 40); // Pink
 
             public static final Color aiming = new Color(210, 200, 180); // white
             public static final Color onTarget = new Color(0, 255, 0); // green
-            public static final Color shooting = new Color(60, 255, 255); // aqua
+            public static final Color shooting = new Color(10, 255, 255); // aqua
 
             public static final Color intakeSuccess = new Color(0, 255, 0); // Lime
             public static final Color purple = new Color(210, 75, 230);
@@ -337,7 +337,7 @@ public class Constants {
     
         }
 
-        public static final int numberOfIntakingChasers = 3;
+        public static final int numberOfIntakingChasers = 4;
         public static final int numberOfChaserChasers = 6;
     }
 }

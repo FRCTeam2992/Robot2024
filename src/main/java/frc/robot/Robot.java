@@ -11,7 +11,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.commands.SetLimeLightOdometryUpdates;
+import frc.robot.commands.SetNoteLocation;
 import frc.robot.commands.SetOnTarget;
+import frc.robot.MyRobotState.RobotModeState;
 import frc.robot.commands.AutoMoveForwardBack;
 import frc.robot.commands.SetElevatorTargetPosition;
 
@@ -32,7 +34,11 @@ public class Robot extends TimedRobot {
     mRobotContainer.resetAllSubsystemState();
 
     CommandScheduler.getInstance().schedule(mRobotContainer.setOnTargetCommand);
-    CommandScheduler.getInstance().schedule(mRobotContainer.setNoteLocationCommand);
+
+    mRobotContainer.setNoteLocationCommand.schedule();
+    CommandScheduler.getInstance().schedule(new SetNoteLocation(mRobotContainer.mFeeder, mRobotContainer.mIntake, mRobotContainer.mRobotState));
+
+    mRobotContainer.mRobotState.setRobotMode(RobotModeState.Auto);
 
     // CameraServer.startAutomaticCapture();
   }
@@ -59,7 +65,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().schedule(
           new SetLimeLightOdometryUpdates(mRobotContainer.mDrivetrain, true));
 
-    mRobotContainer.mRobotState.setRobotMode(MyRobotState.RobotModeState.Speaker);
+    mRobotContainer.mRobotState.setRobotMode(MyRobotState.RobotModeState.Auto);
   }
 
   @Override
@@ -111,6 +117,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+
+    CommandScheduler.getInstance().schedule(new SetNoteLocation(mRobotContainer.mFeeder, mRobotContainer.mIntake, mRobotContainer.mRobotState));
+
 
     mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralModeValue.Brake);
         mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralModeValue.Brake);

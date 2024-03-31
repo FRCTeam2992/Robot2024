@@ -37,11 +37,11 @@ public class LEDs extends SubsystemBase {
   private boolean noNoteColorFrame = true;
   private int noNoteFrameTimer = 0;
 
-  private boolean repeatLEDCheck = false;
+  private boolean repeatLEDCheck = true;
 
   public LEDs(MyRobotState robotState) {
     m_led = new AddressableLED(0); //~
-    m_ledBuffer = new AddressableLEDBuffer(17); //~ Copied from Stingray's code
+    m_ledBuffer = new AddressableLEDBuffer(81); //~ Copied from Stingray's code
     m_led.setLength(m_ledBuffer.getLength()); //~
 
     m_led.setData(m_ledBuffer);
@@ -58,7 +58,7 @@ public class LEDs extends SubsystemBase {
       mRobotState.setLEDMode(LEDModeState.idle);
     }
 
-    if (mLEDMode != mRobotState.getLEDMode() || noteLocation != mRobotState.getNoteLocation()
+    if (mLEDMode != mRobotState.getLEDMode() || mRobotMode != mRobotState.getRobotMode() || noteLocation != mRobotState.getNoteLocation()
     ||  isOnTarget != mRobotState.isOnTarget() || repeatLEDCheck){
       
       noteLocation = mRobotState.getNoteLocation();
@@ -92,19 +92,19 @@ public class LEDs extends SubsystemBase {
   }
 
   public void setSingleLEDColor(int pixel, Color color) {
-      m_ledBuffer.setRGB(pixel, color.r(), color.b(), color.g());
+      m_ledBuffer.setRGB(pixel, color.r(), color.g(), color.b());
   }
 
   public void setLEDIntakingColorChase(Color color){
     if (intakeFrameTimer == 5) {
       int fractionedLEDLength = (m_ledBuffer.getLength() / Constants.LEDs.numberOfIntakingChasers);
-      for (int i = 1; i < (Constants.LEDs.numberOfIntakingChasers + 1); i++){
+      for (int i = 0; i < (Constants.LEDs.numberOfIntakingChasers); i++){
         for (int j = 0; j < (fractionedLEDLength); j++){
-          int pixel = j + (m_ledBuffer.getLength() - (fractionedLEDLength * i)) + intakeFrameCounter;
-          if (pixel >= fractionedLEDLength * i){
+          int pixel = j + (fractionedLEDLength * i) + intakeFrameCounter;
+          if (pixel >= fractionedLEDLength * (i + 1)){
             pixel = pixel - fractionedLEDLength;
           }
-          m_ledBuffer.setRGB(pixel, color.r() / (fractionedLEDLength - j), color.b() / (fractionedLEDLength - j), color.r() / (fractionedLEDLength - j));
+          m_ledBuffer.setRGB(pixel, color.r() / ((fractionedLEDLength - j) * (fractionedLEDLength - j) * (((fractionedLEDLength - j) / 2) + 1)), color.g() / ((fractionedLEDLength - j) * (fractionedLEDLength - j)), color.b() / ((fractionedLEDLength - j) * (fractionedLEDLength - j)));
         }
       }
       intakeFrameCounter ++;
@@ -127,18 +127,18 @@ public class LEDs extends SubsystemBase {
   }
 
    public void setLEDTwoColorChase(Color color1, Color color2){
-    if (colorChaseFrameTimer == 5) {
+    if (colorChaseFrameTimer == 3) {
       int fractionedLEDLength = (m_ledBuffer.getLength() / Constants.LEDs.numberOfChaserChasers);
-      for (int i = 1; i < (Constants.LEDs.numberOfChaserChasers + 1); i++){
+      for (int i = 0; i < (Constants.LEDs.numberOfChaserChasers); i++){
         for (int j = 0; j < (fractionedLEDLength); j++){
-          int pixel = j + (m_ledBuffer.getLength() - (fractionedLEDLength * i)) + colorChaseFrameCounter;
-          if (pixel >= fractionedLEDLength * i){
+          int pixel = j + (fractionedLEDLength * i) + colorChaseFrameCounter;
+          if (pixel >= fractionedLEDLength * (i + 1)){
             pixel = pixel - fractionedLEDLength;
           }
           if (j >= fractionedLEDLength / 2){
              m_ledBuffer.setRGB(pixel, color1.r() / (fractionedLEDLength - j), color1.b() / (fractionedLEDLength - j), color1.r() / (fractionedLEDLength - j));
           } else{
-             m_ledBuffer.setRGB(pixel, color2.r() / (fractionedLEDLength - j), color2.b() / (fractionedLEDLength - j), color2.r() / (fractionedLEDLength - j));
+             m_ledBuffer.setRGB(pixel, color2.r() / (fractionedLEDLength - j), color2.g() / (fractionedLEDLength - j), color2.b() / (fractionedLEDLength - j));
           }
         }
       }
@@ -164,6 +164,7 @@ public class LEDs extends SubsystemBase {
         noNoteColorFrame = true;
       } else {
         setLEDStripColor(new Color(0, 0, 0));
+        noNoteColorFrame = true;
       }
       noNoteFrameTimer = 0;
     }

@@ -21,8 +21,8 @@ public class AutoIntake extends SequentialCommandGroup {
   /** Creates a new AutoIntake. */
   public AutoIntake(Feeder mFeeder, Intake mIntake, MyRobotState mRobotState) {
     addCommands(
+        new InstantCommand(() -> {if (mRobotState.getLEDMode() == LEDModeState.idle){mRobotState.setLEDMode(LEDModeState.intaking);}}),
         new ParallelRaceGroup(
-            new InstantCommand(() -> {if (mRobotState.getLEDMode() == LEDModeState.idle){mRobotState.setLEDMode(LEDModeState.intaking);}}),
             new MoveFeeder(mFeeder, Constants.Feeder.Speeds.intakingPieceSpeed, true),
             new MoveIntake(mIntake,
                 Constants.Intake.Speeds.intakingPieceSpeed, false)
