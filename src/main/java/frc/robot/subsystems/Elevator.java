@@ -25,9 +25,9 @@ public class Elevator extends SubsystemBase {
   private MyRobotState mRobotState;
   /** Creates a new elevator. */
   private CANSparkMax leadMotor; //left
-  private CANSparkMax followMotor1; //left
-  private CANSparkMax followMotor2; //right
-  private CANSparkMax followMotor3; //right
+  private CANSparkMax followMotor1; //right
+  // private CANSparkMax followMotor2; //right
+  // private CANSparkMax followMotor3; //right
 
   private SparkPIDController PIDController;
 
@@ -50,27 +50,27 @@ public class Elevator extends SubsystemBase {
 
     leadMotor = new CANSparkMax(Constants.Elevator.leadMotorID, MotorType.kBrushless);
     followMotor1 = new CANSparkMax(Constants.Elevator.followMotor1ID, MotorType.kBrushless);
-    followMotor2 = new CANSparkMax(Constants.Elevator.followMotor2ID, MotorType.kBrushless);
-    followMotor3 = new CANSparkMax(Constants.Elevator.followMotor3ID, MotorType.kBrushless);
+    // followMotor2 = new CANSparkMax(Constants.Elevator.followMotor2ID, MotorType.kBrushless);
+    // followMotor3 = new CANSparkMax(Constants.Elevator.followMotor3ID, MotorType.kBrushless);
 
     leadMotor.setIdleMode(IdleMode.kBrake);
     followMotor1.setIdleMode(IdleMode.kBrake);
-    followMotor2.setIdleMode(IdleMode.kBrake);
-    followMotor3.setIdleMode(IdleMode.kBrake);
+    // followMotor2.setIdleMode(IdleMode.kBrake);
+    // followMotor3.setIdleMode(IdleMode.kBrake);
 
     leadMotor.setInverted(false);
-    followMotor1.setInverted(false);
-    followMotor2.setInverted(true);
-    followMotor3.setInverted(true);
+    followMotor1.setInverted(true);
+    // followMotor2.setInverted(true);
+    // followMotor3.setInverted(true);
 
     leadMotor.setClosedLoopRampRate(0.3);
     followMotor1.setClosedLoopRampRate(0.3);
-    followMotor2.setClosedLoopRampRate(0.3);
-    followMotor3.setClosedLoopRampRate(0.3);
+    // followMotor2.setClosedLoopRampRate(0.3);
+    // followMotor3.setClosedLoopRampRate(0.3);
 
-    followMotor1.follow(leadMotor, false);
-    followMotor2.follow(leadMotor, true);
-    followMotor3.follow(leadMotor, true);
+    followMotor1.follow(leadMotor, true);
+    // followMotor2.follow(leadMotor, true);
+    // followMotor3.follow(leadMotor, true);
 
     PIDController = leadMotor.getPIDController();
     PIDController.setP(Constants.Elevator.PIDConstants.kP0, 0);
@@ -96,8 +96,7 @@ public class Elevator extends SubsystemBase {
       // zeroElevatorEncoders();
       // new HoldElevator(this).schedule();
     }
-    // setElevatorTargetPosition(SmartDashboard.getNumber("Set Elevator Position",
-    // 0.0));
+    setElevatorTargetPosition(SmartDashboard.getNumber("Set Elevator Position",0.0));
 
     SmartDashboard.putNumber("Elevator Inches", getElevatorInches());
     SmartDashboard.putNumber("Elevator Motor Position", getElevatorPosition()[0]);
@@ -146,8 +145,8 @@ public class Elevator extends SubsystemBase {
       double[] positions = {0.0, 0.0, 0.0, 0.0}; //{0: lead, 1: follow1, 2: follow2, 3: follow3}
       positions[0] = leadMotor.getEncoder().getPosition();
       positions[1] = followMotor1.getEncoder().getPosition();
-      positions[2] = followMotor2.getEncoder().getPosition();
-      positions[3] = followMotor3.getEncoder().getPosition();
+      // positions[2] = followMotor2.getEncoder().getPosition();
+      // positions[3] = followMotor3.getEncoder().getPosition();
       return positions;
   }
 
@@ -166,8 +165,8 @@ public class Elevator extends SubsystemBase {
   public void zeroElevatorEncoders() {
     leadMotor.getEncoder().setPosition(0.0);
     followMotor1.getEncoder().setPosition(0.0);
-    followMotor2.getEncoder().setPosition(0.0);
-    followMotor3.getEncoder().setPosition(0.0);
+    // followMotor2.getEncoder().setPosition(0.0);
+    // followMotor3.getEncoder().setPosition(0.0);
   }
 
   public void setElevatorSpeed(double speed) {
@@ -307,7 +306,7 @@ public class Elevator extends SubsystemBase {
       leadMotor.set(0.0);
     } else {
       holdPosition = Math.max(holdPosition, 0.0);
-      holdPosition = Math.min(holdPosition, Constants.Elevator.Limits.hardStopTop);
+      holdPosition = Math.min(holdPosition, inchesToEncoderRotations(Constants.Elevator.Limits.hardStopTop));
 
     PIDController.setReference(holdPosition, CANSparkMax.ControlType.kPosition, 0, Constants.Elevator.PIDConstants.kF0);
     }
