@@ -48,6 +48,7 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putData(this);
+    SmartDashboard.putBoolean("Intake Beam Break", isBeamBreakLimited());
     // This method will be called once per scheduler run
   }
 
@@ -62,6 +63,6 @@ public class Intake extends SubsystemBase {
   }
 
   public boolean isBeamBreakLimited() {
-    return beamBreak.get();
+    return !beamBreak.get();
   }
 }
