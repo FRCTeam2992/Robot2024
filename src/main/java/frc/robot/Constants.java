@@ -247,16 +247,16 @@ public class Constants {
 
         public static final int leadMotorPDHPort = 0; // place holder
 
-        public static final double gearRatio = (12.0 / 60.0) * (36.0 / 64.0);
+        public static final double gearRatio = (12.0 / 78.0) * (28.0 / 64.0);
         public static final double sprocketPitchDiameter = 1.751; // inches
         public static final double encoderToInches = gearRatio * (sprocketPitchDiameter * Math.PI) * 2; // calculates
 
         public static class PIDConstants {
-            public static final double kP0 = 0.1; // placeholder
-            public static final double kI0 = 0.0; // placeholder
-            public static final double kD0 = 0.0001; // placeholder
-            public static final double kIZone0 = 0.0; // placeholder
-            public static final double kF0 = 0.035; // Place holder
+            public static final double kP0 = 0.125; // placeholder
+            public static final double kI0 = 0.0015; // placeholder
+            public static final double kD0 = 0.0; //0.001; // placeholder
+            public static final double kIZone0 = 0.75; // placeholder
+            public static final double kF0 = 0.05; // Place holder
 
             public static final double kP1 = 0.03; // placeholder
             public static final double kI1 = 0.0; // placeholder
@@ -264,8 +264,8 @@ public class Constants {
             public static final double kIZone1 = 0.0; // placeholder
             public static final double kF1 = 0.0; // Place holder
 
-            public static final double kMinOutput = -0.4; // placeholder
-            public static final double kMaxOutput = 0.55; // placeholder
+            public static final double kMinOutput = -0.6; // placeholder
+            public static final double kMaxOutput = 0.75; // placeholder
 
             public static final double SmartMotionMaxVel = 350.0; // placeholder
             public static final double SmartMotionMinVel = -350.0; // placeholder

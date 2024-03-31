@@ -185,8 +185,9 @@ public class RobotContainer {
     // POV
     controller1.povUp().whileTrue(new MoveShooterPivot(mShooterPivot, 0.13));
     controller1.povDown().whileTrue(new MoveShooterPivot(mShooterPivot, -0.10));
-    controller1.povLeft().whileTrue(new MoveFeeder(mFeeder, 0.4, false));
-    controller1.povLeft().whileTrue(new MoveIntake(mIntake, 0.3));
+    // controller1.povLeft().whileTrue(new MoveFeeder(mFeeder, 0.4, false));
+    // controller1.povLeft().whileTrue(new MoveIntake(mIntake, 0.3));
+    controller1.povDownLeft().onTrue(new InstantCommand(() -> {mRobotState.setRobotMode(RobotModeState.Endgame); }));
     controller1.povRight().whileTrue(new MoveIntake(mIntake, 0.4));
 
     // ABXY
@@ -203,7 +204,7 @@ public class RobotContainer {
     // controller1.x().whileTrue(new SetShooterSpeedTarget(mShooter, 500));
     controller1.x().onTrue(new MoveShooter(mShooter, 0.1));
 
-    controller0.povUp().whileTrue(new MoveElevator(mElevator, mShooterPivot, 0.15));
+    controller0.povUp().whileTrue(new MoveElevator(mElevator, mShooterPivot, 0.3));
     controller0.povDown().whileTrue(new MoveElevator(mElevator, mShooterPivot, -0.05));
 
     controller1.axisGreaterThan(1, Constants.Elevator.Climb.joyStickDeadBand)

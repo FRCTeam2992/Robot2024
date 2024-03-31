@@ -96,8 +96,7 @@ public class Elevator extends SubsystemBase {
       // zeroElevatorEncoders();
       // new HoldElevator(this).schedule();
     }
-    // setElevatorTargetPosition(SmartDashboard.getNumber("Set Elevator Position",
-    // 0.0));
+    setElevatorTargetPosition(SmartDashboard.getNumber("Set Elevator Position",0.0));
 
     SmartDashboard.putNumber("Elevator Inches", getElevatorInches());
     SmartDashboard.putNumber("Elevator Motor Position", getElevatorPosition()[0]);
@@ -307,7 +306,7 @@ public class Elevator extends SubsystemBase {
       leadMotor.set(0.0);
     } else {
       holdPosition = Math.max(holdPosition, 0.0);
-      holdPosition = Math.min(holdPosition, Constants.Elevator.Limits.hardStopTop);
+      holdPosition = Math.min(holdPosition, inchesToEncoderRotations(Constants.Elevator.Limits.hardStopTop));
 
     PIDController.setReference(holdPosition, CANSparkMax.ControlType.kPosition, 0, Constants.Elevator.PIDConstants.kF0);
     }
