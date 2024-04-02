@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.SetElevatorTargetPosition;
+import frc.robot.commands.SetLEDStripColor;
 import frc.robot.commands.StopElevator;
 import frc.robot.Constants;
 import frc.robot.MyRobotState;
@@ -67,6 +68,12 @@ public class Elevator extends SubsystemBase {
     followMotor1.setClosedLoopRampRate(0.3);
     // followMotor2.setClosedLoopRampRate(0.3);
     // followMotor3.setClosedLoopRampRate(0.3);
+
+    leadMotor.setSmartCurrentLimit(80);
+    followMotor1.setSmartCurrentLimit(80);
+
+    leadMotor.setSecondaryCurrentLimit(80);
+    followMotor1.setSecondaryCurrentLimit(80);
 
     followMotor1.follow(leadMotor, true);
     // followMotor2.follow(leadMotor, true);

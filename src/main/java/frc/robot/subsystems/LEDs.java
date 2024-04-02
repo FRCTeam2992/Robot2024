@@ -146,6 +146,9 @@ public class LEDs extends SubsystemBase {
       if (colorChaseFrameCounter >= fractionedLEDLength) {
         colorChaseFrameCounter = 0;
       }
+      for (int k = (fractionedLEDLength * Constants.LEDs.numberOfChaserChasers); k < m_ledBuffer.getLength(); k++){
+          m_ledBuffer.setRGB(k, color2.r(), color2.g(), color2.b());
+      }
       m_led.setData(m_ledBuffer);
       colorChaseFrameTimer = 0;
     }
@@ -155,7 +158,7 @@ public class LEDs extends SubsystemBase {
 
 
   public void setLEDNoNote(Color color) {
-    if (noNoteFrameTimer == 5){
+    if (noNoteFrameTimer == 10){
       if (noNoteColorFrame){
         setLEDStripColor(color);
         noNoteColorFrame = false;
