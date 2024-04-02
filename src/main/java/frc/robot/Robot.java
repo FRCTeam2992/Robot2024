@@ -37,6 +37,7 @@ public class Robot extends TimedRobot {
 
     mRobotContainer.setNoteLocationCommand.schedule();
     CommandScheduler.getInstance().schedule(new SetNoteLocation(mRobotContainer.mFeeder, mRobotContainer.mIntake, mRobotContainer.mRobotState));
+    CommandScheduler.getInstance().schedule(new SetOnTarget(mRobotContainer.mElevator, mRobotContainer.mShooter, mRobotContainer.mShooterPivot, mRobotContainer.mRobotState));
 
     mRobotContainer.mRobotState.setRobotMode(RobotModeState.Auto);
 

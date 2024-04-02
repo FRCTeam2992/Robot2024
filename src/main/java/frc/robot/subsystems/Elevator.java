@@ -103,7 +103,7 @@ public class Elevator extends SubsystemBase {
       // zeroElevatorEncoders();
       // new HoldElevator(this).schedule();
     }
-    setElevatorTargetPosition(SmartDashboard.getNumber("Set Elevator Position",0.0));
+    // setElevatorTargetPosition(SmartDashboard.getNumber("Set Elevator Position",0.0));
 
     SmartDashboard.putNumber("Elevator Inches", getElevatorInches());
     SmartDashboard.putNumber("Elevator Motor Position", getElevatorPosition()[0]);
@@ -112,7 +112,7 @@ public class Elevator extends SubsystemBase {
 
     SmartDashboard.putNumber("Ele Velocity", getElevatorVelocity());
 
-    SmartDashboard.putNumber("Elevator target", getTargetPosition());
+    SmartDashboard.putNumber("Elevator target", encoderRotationsToInches(targetPosition));
     // This method will be called once per scheduler run
     if (DriverStation.isDisabled()) {
       setElevatorSpeed(0.0);
@@ -216,6 +216,10 @@ public class Elevator extends SubsystemBase {
     if (getElevatorInches() < Constants.Elevator.Limits.softStopBottom) {
       speed = Math.max(-0.1, speed);
     } else if (getElevatorInches() > Constants.Elevator.Limits.softStopTop) {
+      speed = Math.min(0.08, speed);
+    }
+
+    if (getElevatorInches() > Constants.Elevator.Limits.hardStopTop) {
       speed = Math.min(0.0, speed);
     }
 
@@ -268,15 +272,18 @@ public class Elevator extends SubsystemBase {
       case Passing:
       case Auto: {
         // In these cases use normal top limit
-        position = Math.min(position, Constants.Elevator.Limits.maxElevatorSpeaker);
+        position = Math.min(position, inchesToEncoderRotations(Constants.Elevator.Limits.maxElevatorSpeaker));
+        position = Math.max(position, inchesToEncoderRotations(Constants.Elevator.Limits.softStopBottom));
         break;
       }
       case Amp: {
-        position = Math.min(position, Constants.Elevator.Limits.maxElevatorAmp);
+        position = Math.min(position, inchesToEncoderRotations(Constants.Elevator.Limits.maxElevatorAmp));
+        position = Math.max(position, inchesToEncoderRotations(Constants.Elevator.Limits.softStopBottom));
         break;
       }
       case Endgame: {
-        position = Math.min(position, Constants.Elevator.Limits.hardStopTop);
+        position = Math.min(position, inchesToEncoderRotations(Constants.Elevator.Limits.hardStopTop));
+        position = Math.max(position, inchesToEncoderRotations(Constants.Elevator.Limits.softStopBottom));
         break;
       }
 

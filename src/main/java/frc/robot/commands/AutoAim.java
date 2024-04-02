@@ -66,7 +66,7 @@ public class AutoAim extends Command {
         mShooterPivot.setPivotTarget(mInterpolator.calcPivotPosition(distance));
         mShooterPivot.setPivotToPID();
         mElevator.setElevatorTargetPosition(Constants.Elevator.Positions.speakerShooting); // All the way down
-        mElevator.moveElevatorToTargetPosition();
+        mElevator.moveElevatorToTargetPosition();        
         break;
       }
       case DefaultSpeaker: {

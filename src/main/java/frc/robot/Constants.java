@@ -197,7 +197,7 @@ public class Constants {
     public static class ShooterPivot {
         public static final int pivotMotorID = 7;
 
-        public static final double pivotTargetedThreshold = 0.2; // Place holder
+        public static final double pivotTargetedThreshold = 2.0; // Place holder
 
         public static final double pivotHeight = 14.9397244; // Pivot axis height above ground when elevator at
                                                              // 0 (in)
@@ -257,7 +257,7 @@ public class Constants {
         public static final double encoderToInches = gearRatio * (sprocketPitchDiameter * Math.PI) * 2; // calculates
 
         public static class PIDConstants {
-            public static final double kP0 = 0.125; // placeholder
+            public static final double kP0 = 0.1; // placeholder
             public static final double kI0 = 0.0015; // placeholder
             public static final double kD0 = 0.0; //0.001; // placeholder
             public static final double kIZone0 = 0.75; // placeholder
@@ -270,7 +270,7 @@ public class Constants {
             public static final double kF1 = 0.0; // Place holder
 
             public static final double kMinOutput = -0.6; // placeholder
-            public static final double kMaxOutput = 0.75; // placeholder
+            public static final double kMaxOutput = 0.85; // placeholder
 
             public static final double SmartMotionMaxVel = 350.0; // placeholder
             public static final double SmartMotionMinVel = -350.0; // placeholder
@@ -286,7 +286,7 @@ public class Constants {
         public static final double elevatorHeightToleranceInch = 0.5; // Place holder
 
         public static class Limits {
-            public static final double softStopBottom = 0.0; // bottom soft stop (in) //Place holder
+            public static final double softStopBottom = 0.5; // bottom soft stop (in) //Place holder
             public static final double softStopTop = 23.0; // bottom soft stop (in) //PlaceHolder
             public static final double hardStopTop = 24.0; // bottom soft stop (in) //Place holder
 
@@ -303,8 +303,8 @@ public class Constants {
         public static class Positions {
             public static final double intakingPiece = 0.0; // Place holder
             public static final double safeZoneTop = 7.5; // placeholder
-            public static final double speakerShooting = 0.0;
-            public static final double ampScoring = 20.0; // placeholder
+            public static final double speakerShooting = 1.5;
+            public static final double ampScoring = 22.0; // placeholder
             public static final double trapScoring = 20.0; // placeholder
         }
 
