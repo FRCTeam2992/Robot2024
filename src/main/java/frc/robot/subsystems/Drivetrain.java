@@ -107,11 +107,13 @@ public class Drivetrain extends SubsystemBase {
     public final SwerveController swerveController;
 
     // Limelights
+    public final LimeLight limeLightCameraFront;
     public final LimeLight limeLightCameraBack;
     public final LimeLight limeLightCameraLeft;
     public final LimeLight limeLightCameraRight;
     public final ArrayList<LimeLight> limelightList;
     public double limeLightBlendedLatency = 0.0;
+    private double[] limelightFrontBotPose;
     private double[] limelightBackBotPose;
     private double[] limelightLeftBotPose;
     private double[] limelightRightBotPose;
@@ -287,6 +289,9 @@ public class Drivetrain extends SubsystemBase {
                 Constants.DrivetrainConstants.swerveWidth);
 
         // Limelight
+        limeLightCameraFront = new LimeLight("limelight-front");
+        limelightFrontBotPose = new double[7];
+
         limeLightCameraBack = new LimeLight("limelight-back");
         limelightBackBotPose = new double[7];
 
@@ -297,6 +302,7 @@ public class Drivetrain extends SubsystemBase {
         limelightRightBotPose = new double[7];
 
         limelightList = new ArrayList<LimeLight>();
+        limelightList.add(limeLightCameraFront);
         limelightList.add(limeLightCameraBack);
         limelightList.add(limeLightCameraLeft);
         limelightList.add(limeLightCameraRight);
@@ -456,6 +462,20 @@ public class Drivetrain extends SubsystemBase {
                 SmartDashboard.putBoolean("Limelight Seeing Target?", limeLightCameraBack.getTargetID() != -1);
                 SmartDashboard.putBoolean("Latest Vision Pose OK?", latestVisionPoseValid);
 
+                if (limelightFrontBotPose != null && limelightFrontBotPose.length >= 6) {
+                    SmartDashboard.putNumber("Limelight Front Pose X (m)",
+                            limelightFrontBotPose[0]);
+                    SmartDashboard.putNumber("Limelight Front Pose Y (m)",
+                            limelightFrontBotPose[1]);
+                    SmartDashboard.putNumber("Limelight Front Pose Yaw (deg)",
+                            limelightFrontBotPose[5]);
+                    // SmartDashboard.putNumber("Limelight Front Pose Latency (ms)",
+                    // limelightFrontBotPose[6]);
+                    SmartDashboard.putNumber("Limelight Front Tid",
+                            limeLightCameraFront.getTargetID());
+                    SmartDashboard.putNumber("Limelight Front Ta",
+                            limeLightCameraFront.getTargetArea());
+                }
                 if (limelightBackBotPose != null && limelightBackBotPose.length >= 6) {
                     SmartDashboard.putNumber("Limelight Back Pose X (m)",
                             limelightBackBotPose[0]);
