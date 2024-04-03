@@ -778,7 +778,7 @@ public class Drivetrain extends SubsystemBase {
 
         if (limelightFrontBotPose != null && limeLightCameraFront.getTargetID() != -1) {
             double limelightFrontTargetArea = limeLightCameraFront.getTargetArea();
-            if (limelightFrontTargetArea >= Constants.Vision.targetAreaThreshold) {
+            if (limelightFrontTargetArea >= Constants.Vision.targetAreaThresholdLL3) {
                 limelightTotalArea += limelightFrontTargetArea;
                 x += limelightFrontBotPose[0] * limelightFrontTargetArea;
                 y += limelightFrontBotPose[1] * limelightFrontTargetArea;
@@ -788,7 +788,7 @@ public class Drivetrain extends SubsystemBase {
         }
         if (limelightBackBotPose != null && limeLightCameraBack.getTargetID() != -1) {
             double limelightBackTargetArea = limeLightCameraBack.getTargetArea();
-            if (limelightBackTargetArea >= Constants.Vision.targetAreaThreshold) {
+            if (limelightBackTargetArea >= Constants.Vision.targetAreaThresholdLL3) {
                 limelightTotalArea += limelightBackTargetArea;
                 x += limelightBackBotPose[0] * limelightBackTargetArea;
                 y += limelightBackBotPose[1] * limelightBackTargetArea;
@@ -798,7 +798,7 @@ public class Drivetrain extends SubsystemBase {
         }
         if (limelightLeftBotPose != null && limeLightCameraLeft.getTargetID() != -1) {
             double limelightLeftTargetArea = limeLightCameraLeft.getTargetArea();
-            if (limelightLeftTargetArea >= Constants.Vision.targetAreaThreshold) {
+            if (limelightLeftTargetArea >= Constants.Vision.targetAreaThresholdLL2) {
                 limelightTotalArea += limelightLeftTargetArea;
                 x += limelightLeftBotPose[0] * limelightLeftTargetArea;
                 y += limelightLeftBotPose[1] * limelightLeftTargetArea;
@@ -808,7 +808,7 @@ public class Drivetrain extends SubsystemBase {
         }
         if (limelightRightBotPose != null && limeLightCameraRight.getTargetID() != -1) {
             double limelightRightTargetArea = limeLightCameraRight.getTargetArea();
-            if (limelightRightTargetArea >= Constants.Vision.targetAreaThreshold) {
+            if (limelightRightTargetArea >= Constants.Vision.targetAreaThresholdLL2) {
                 limelightTotalArea += limelightRightTargetArea;
                 x += limelightRightBotPose[0] * limelightRightTargetArea;
                 y += limelightRightBotPose[1] * limelightRightTargetArea;
@@ -817,7 +817,7 @@ public class Drivetrain extends SubsystemBase {
             }
         }
 
-        if (limelightTotalArea <= Constants.Vision.targetAreaThreshold) {
+        if (limelightTotalArea <= Constants.Vision.totalTargetAreaThreshold) {
             limeLightBlendedLatency = 0.0;
             latestVisionPoseValid = false;
             isUpdatingLimelightOdometry = false;
