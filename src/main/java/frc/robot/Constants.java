@@ -14,7 +14,7 @@ public class Constants {
     public static final boolean debugDashboard = true;
 
     public static class Vision {
-        public static final double targetAreaThreshold = 0.2;
+        public static final double targetAreaThreshold = 0.15;
     }
 
     public static class DrivetrainConstants {
