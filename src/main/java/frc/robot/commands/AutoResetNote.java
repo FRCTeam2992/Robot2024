@@ -4,34 +4,32 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
-import frc.robot.MyRobotState;
-import frc.robot.MyRobotState.LEDModeState;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AutoIntake extends SequentialCommandGroup {
+public class AutoResetNote extends SequentialCommandGroup {
   /** Creates a new AutoIntake. */
-  public AutoIntake(Feeder mFeeder, Intake mIntake, MyRobotState mRobotState) {
+  public AutoResetNote(Feeder mFeeder, Intake mIntake) {
     addCommands(
-        new InstantCommand(() -> {if (mRobotState.getLEDMode() == LEDModeState.idle){mRobotState.setLEDMode(LEDModeState.intaking);}}),
         new ParallelRaceGroup(
-            new MoveFeeder(mFeeder, Constants.Feeder.Speeds.intakingPieceSpeed, true),
-            new MoveIntake(mIntake,
-                Constants.Intake.Speeds.intakingPieceSpeed, false)
+          new MoveFeeder(mFeeder, Constants.Feeder.Speeds.outakingPieceSpeed, false),
+          new MoveIntake(mIntake, Constants.Intake.Speeds.outakingPieceSpeed, true)
         ),
-        new InstantCommand(() -> {if (mRobotState.getLEDMode() == LEDModeState.idle){mRobotState.setLEDMode(LEDModeState.idle);}}),
+        new ParallelRaceGroup(
+          new MoveFeeder(mFeeder, Constants.Feeder.Speeds.intakingPieceSpeed, true),
+          new MoveIntake(mIntake, Constants.Intake.Speeds.intakingPieceSpeed, false)
+        ),
 
         new ParallelRaceGroup(
             new MoveFeeder(mFeeder, 0.15, false).withTimeout(0.3),
-            new MoveIntake(mIntake, 0.05, false)
+            new MoveIntake(mIntake, -0.01, false)
         )
         
     );

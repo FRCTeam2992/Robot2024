@@ -17,6 +17,8 @@ import com.ctre.phoenix6.signals.ReverseLimitTypeValue;
 import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 
 import frc.robot.Constants;
+import frc.robot.MyRobotState;
+import frc.robot.MyRobotState.RobotNoteLocation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -26,7 +28,9 @@ public class Feeder extends SubsystemBase {
   private TalonFXConfiguration feedMotorConfigs;
   private DutyCycleOut percentOutControlRequest;
 
+
   public Feeder() {
+
     feedMotor = new TalonFX(Constants.Feeder.feederMotorID);
     feedMotorConfigs = new TalonFXConfiguration();
 

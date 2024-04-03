@@ -7,11 +7,13 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.lib.leds.Color;
 
 /** Add your docs here. */
 public class Constants {
     public static final boolean dataLogging = false;
     public static final boolean debugDashboard = true;
+
 
     public static class DrivetrainConstants {
         // Drive Variables
@@ -153,6 +155,7 @@ public class Constants {
     public static class Intake {
         public static final int intakeLeadMotorID = 10;
         public static final int intakeFollowMotorID = 11;
+        public static final int intakeBeamBreakID = 0;
 
         public static class Speeds {
             public static final double intakingPieceSpeed = 0.35;
@@ -180,15 +183,17 @@ public class Constants {
 
         public static final double defaultShooterSpeed = 3300; // RPM
 
+        public static final double encoderToFlywheelRotations = 0.666667;
+
         public static class ShooterPIDConstants {
             public static final boolean useCodePID = true; // Whether to overwrite PID values in motor
 
-            public static double P = 0.05; // Place holder
-            public static double I = 0.0; // Place holder
-            public static double D = 0.0; // Place holder
-            public static double V = 0.01007; // Place holder
+            public static double P = 0.04; 
+            public static double I = 0.0; 
+            public static double D = 0.0; 
+            public static double V = 0.01006; 
             public static double S = 0.00;
-            public static double acceleration = 50; // Place holder
+            public static double acceleration = 100; // Place holder
             public static double jerk = 50;
             // public static double cruiseVelocity = 0.0; // Place holder
 
@@ -198,7 +203,7 @@ public class Constants {
     public static class ShooterPivot {
         public static final int pivotMotorID = 7;
 
-        public static final double pivotTargetedThreshold = 0.2; // Place holder
+        public static final double pivotTargetedThreshold = 2.0; // Place holder
 
         public static final double pivotHeight = 14.9397244; // Pivot axis height above ground when elevator at
                                                              // 0 (in)
@@ -253,16 +258,16 @@ public class Constants {
 
         public static final int leadMotorPDHPort = 0; // place holder
 
-        public static final double gearRatio = (12.0 / 60.0) * (36.0 / 64.0);
+        public static final double gearRatio = (12.0 / 78.0) * (28.0 / 64.0);
         public static final double sprocketPitchDiameter = 1.751; // inches
         public static final double encoderToInches = gearRatio * (sprocketPitchDiameter * Math.PI) * 2; // calculates
 
         public static class PIDConstants {
             public static final double kP0 = 0.1; // placeholder
-            public static final double kI0 = 0.0; // placeholder
-            public static final double kD0 = 0.0001; // placeholder
-            public static final double kIZone0 = 0.0; // placeholder
-            public static final double kF0 = 0.035; // Place holder
+            public static final double kI0 = 0.0015; // placeholder
+            public static final double kD0 = 0.0; //0.001; // placeholder
+            public static final double kIZone0 = 0.75; // placeholder
+            public static final double kF0 = 0.05; // Place holder
 
             public static final double kP1 = 0.03; // placeholder
             public static final double kI1 = 0.0; // placeholder
@@ -270,8 +275,8 @@ public class Constants {
             public static final double kIZone1 = 0.0; // placeholder
             public static final double kF1 = 0.0; // Place holder
 
-            public static final double kMinOutput = -0.4; // placeholder
-            public static final double kMaxOutput = 0.55; // placeholder
+            public static final double kMinOutput = -0.6; // placeholder
+            public static final double kMaxOutput = 0.85; // placeholder
 
             public static final double SmartMotionMaxVel = 350.0; // placeholder
             public static final double SmartMotionMinVel = -350.0; // placeholder
@@ -287,7 +292,7 @@ public class Constants {
         public static final double elevatorHeightToleranceInch = 0.5; // Place holder
 
         public static class Limits {
-            public static final double softStopBottom = 0.0; // bottom soft stop (in) //Place holder
+            public static final double softStopBottom = 0.5; // bottom soft stop (in) //Place holder
             public static final double softStopTop = 23.0; // bottom soft stop (in) //PlaceHolder
             public static final double hardStopTop = 24.0; // bottom soft stop (in) //Place holder
 
@@ -304,8 +309,8 @@ public class Constants {
         public static class Positions {
             public static final double intakingPiece = 0.0; // Place holder
             public static final double safeZoneTop = 7.5; // placeholder
-            public static final double speakerShooting = 0.0;
-            public static final double ampScoring = 20.0; // placeholder
+            public static final double speakerShooting = 1.5;
+            public static final double ampScoring = 22.0; // placeholder
             public static final double trapScoring = 20.0; // placeholder
         }
 
@@ -313,5 +318,34 @@ public class Constants {
             public static final double joyStickDeadBand = 0.1;
 
         }
+    }
+
+    public static class LEDs {
+        public static class Colors { // Free to change as you feel
+            public static final Color auto = new Color(255, 0, 255); // 
+            public static final Color override = new Color(255, 0, 0); // Red
+            public static final Color speaker = new Color(0, 0, 255); // Blue
+            public static final Color amp = new Color(255, 160, 0); // Yellow
+            public static final Color endgame = new Color(255, 0, 255); // purple
+            public static final Color defaultSpeaker = new Color(255, 40, 0); // orange
+            public static final Color passing = new Color(255, 40, 40); // Pink
+
+            public static final Color aiming = new Color(210, 200, 180); // white
+            public static final Color onTarget = new Color(0, 255, 0); // green
+            public static final Color shooting = new Color(10, 255, 255); // aqua
+
+            public static final Color intakeSuccess = new Color(0, 255, 0); // Lime
+            public static final Color purple = new Color(210, 75, 230);
+            public static final Color yellow = new Color(255, 160, 0);
+            public static final Color blue = new Color(0, 0, 255);
+            public static final Color red = new Color(255, 0, 0);
+            public static final Color orange = new Color(255, 80, 0);
+            public static final Color white = new Color(210, 200, 180);
+            public static final Color off = new Color(0, 0, 0);
+    
+        }
+
+        public static final int numberOfIntakingChasers = 4;
+        public static final int numberOfChaserChasers = 6;
     }
 }
