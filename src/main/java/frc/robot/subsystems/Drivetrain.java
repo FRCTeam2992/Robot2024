@@ -779,10 +779,10 @@ public class Drivetrain extends SubsystemBase {
             double limelightFrontTargetArea = limeLightCameraFront.getTargetArea();
             if (limelightFrontTargetArea >= Constants.Vision.targetAreaThreshold) {
                 limelightTotalArea += limelightFrontTargetArea;
-                x += limelightBackBotPose[0] * limelightFrontTargetArea;
-                y += limelightBackBotPose[1] * limelightFrontTargetArea;
-                theta += limelightBackBotPose[5] * limelightFrontTargetArea;
-                limeLightBlendedLatency += limelightBackBotPose[6];
+                x += limelightFrontBotPose[0] * limelightFrontTargetArea;
+                y += limelightFrontBotPose[1] * limelightFrontTargetArea;
+                theta += limelightFrontBotPose[5] * limelightFrontTargetArea;
+                limeLightBlendedLatency += limelightFrontBotPose[6];
             }
         }
         if (limelightBackBotPose != null && limeLightCameraBack.getTargetID() != -1) {
