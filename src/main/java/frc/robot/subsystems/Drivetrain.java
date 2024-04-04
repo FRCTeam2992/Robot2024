@@ -460,8 +460,8 @@ public class Drivetrain extends SubsystemBase {
                 SmartDashboard.putNumber("Wheel speed (m)", frontLeftModule.getWheelSpeedMeters());
                 SmartDashboard.putBoolean(
                     "LL Seeing Target?",
-                    limeLightCameraBack.getTargetID() != -1 || limeLightCameraFront.getTargetID() != -1 ||
-                        limeLightCameraLeft.getTargetID() != 1 || limeLightCameraRight.getTargetID() != -1);
+                    (limeLightCameraBack.getTargetID() > -1) || (limeLightCameraFront.getTargetID() > -1) ||
+                        (limeLightCameraLeft.getTargetID() > -1) || (limeLightCameraRight.getTargetID() > -1));
                 SmartDashboard.putBoolean("Latest LL Pose OK?", latestVisionPoseValid);
 
                 if (limelightFrontBotPose != null && limelightFrontBotPose.length >= 6) {
