@@ -58,5 +58,47 @@ public class MyRobotState {
     public boolean isPassing() {
         return robotMode == RobotModeState.Passing;
     }
+
+    public static enum LEDModeState{
+        intaking,
+        aiming,
+        shooting,
+        idle
+    }
     
+    private LEDModeState LEDMode = LEDModeState.idle;
+
+     public void setLEDMode(LEDModeState mode) {
+        LEDMode = mode;
+    }
+
+    public LEDModeState getLEDMode() {
+        return LEDMode;
+    }
+
+    public static enum RobotNoteLocation {
+        intake,
+        shooter,
+        noNote
+    }
+
+    private RobotNoteLocation noteLocation = RobotNoteLocation.noNote;
+
+    public void setNoteLocation(RobotNoteLocation note){
+        noteLocation = note;
+    }
+
+    public RobotNoteLocation getNoteLocation(){
+        return noteLocation;
+    }
+
+    private boolean robotOnTarget = false;
+
+    public void setOnTarget(boolean onTarget){
+        robotOnTarget = onTarget;
+    }
+
+    public boolean isOnTarget(){
+        return robotOnTarget;
+    }
 }

@@ -5,19 +5,25 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Intake;
+import frc.robot.MyRobotState;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.ShooterPivot;
 
-public class MoveIntake extends Command {
-  /** Creates a new MoveIntake. */
-  private Intake mIntake;
-  private double mSpeed;
-  private boolean mIsLimited;
-  public MoveIntake(Intake subsystem, double speed, boolean isLimited) {
+public class SetOnTarget extends Command {
+
+  private Elevator mElevator;
+  private Shooter mShooter;
+  private ShooterPivot mPivot;
+  private MyRobotState mRobotState;
+
+  /** Creates a new SetOnTarget. */
+  public SetOnTarget(Elevator elevator, Shooter shooter, ShooterPivot pivot, MyRobotState robotState) {
+    mElevator = elevator;
+    mShooter = shooter;
+    mPivot = pivot;
+    mRobotState = robotState;
     // Use addRequirements() here to declare subsystem dependencies.
-    mIntake = subsystem;
-    mSpeed = speed;
-    mIsLimited = isLimited;
-    addRequirements(mIntake);
   }
 
   // Called when the command is initially scheduled.
@@ -27,22 +33,16 @@ public class MoveIntake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    mIntake.setIntakeSpeed(mSpeed);
+    mRobotState.setOnTarget((mElevator.atPosition() && mPivot.atTarget() && mShooter.atShooterRPM()));
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    mIntake.setIntakeSpeed(0.0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-
-    if (mIsLimited){
-      return mIntake.isBeamBreakLimited();
-    }
     return false;
   }
 }
