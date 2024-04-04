@@ -202,7 +202,7 @@ public class Constants {
     public static class ShooterPivot {
         public static final int pivotMotorID = 7;
 
-        public static final double pivotTargetedThreshold = 2.0; // Place holder
+        public static final double pivotTargetedThreshold = 1.0; // Place holder
 
         public static final double pivotHeight = 14.9397244; // Pivot axis height above ground when elevator at
                                                              // 0 (in)

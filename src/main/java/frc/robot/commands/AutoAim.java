@@ -61,12 +61,12 @@ public class AutoAim extends Command {
         SmartDashboard.putNumber("Aim Distance", distance);
 
         mDrivetrain.setAutoRotate(true);
-        mShooter.setShooterTargetRPM(mInterpolator.calcMainShooterSpeed(distance));
-        mShooter.setShooterToTargetRPM();
-        mShooterPivot.setPivotTarget(mInterpolator.calcPivotPosition(distance));
-        mShooterPivot.setPivotToPID();
-        mElevator.setElevatorTargetPosition(Constants.Elevator.Positions.speakerShooting); // All the way down
-        mElevator.moveElevatorToTargetPosition();        
+        // mShooter.setShooterTargetRPM(mInterpolator.calcMainShooterSpeed(distance));
+        // mShooter.setShooterToTargetRPM();
+        // mShooterPivot.setPivotTarget(mInterpolator.calcPivotPosition(distance));
+        // mShooterPivot.setPivotToPID();
+        // mElevator.setElevatorTargetPosition(Constants.Elevator.Positions.speakerShooting); // All the way down
+        // mElevator.moveElevatorToTargetPosition();        
         break;
       }
       case DefaultSpeaker: {
@@ -80,9 +80,9 @@ public class AutoAim extends Command {
       }
 
       case Passing: {
-        mShooter.setShooterTargetRPM(3300);
+        mShooter.setShooterTargetRPM(3000);
         mShooter.setShooterToTargetRPM();
-        mShooterPivot.setPivotTarget(32);
+        mShooterPivot.setPivotTarget(50);
         mShooterPivot.setPivotToPID();
         mElevator.setElevatorTargetPosition(Constants.Elevator.Positions.speakerShooting); // All the way down
         mElevator.moveElevatorToTargetPosition();

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -182,7 +183,7 @@ public class RobotContainer {
 
     // Triggers
     controller1.rightTrigger(0.3)
-        .onTrue(new SetPivotTargetAngle(mShooterPivot, Constants.ShooterPivot.Positions.intakingPiece - 15.0)
+        .onTrue(new SetPivotTargetAngle(mShooterPivot, 5.0)
             .andThen(new SetPivotToTargetAngle(mShooterPivot).withTimeout(2.0)));
     controller1.rightTrigger(0.3).whileTrue(new MoveIntake(mIntake, Constants.Intake.Speeds.outakingPieceSpeed, false)
         .alongWith(new MoveFeeder(mFeeder, Constants.Feeder.Speeds.outakingPieceSpeed, false)));
@@ -301,9 +302,9 @@ public class RobotContainer {
     mNoteInterpolator = new NoteInterpolator();
 
   //  mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 2700, 56.0, 0.0));
-  mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 2800, 56.5, 1.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 2800, 58.5, 1.0));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(50, 2800, 55.0, 1.0));
-  mNoteInterpolator.addDataPoint(new NoteDataPoint(55, 2800, 53.6, 1.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(55, 2800, 54.6, 1.0));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(66, 3100, 44.5, 1.0));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(78, 3100, 43.5, 1.0));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(89, 3300, 39.5, 1.0));

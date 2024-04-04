@@ -301,10 +301,10 @@ public class LimeLight {
     }
 
     /**
-     * @param mode the desired set stream mode.
+     * @param pipsecondary the desired set stream mode.
      */
-    public void setStreamMode(StreamMode mode) {
-        switch (mode) {
+    public void setStreamMode(StreamMode pipsecondary) {
+        switch (pipsecondary) {
             case Standard:
                 stream.setDouble(0);
                 break;
