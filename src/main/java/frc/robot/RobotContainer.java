@@ -305,10 +305,10 @@ public class RobotContainer {
   mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 2800, 58.5, 1.0));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(50, 2800, 55.0, 1.0));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(55, 2800, 54.6, 1.0));
-  mNoteInterpolator.addDataPoint(new NoteDataPoint(66, 3100, 44.5, 1.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(66, 3100, 46.5, 1.0));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(78, 3100, 43.5, 1.0));
-  mNoteInterpolator.addDataPoint(new NoteDataPoint(89, 3300, 39.5, 1.0));
-  mNoteInterpolator.addDataPoint(new NoteDataPoint(99, 3700, 36.5, 1.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(89, 3300, 41.0, 1.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(99, 3700, 37.0, 1.0));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(112, 3800, 33.0, 1.5));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(120, 3800, 32.6, 1.5));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(134, 3800, 31.8, 1.5));
