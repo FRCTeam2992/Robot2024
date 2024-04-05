@@ -103,7 +103,7 @@ public class Elevator extends SubsystemBase {
       // zeroElevatorEncoders();
       // new HoldElevator(this).schedule();
     }
-    setElevatorTargetPosition(SmartDashboard.getNumber("Set Elevator Position",0.0));
+    // setElevatorTargetPosition(SmartDashboard.getNumber("Set Elevator Position",0.0));
 
     SmartDashboard.putNumber("Elevator Inches", getElevatorInches());
     SmartDashboard.putNumber("Elevator Motor Position", getElevatorPosition()[0]);

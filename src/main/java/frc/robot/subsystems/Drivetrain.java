@@ -971,7 +971,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void resetSubsystemState() {
-        inSlowMode = false;
+        inSlowMode = true;
         doFieldOrient = Constants.DrivetrainConstants.isFieldCentric;
         autoRotate = false;
         loadingMode = false;
