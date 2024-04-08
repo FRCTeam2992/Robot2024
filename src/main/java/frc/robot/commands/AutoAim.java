@@ -70,9 +70,9 @@ public class AutoAim extends Command {
         break;
       }
       case DefaultSpeaker: {
-        mShooter.setShooterTargetRPM(3000);
+        mShooter.setShooterTargetRPM(2800);
         mShooter.setShooterToTargetRPM();
-        mShooterPivot.setPivotTarget(47.5);
+        mShooterPivot.setPivotTarget(58.5);
         mShooterPivot.setPivotToPID();
         mElevator.setElevatorTargetPosition(Constants.Elevator.Positions.speakerShooting); // All the way down
         mElevator.moveElevatorToTargetPosition();

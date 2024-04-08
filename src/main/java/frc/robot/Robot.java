@@ -103,7 +103,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().cancelAll();
 
     CommandScheduler.getInstance().schedule(
-          new SetLimeLightOdometryUpdates(mRobotContainer.mDrivetrain, true));
+          new SetLimeLightOdometryUpdates(mRobotContainer.mDrivetrain, false));
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();

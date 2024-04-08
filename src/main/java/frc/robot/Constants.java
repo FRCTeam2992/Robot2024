@@ -157,7 +157,7 @@ public class Constants {
         public static final int intakeBeamBreakID = 0;
 
         public static class Speeds {
-            public static final double intakingPieceSpeed = 0.35;
+            public static final double intakingPieceSpeed = 0.6;
             public static final double outakingPieceSpeed = -0.4;
         }
     }
