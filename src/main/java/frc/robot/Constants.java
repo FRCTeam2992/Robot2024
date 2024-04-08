@@ -59,7 +59,7 @@ public class Constants {
 
         public static class PIDConstants {
             // Swerve Drive PID (Velocity Control)
-            public static final double driveP = 0.02;
+            public static final double driveP = 0.04;
             public static final double driveI = 0.0;
             public static final double driveD = 0.00;
             public static final double driveV = 0.012;
