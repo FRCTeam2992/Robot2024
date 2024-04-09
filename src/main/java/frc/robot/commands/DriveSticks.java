@@ -163,9 +163,9 @@ public class DriveSticks extends Command {
 
             // Check for Slow Mode
             if (mDriveTrain.isInSlowMode()) {
-                x1 *= 0.6;
-                y1 *= 0.6;
-                x2 *= 0.1;
+                x1 *= 0.4;
+                y1 *= 0.4;
+                x2 *= 0.3;
             }
             // Check for Endgame Mode
             // if (mRobotState.isInEndgameMode()) {

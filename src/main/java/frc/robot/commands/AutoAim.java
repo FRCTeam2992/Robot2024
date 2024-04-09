@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.Constants;
 import frc.robot.MyRobotState;
+import frc.robot.MyRobotState.LEDModeState;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Shooter;
@@ -65,13 +66,13 @@ public class AutoAim extends Command {
         mShooterPivot.setPivotTarget(mInterpolator.calcPivotPosition(distance));
         mShooterPivot.setPivotToPID();
         mElevator.setElevatorTargetPosition(Constants.Elevator.Positions.speakerShooting); // All the way down
-        mElevator.moveElevatorToTargetPosition();
+        mElevator.moveElevatorToTargetPosition();        
         break;
       }
       case DefaultSpeaker: {
-        mShooter.setShooterTargetRPM(3000);
+        mShooter.setShooterTargetRPM(2800);
         mShooter.setShooterToTargetRPM();
-        mShooterPivot.setPivotTarget(47.5);
+        mShooterPivot.setPivotTarget(58.5);
         mShooterPivot.setPivotToPID();
         mElevator.setElevatorTargetPosition(Constants.Elevator.Positions.speakerShooting); // All the way down
         mElevator.moveElevatorToTargetPosition();
@@ -79,9 +80,9 @@ public class AutoAim extends Command {
       }
 
       case Passing: {
-        mShooter.setShooterTargetRPM(3300);
+        mShooter.setShooterTargetRPM(3000);
         mShooter.setShooterToTargetRPM();
-        mShooterPivot.setPivotTarget(32);
+        mShooterPivot.setPivotTarget(50);
         mShooterPivot.setPivotToPID();
         mElevator.setElevatorTargetPosition(Constants.Elevator.Positions.speakerShooting); // All the way down
         mElevator.moveElevatorToTargetPosition();
@@ -107,6 +108,11 @@ public class AutoAim extends Command {
         break;
       }
     }
+
+    if (mState.getLEDMode() != LEDModeState.shooting){
+      mState.setLEDMode(LEDModeState.aiming);
+    }
+
     SmartDashboard.putNumber("AutoAim shooter speed", mShooter.getShooterTargetRPM());
     SmartDashboard.putNumber("AutoAim pivot angle", mShooterPivot.getPivotTarget());
     SmartDashboard.putNumber("AutoAim Elevator Target", mElevator.getTargetPosition());
@@ -147,6 +153,8 @@ public class AutoAim extends Command {
       }
 
     }
+
+    mState.setLEDMode(LEDModeState.idle);
 
   }
 

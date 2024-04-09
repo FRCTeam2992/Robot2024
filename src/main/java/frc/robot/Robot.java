@@ -11,6 +11,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.commands.SetLimeLightOdometryUpdates;
+import frc.robot.commands.SetNoteLocation;
+import frc.robot.commands.SetOnTarget;
+import frc.lib.vision.LimeLight.StreamMode;
+import frc.robot.MyRobotState.RobotModeState;
 import frc.robot.commands.AutoMoveForwardBack;
 import frc.robot.commands.SetElevatorTargetPosition;
 
@@ -30,7 +34,15 @@ public class Robot extends TimedRobot {
     mRobotContainer.mShooterPivot.zeroPivotEncoder();
     mRobotContainer.resetAllSubsystemState();
 
-    // CameraServer.startAutomaticCapture();
+    CommandScheduler.getInstance().schedule(mRobotContainer.setOnTargetCommand);
+
+    mRobotContainer.setNoteLocationCommand.schedule();
+    CommandScheduler.getInstance().schedule(new SetNoteLocation(mRobotContainer.mFeeder, mRobotContainer.mIntake, mRobotContainer.mRobotState));
+    CommandScheduler.getInstance().schedule(new SetOnTarget(mRobotContainer.mElevator, mRobotContainer.mShooter, mRobotContainer.mShooterPivot, mRobotContainer.mRobotState));
+
+    mRobotContainer.mRobotState.setRobotMode(RobotModeState.Auto);
+
+    mRobotContainer.mDrivetrain.limeLightCameraLeft.setStreamMode(StreamMode.PiPSecondary);
   }
 
   @Override
@@ -44,6 +56,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Overried", mRobotContainer.mRobotState.IsOverrideMode());
     SmartDashboard.putBoolean("Default", mRobotContainer.mRobotState.isDefaultSpeakerMode());
 
+    SmartDashboard.putString("LED State (in Robot)", mRobotContainer.mRobotState.getLEDMode().toString());
+
   }
 
   @Override
@@ -53,7 +67,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().schedule(
           new SetLimeLightOdometryUpdates(mRobotContainer.mDrivetrain, true));
 
-    mRobotContainer.mRobotState.setRobotMode(MyRobotState.RobotModeState.Speaker);
+    mRobotContainer.mRobotState.setRobotMode(MyRobotState.RobotModeState.Auto);
   }
 
   @Override
@@ -89,7 +103,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().cancelAll();
 
     CommandScheduler.getInstance().schedule(
-          new SetLimeLightOdometryUpdates(mRobotContainer.mDrivetrain, true));
+          new SetLimeLightOdometryUpdates(mRobotContainer.mDrivetrain, false));
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -105,6 +119,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+
+    CommandScheduler.getInstance().schedule(new SetNoteLocation(mRobotContainer.mFeeder, mRobotContainer.mIntake, mRobotContainer.mRobotState));
+
 
     mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralModeValue.Brake);
         mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralModeValue.Brake);
