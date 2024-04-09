@@ -342,5 +342,6 @@ public class RobotContainer {
     NamedCommands.registerCommand("stopPivot", new StopShooterPivot(mShooterPivot).withTimeout(0.1));
     NamedCommands.registerCommand("driveStop", new AutoMoveForwardBack(mDrivetrain, true, 0).withTimeout(0.5));
     NamedCommands.registerCommand("startIntake", new MoveIntake(mIntake, 0.4, false));
+    NamedCommands.registerCommand("startFeeder", new MoveFeeder(mFeeder, 0.4, false));
   }
 }
