@@ -36,6 +36,7 @@ import frc.lib.drive.swerve.SwerveController;
 import frc.lib.drive.swerve.SwerveModuleFalconFalcon;
 import frc.lib.vision.LimeLight;
 import frc.lib.vision.LimeLight.CoordinateSpace;
+import frc.lib.vision.LimeLight.StreamMode;
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.controller.PIDController;
@@ -150,7 +151,7 @@ public class Drivetrain extends SubsystemBase {
     public Transform2d moved;
 
     // State Variables
-    private boolean inSlowMode = false;
+    private boolean inSlowMode = true;
     private boolean doFieldOrient = true;
     private boolean autoRotate = false;
     private boolean loadingMode = false;
@@ -297,6 +298,7 @@ public class Drivetrain extends SubsystemBase {
 
         limeLightCameraLeft = new LimeLight("limelight-left");
         limelightLeftBotPose = new double[7];
+        limeLightCameraLeft.setStreamMode(StreamMode.PiPSecondary);
 
         limeLightCameraRight = new LimeLight("limelight-right");
         limelightRightBotPose = new double[7];
@@ -969,7 +971,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void resetSubsystemState() {
-        inSlowMode = false;
+        inSlowMode = true;
         doFieldOrient = Constants.DrivetrainConstants.isFieldCentric;
         autoRotate = false;
         loadingMode = false;

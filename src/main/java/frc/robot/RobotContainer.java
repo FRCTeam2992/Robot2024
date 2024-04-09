@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -160,11 +161,11 @@ public class RobotContainer {
 
     controller0.rightBumper().onTrue(new InstantCommand(
         () -> {
-          mDrivetrain.setInSlowMode(true);
+          mDrivetrain.setInSlowMode(false);
         })); // Slow Mode
     controller0.rightBumper().onFalse(new InstantCommand(
         () -> {
-          mDrivetrain.setInSlowMode(false);
+          mDrivetrain.setInSlowMode(true);
         })); // Slow Mode
 
     // ABXY
@@ -182,7 +183,7 @@ public class RobotContainer {
 
     // Triggers
     controller1.rightTrigger(0.3)
-        .onTrue(new SetPivotTargetAngle(mShooterPivot, Constants.ShooterPivot.Positions.intakingPiece - 15.0)
+        .onTrue(new SetPivotTargetAngle(mShooterPivot, 5.0)
             .andThen(new SetPivotToTargetAngle(mShooterPivot).withTimeout(2.0)));
     controller1.rightTrigger(0.3).whileTrue(new MoveIntake(mIntake, Constants.Intake.Speeds.outakingPieceSpeed, false)
         .alongWith(new MoveFeeder(mFeeder, Constants.Feeder.Speeds.outakingPieceSpeed, false)));
@@ -199,7 +200,7 @@ public class RobotContainer {
     controller1.rightBumper().onTrue(
         new SetElevatorTargetPosition(mElevator, Constants.Elevator.Positions.intakingPiece)
             .andThen(new MoveElevatorToTarget(mElevator)));
-
+    controller1.rightBumper().onTrue(new SetOnTarget(mElevator, mShooter, mShooterPivot, mRobotState));
     // POV
     controller1.povUp().whileTrue(new MoveShooterPivot(mShooterPivot, 0.13));
     controller1.povDown().whileTrue(new MoveShooterPivot(mShooterPivot, -0.10));
@@ -301,16 +302,16 @@ public class RobotContainer {
     mNoteInterpolator = new NoteInterpolator();
 
   //  mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 2700, 56.0, 0.0));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 2800, 47.75, 0.0));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(50, 2800, 47.75, 0.0));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(55, 2800, 43.6, 0.0));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(66, 3100, 41, 0.0));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(78, 3100, 38, 0.0));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(89, 3300, 35.0, 0.0));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(99, 3700, 31.75, 0.0));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(112, 4000, 30.0, 0.0));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(120, 4000, 28.5, 0.0));
-    mNoteInterpolator.addDataPoint(new NoteDataPoint(134, 4000, 27.0, 0.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 2800, 56.0, 1.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(50, 2800, 53.0, 1.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(55, 2800, 52.6, 1.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(66, 3100, 44.5, 1.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(78, 3100, 43.5, 1.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(89, 3300, 41.0, 1.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(99, 3700, 37.0, 1.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(112, 3800, 33.0, 1.5));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(120, 3800, 32.6, 1.5));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(134, 3800, 31.8, 1.5));
 
   }
 

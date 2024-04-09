@@ -13,6 +13,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.commands.SetLimeLightOdometryUpdates;
 import frc.robot.commands.SetNoteLocation;
 import frc.robot.commands.SetOnTarget;
+import frc.lib.vision.LimeLight.StreamMode;
 import frc.robot.MyRobotState.RobotModeState;
 import frc.robot.commands.AutoMoveForwardBack;
 import frc.robot.commands.SetElevatorTargetPosition;
@@ -41,7 +42,7 @@ public class Robot extends TimedRobot {
 
     mRobotContainer.mRobotState.setRobotMode(RobotModeState.Auto);
 
-    // CameraServer.startAutomaticCapture();
+    mRobotContainer.mDrivetrain.limeLightCameraLeft.setStreamMode(StreamMode.PiPSecondary);
   }
 
   @Override
@@ -102,7 +103,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().cancelAll();
 
     CommandScheduler.getInstance().schedule(
-          new SetLimeLightOdometryUpdates(mRobotContainer.mDrivetrain, true));
+          new SetLimeLightOdometryUpdates(mRobotContainer.mDrivetrain, false));
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
