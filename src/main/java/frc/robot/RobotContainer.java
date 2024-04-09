@@ -30,6 +30,7 @@ import frc.robot.commands.AutoResetNote;
 import frc.robot.commands.AutoRotateBot;
 import frc.robot.commands.AutoRotateToHeading;
 import frc.robot.commands.AutoShoot;
+import frc.robot.commands.AutonomousLimitedAim;
 import frc.robot.commands.DisableFieldOrientToggle;
 import frc.robot.commands.DriveSticks;
 import frc.robot.commands.ElevatorSticks;
@@ -329,6 +330,8 @@ public class RobotContainer {
   private void registerAutoCommandNames() {
     NamedCommands.registerCommand("autoAim",
         new AutoAim(mElevator, mShooterPivot, mShooter, mRobotState, mNoteInterpolator, mDrivetrain));
+    NamedCommands.registerCommand("limitedAutoAim",
+        new AutonomousLimitedAim(mElevator, mShooterPivot, mShooter, mRobotState, mNoteInterpolator, mDrivetrain));
     NamedCommands.registerCommand("pivot1stShot", new SetPivotTargetAngle(mShooterPivot, 56));
     NamedCommands.registerCommand("autoShoot",
         new AutoShoot(mIntake, mFeeder, mRobotState, mElevator, mShooterPivot, mShooter, 0).withTimeout(1.0));
@@ -338,5 +341,6 @@ public class RobotContainer {
     NamedCommands.registerCommand("stopFeeder", new MoveFeeder(mFeeder, 0, false));
     NamedCommands.registerCommand("stopPivot", new StopShooterPivot(mShooterPivot).withTimeout(0.1));
     NamedCommands.registerCommand("driveStop", new AutoMoveForwardBack(mDrivetrain, true, 0).withTimeout(0.5));
+    NamedCommands.registerCommand("startIntake", new MoveIntake(mIntake, 0.4, false));
   }
 }

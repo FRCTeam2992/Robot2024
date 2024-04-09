@@ -158,7 +158,7 @@ public class Constants {
 
         public static class Speeds {
             public static final double intakingPieceSpeed = 0.6;
-            public static final double outakingPieceSpeed = -0.4;
+            public static final double outakingPieceSpeed = -0.8;
         }
     }
 
@@ -241,6 +241,8 @@ public class Constants {
             public static final double maxPivotEndgame = 1.5; // Max pivot angle in in Endgame mode
 
             public static final double pivotCollisionZone = 10.0; // PlaceHolder
+
+            public static final double minAimDistanceClearOfStage = 145.0;
         }
 
         public static class Positions {
