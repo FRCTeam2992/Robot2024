@@ -38,7 +38,7 @@ public class Shooter extends SubsystemBase {
     shooterMotor = new TalonFX(Constants.Shooter.DeviceIDs.shooterMotorID);
     shooterMotorConfigs = new TalonFXConfiguration();
 
-    shooterMotorConfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    shooterMotorConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     shooterMotorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     shooterMotorConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
     shooterMotorConfigs.CurrentLimits.SupplyCurrentThreshold = 80.0;
@@ -106,7 +106,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setShooterToTargetRPM() {
-    double speed = shooterTargetRPM;
+    double speed = shooterTargetRPM / Constants.Shooter.encoderToFlywheelRotations;
     setShooterRawVelocity(speed);
   }
 
@@ -117,7 +117,7 @@ public class Shooter extends SubsystemBase {
 
   public double getShooterRPM() {
     // return shooterVelocity.waitForUpdate(0.0).getValue() * 60.0;
-    return shooterVelocity.refresh().getValue() * 60.0;
+    return shooterVelocity.refresh().getValue() * 60.0 * Constants.Shooter.encoderToFlywheelRotations;
   }
 
   public double getShooterTargetRPM() {
