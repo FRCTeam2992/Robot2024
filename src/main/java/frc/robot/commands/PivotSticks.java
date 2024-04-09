@@ -8,48 +8,36 @@ import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ShooterPivot;
 
-public class ElevatorSticks extends Command {
+public class PivotSticks extends Command {
 
-  private Elevator mElevator;
-    private MedianFilter medianFilter;
+  private ShooterPivot mPivot;
+  private MedianFilter mMedianFilter;
+  /** Creates a new PivotSticks. */
+  public PivotSticks(ShooterPivot pivot) {
+    mPivot = pivot;
 
-  /** Creates a new ClimbSticks. */
-  public ElevatorSticks(Elevator elevator) {
-    mElevator = elevator;
-    addRequirements(mElevator);
-
-    medianFilter = new MedianFilter(5);
+    mMedianFilter = new MedianFilter(5);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    mElevator.setElevatorManualMode();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double climbY;
+    double pivotY;
 
-    climbY = -medianFilter.calculate(Robot.mRobotContainer.controller1.getLeftY());
+    pivotY = -mMedianFilter.calculate(Robot.mRobotContainer.controller1.getRightY());
 
-    if (climbY < Constants.Elevator.Climb.joyStickDeadBand){
-      mElevator.setHoldPositionRecorded(false);
-      mElevator.holdElevator();
-    } 
-      // climbY = climbY*climbY*climbY;
-      // mElevator.setElevatorVelocity(climbY * 60);
-    if (climbY > 0.0){
-      mElevator.setElevatorSpeed((climbY) + 0.05);
+    if (pivotY > 0.0){
+      mPivot.setPivotSpeed((pivotY * 0.16) + 0.022);
     } else {
-      mElevator.setElevatorSpeed(climbY);
+      mPivot.setPivotSpeed((pivotY * 0.13) + 0.018);
     }
-    
   }
 
   // Called once the command ends or is interrupted.
