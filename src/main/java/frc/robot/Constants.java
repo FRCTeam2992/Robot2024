@@ -15,9 +15,9 @@ public class Constants {
     public static final boolean debugDashboard = true;
 
     public static class Vision {
-        public static final double targetAreaThresholdLL3 = 0.15;
-        public static final double targetAreaThresholdLL2 = 0.25;
-        public static final double totalTargetAreaThreshold = 0.15;
+        public static final double targetAreaThresholdLL3 = 0.09;
+        public static final double targetAreaThresholdLL2 = 0.16;
+        public static final double totalTargetAreaThreshold = 0.09;
     }
 
     public static class DrivetrainConstants {
@@ -308,7 +308,7 @@ public class Constants {
         public static class Positions {
             public static final double intakingPiece = 0.0; // Place holder
             public static final double safeZoneTop = 7.5; // placeholder
-            public static final double speakerShooting = 1.5;
+            public static final double speakerShooting = 0.0;
             public static final double ampScoring = 22.0; // placeholder
             public static final double trapScoring = 20.0; // placeholder
         }

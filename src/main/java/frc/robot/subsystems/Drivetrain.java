@@ -456,6 +456,7 @@ public class Drivetrain extends SubsystemBase {
                 SmartDashboard.putBoolean("IsAutoRotate", isAutoRotate());
 
                 SmartDashboard.putData("Drivetrain", this);
+                SmartDashboard.putNumber("Speaker Aim Difference", calculateDistanceFromSpeaker());
             }
 
             if (Constants.debugDashboard) {
@@ -979,4 +980,15 @@ public class Drivetrain extends SubsystemBase {
         limelightYMedianFilter.reset();
         limelightAngleMedianFilter.reset();
    }
+
+   private double calculateDistanceFromSpeaker() {
+    // goal changes depending on alliance
+    if (DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == (DriverStation.Alliance.Red)) {
+      return latestSwervePose.getTranslation()
+          .getDistance(Constants.DrivetrainConstants.Field.redGoalTarget) * 39.3701; // Inches
+    } else {
+      return latestSwervePose.getTranslation()
+          .getDistance(Constants.DrivetrainConstants.Field.blueGoalTarget) * 39.3701; // Inches
+    }
+  }
 }
