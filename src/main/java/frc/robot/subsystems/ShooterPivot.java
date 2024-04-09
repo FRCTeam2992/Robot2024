@@ -283,7 +283,7 @@ public class ShooterPivot extends SubsystemBase {
         pivotMode = PivotModeState.ManualMovement;
         // Enforce soft top and bottom limits
         if (currentPivotAngle < Constants.ShooterPivot.Limits.minPivotAngle && speed < 0.0) {
-          speed = -0.02; // Set to minimum down speed since encoder says too low
+          speed = -0.05; // Set to minimum down speed since encoder says too low
         } else if (currentPivotAngle > Constants.ShooterPivot.Limits.maxPivotAngle && speed > 0.0) {
           speed = 0.0; // Set to miniumum up speed since encoder says too high
         }
@@ -293,7 +293,7 @@ public class ShooterPivot extends SubsystemBase {
       case Amp: {
         pivotMode = PivotModeState.ManualMovement;
         if (currentPivotAngle < Constants.ShooterPivot.Limits.minPivotAngle && speed < 0.0) {
-          speed = -0.01; // Set to minimum down speed since encoder says too low
+          speed = -0.05; // Set to minimum down speed since encoder says too low
         } else if (currentPivotAngle > Constants.ShooterPivot.Limits.maxPivotAmp && speed > 0.0) {
           speed = 0.0; // Can't go up anymore since in Amp mode and too high
         }
@@ -303,7 +303,7 @@ public class ShooterPivot extends SubsystemBase {
       case Endgame: {
         pivotMode = PivotModeState.ManualMovement;
         if (currentPivotAngle < Constants.ShooterPivot.Limits.minPivotAngle && speed < 0.0) {
-          speed = -0.01; // Set to minimum down speed since encoder says too low
+          speed = -0.05; // Set to minimum down speed since encoder says too low
         } else if (currentPivotAngle > Constants.ShooterPivot.Limits.maxPivotEndgame && speed > 0.0) {
           speed = 0.0; // Can't go up anymore since in Endgame Mode and too high
         }
