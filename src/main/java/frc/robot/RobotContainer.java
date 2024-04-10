@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import frc.lib.drive.swerve.OdometryThread;
@@ -343,5 +344,13 @@ public class RobotContainer {
     NamedCommands.registerCommand("driveStop", new AutoMoveForwardBack(mDrivetrain, true, 0).withTimeout(0.5));
     NamedCommands.registerCommand("startIntake", new MoveIntake(mIntake, 0.4, false));
     NamedCommands.registerCommand("startFeeder", new MoveFeeder(mFeeder, 0.4, false));
+    NamedCommands.registerCommand("setPassingMode", new ParallelCommandGroup( 
+      new SetPivotTargetAngle(mShooterPivot, 50.0), 
+      new SetShooterSpeedTarget(mShooter, 3000.0),
+      new SetPivotToTargetAngle(mShooterPivot),
+      new StartShooter(mShooter)));
+
+
+    
   }
 }
