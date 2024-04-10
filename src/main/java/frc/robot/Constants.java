@@ -177,7 +177,7 @@ public class Constants {
     public static class Shooter {
 
         public static class DeviceIDs {
-            public static int shooterMotorID = 8;
+            public static int shooterMotorID = 60;
         }
 
         public static final double defaultShooterSpeed = 3300; // RPM
@@ -218,14 +218,14 @@ public class Constants {
 
         public static class PIDController {
             public static final boolean useCodePID = true; // Whether to overwrite PID values in motor
-            public static final double P = 0.2; // Place holder
-            public static final double I = 0.02; // Place holder
+            public static final double P = 0.4; // Place holder
+            public static final double I = 0.0009; // Place holder
             public static final double D = 0.001; // Place holder
             public static final double G = 0.0225; // Place holder
 
-            public static final double maxVelocity = 48.0; // degrees/second //Place holder
-            public static final double maxAcceleration = 480.0; // degrees/second^2 //Place holder
-            public static final double jerk = 4000.0;
+            public static final double maxVelocity = 70.0; // degrees/second //Place holder
+            public static final double maxAcceleration = 500.0; // degrees/second^2 //Place holder
+            public static final double jerk = 6500.0;
 
             public static final double peakForwardDutyCycle = 1.0; // Max forward motor power
             public static final double peakReverseDutyCycle = -1.0; // Max reverse power
@@ -262,20 +262,24 @@ public class Constants {
         public static final double encoderToInches = gearRatio * (sprocketPitchDiameter * Math.PI) * 2; // calculates
 
         public static class PIDConstants {
-            public static final double kP0 = 0.1; // placeholder
-            public static final double kI0 = 0.0015; // placeholder
+            public static final double kP0 = 0.00001; // placeholder
+            public static final double kI0 = 0.00; // placeholder
             public static final double kD0 = 0.0; //0.001; // placeholder
             public static final double kIZone0 = 0.75; // placeholder
-            public static final double kF0 = 0.05; // Place holder
+            public static final double kF0 = 0.07; // Place holder
 
-            public static final double kP1 = 0.03; // placeholder
-            public static final double kI1 = 0.0; // placeholder
+            public static final double kP1 = 0.2; // placeholder
+            public static final double kI1 = 0.0015; // placeholder
             public static final double kD1 = 0.0; // placeholder
-            public static final double kIZone1 = 0.0; // placeholder
-            public static final double kF1 = 0.0; // Place holder
+            public static final double kIZone1 = 0.75; // placeholder
+            public static final double kF1 = 0.007; // Place holder
+            public static final double kSmartMaxAccel = 0.0001; //rpm/s
+            public static final double kSmartMaxVel = 2920; //rpm
+            public static final double kSmartMinVel = -500.0; //rpm
+
 
             public static final double kMinOutput = -0.6; // placeholder
-            public static final double kMaxOutput = 0.85; // placeholder
+            public static final double kMaxOutput = 0.75; // placeholder
 
             public static final double SmartMotionMaxVel = 350.0; // placeholder
             public static final double SmartMotionMinVel = -350.0; // placeholder

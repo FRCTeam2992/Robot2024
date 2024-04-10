@@ -35,6 +35,7 @@ public class ShooterPivot extends SubsystemBase {
   private TalonFXConfiguration pivotMotorConfigs;
 
   private DutyCycleOut percentOutControlRequest;
+  private PositionDutyCycle positionControlRequest;
   private MotionMagicDutyCycle motionMagicControlRequest;
 
   // private DutyCycleEncoder lampreyEncoder;
@@ -66,6 +67,8 @@ public class ShooterPivot extends SubsystemBase {
     pivotMotorConfigs = new TalonFXConfiguration();
     pivotMotorConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     pivotMotorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    pivotMotorConfigs.MotorOutput.PeakForwardDutyCycle = 0.8;
+    pivotMotorConfigs.MotorOutput.PeakReverseDutyCycle = -0.8;
 
     if (!Constants.ShooterPivot.PIDController.useCodePID) {
       // Make sure we copy old PID values in motor over so we don't lose them
@@ -84,8 +87,6 @@ public class ShooterPivot extends SubsystemBase {
       pivotMotorConfigs.Slot0.GravityType = oldConfig.Slot0.GravityType;
       pivotMotorConfigs.MotionMagic.MotionMagicAcceleration = oldConfig.MotionMagic.MotionMagicAcceleration;
       pivotMotorConfigs.MotionMagic.MotionMagicCruiseVelocity = oldConfig.MotionMagic.MotionMagicCruiseVelocity;
-      pivotMotorConfigs.MotorOutput.PeakForwardDutyCycle = oldConfig.MotorOutput.PeakForwardDutyCycle;
-      pivotMotorConfigs.MotorOutput.PeakReverseDutyCycle = oldConfig.MotorOutput.PeakReverseDutyCycle;
     } else {
       pivotMotorConfigs.Slot0.kP = Constants.ShooterPivot.PIDController.P;
       pivotMotorConfigs.Slot0.kI = Constants.ShooterPivot.PIDController.I;
@@ -94,8 +95,6 @@ public class ShooterPivot extends SubsystemBase {
       pivotMotorConfigs.MotionMagic.MotionMagicAcceleration = Constants.ShooterPivot.PIDController.maxAcceleration;
       pivotMotorConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.ShooterPivot.PIDController.maxVelocity;
       pivotMotorConfigs.MotionMagic.MotionMagicJerk = Constants.ShooterPivot.PIDController.jerk;
-      pivotMotorConfigs.MotorOutput.PeakForwardDutyCycle = Constants.ShooterPivot.PIDController.peakForwardDutyCycle;
-      pivotMotorConfigs.MotorOutput.PeakReverseDutyCycle = Constants.ShooterPivot.PIDController.peakReverseDutyCycle;
     }
 
     pivotMotor.getConfigurator().apply(pivotMotorConfigs);
@@ -115,6 +114,7 @@ public class ShooterPivot extends SubsystemBase {
     // lampreyEncoder.setDistancePerRotation(1.0);
 
     percentOutControlRequest = new DutyCycleOut(0.0).withEnableFOC(true);
+    positionControlRequest = new PositionDutyCycle(0.0);
     motionMagicControlRequest = new MotionMagicDutyCycle(0.0).withEnableFOC(true).withSlot(0);
 
     pivotMedianFilter = new MedianFilter(3);

@@ -31,6 +31,7 @@ public class Elevator extends SubsystemBase {
   // private CANSparkMax followMotor3; //right
 
   private SparkPIDController PIDController;
+  private SparkPIDController smSparkPIDController;
 
   private double targetPosition;
   private boolean holdPositionRecorded;
@@ -64,8 +65,8 @@ public class Elevator extends SubsystemBase {
     // followMotor2.setInverted(true);
     // followMotor3.setInverted(true);
 
-    leadMotor.setClosedLoopRampRate(0.3);
-    followMotor1.setClosedLoopRampRate(0.3);
+    leadMotor.setClosedLoopRampRate(0.2);
+    followMotor1.setClosedLoopRampRate(0.2);
     // followMotor2.setClosedLoopRampRate(0.3);
     // followMotor3.setClosedLoopRampRate(0.3);
 
@@ -80,18 +81,24 @@ public class Elevator extends SubsystemBase {
     // followMotor3.follow(leadMotor, true);
 
     PIDController = leadMotor.getPIDController();
+    smSparkPIDController = leadMotor.getPIDController();
+
     PIDController.setP(Constants.Elevator.PIDConstants.kP0, 0);
     PIDController.setI(Constants.Elevator.PIDConstants.kI0, 0);
     PIDController.setD(Constants.Elevator.PIDConstants.kD0, 0);
     PIDController.setIZone(Constants.Elevator.PIDConstants.kIZone0, 0);
     PIDController.setOutputRange(Constants.Elevator.PIDConstants.kMinOutput, Constants.Elevator.PIDConstants.kMaxOutput, 0);
     
-    PIDController.setP(Constants.Elevator.PIDConstants.kP1, 1);
-    PIDController.setI(Constants.Elevator.PIDConstants.kI1, 1);
-    PIDController.setD(Constants.Elevator.PIDConstants.kD1, 1);
-    PIDController.setIZone(Constants.Elevator.PIDConstants.kIZone1, 1);
-    PIDController.setOutputRange(Constants.Elevator.PIDConstants.kMinOutput, Constants.Elevator.PIDConstants.kMaxOutput, 0);
+    smSparkPIDController.setP(Constants.Elevator.PIDConstants.kP1, 0);
+    smSparkPIDController.setI(Constants.Elevator.PIDConstants.kI1, 0);
+    smSparkPIDController.setD(Constants.Elevator.PIDConstants.kD1, 0);
+    smSparkPIDController.setIZone(Constants.Elevator.PIDConstants.kIZone1, 0);
+    smSparkPIDController.setOutputRange(Constants.Elevator.PIDConstants.kMinOutput, Constants.Elevator.PIDConstants.kMaxOutput, 0);
 
+    smSparkPIDController.setSmartMotionMaxAccel(Constants.Elevator.PIDConstants.kSmartMaxAccel, 0);
+    // smSparkPIDController.setSmartMotionAllowedClosedLoopError(holdPosition, 0);
+    smSparkPIDController.setSmartMotionMaxVelocity(Constants.Elevator.PIDConstants.kSmartMaxVel, 0);
+    smSparkPIDController.setSmartMotionMinOutputVelocity(Constants.Elevator.PIDConstants.kSmartMinVel, 0);
 
   }
 
@@ -294,6 +301,7 @@ public class Elevator extends SubsystemBase {
     holdPosition = position;
 
     PIDController.setReference(position, CANSparkMax.ControlType.kPosition, 0, Constants.Elevator.PIDConstants.kF0);
+    // smSparkPIDController.setReference(position, CANSparkMax.ControlType.kPosition, 0, Constants.Elevator.PIDConstants.kF0);
     // PIDController.setReference(position, ControlType.kSmartMotion);
 
     // leadMotor.getPIDController().setReference(position, CANSparkMax.ControlType.kPosition);
