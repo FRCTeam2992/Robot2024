@@ -60,13 +60,13 @@ public class AutoAim extends Command {
         double distance = calculateDistance();
         SmartDashboard.putNumber("Aim Distance", distance);
 
-        // mDrivetrain.setAutoRotate(true);
-        // mShooter.setShooterTargetRPM(mInterpolator.calcMainShooterSpeed(distance));
-        // mShooter.setShooterToTargetRPM();
-        // mShooterPivot.setPivotTarget(mInterpolator.calcPivotPosition(distance));
-        // mShooterPivot.setPivotToPID();
-        // mElevator.setElevatorTargetPosition(Constants.Elevator.Positions.speakerShooting); // All the way down
-        // mElevator.moveElevatorToTargetPosition();        
+        mDrivetrain.setAutoRotate(true);
+        mShooter.setShooterTargetRPM(mInterpolator.calcMainShooterSpeed(distance));
+        mShooter.setShooterToTargetRPM();
+        mShooterPivot.setPivotTarget(mInterpolator.calcPivotPosition(distance));
+        mShooterPivot.setPivotToPID();
+        mElevator.setElevatorTargetPosition(mInterpolator.calcElevatorHeight(distance)); // All the way down
+        mElevator.moveElevatorToTargetPosition();        
         break;
       }
       case DefaultSpeaker: {
@@ -131,13 +131,13 @@ public class AutoAim extends Command {
       case Speaker:
       case Passing:
       case DefaultSpeaker: {
-        // mDrivetrain.setAutoRotate(false);
-        // mShooterPivot.setPivotTarget(Constants.ShooterPivot.Positions.intakingPiece);
-        // mShooterPivot.setPivotToPID();
-        // mElevator.setElevatorTargetPosition(Constants.Elevator.Positions.intakingPiece);
-        // mElevator.moveElevatorToTargetPosition();
-        // mShooter.setShooterTargetRPM(Constants.Shooter.defaultShooterSpeed);
-        // mShooter.setShooterToTargetRPM();
+        mDrivetrain.setAutoRotate(false);
+        mShooterPivot.setPivotTarget(Constants.ShooterPivot.Positions.intakingPiece);
+        mShooterPivot.setPivotToPID();
+        mElevator.setElevatorTargetPosition(Constants.Elevator.Positions.intakingPiece);
+        mElevator.moveElevatorToTargetPosition();
+        mShooter.setShooterTargetRPM(Constants.Shooter.defaultShooterSpeed);
+        mShooter.setShooterToTargetRPM();
         break;
       }
 

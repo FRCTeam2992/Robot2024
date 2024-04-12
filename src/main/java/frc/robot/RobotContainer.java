@@ -303,18 +303,17 @@ public class RobotContainer {
 
   //  mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 2700, 56.0, 0.0));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 2800, 53.0, 0.0));
-  mNoteInterpolator.addDataPoint(new NoteDataPoint(50, 2800, 49.0, 1.0));
-  mNoteInterpolator.addDataPoint(new NoteDataPoint(55, 3200, 47.0, 1.0));
-  mNoteInterpolator.addDataPoint(new NoteDataPoint(66, 3200, 44.0, 1.0));
-  mNoteInterpolator.addDataPoint(new NoteDataPoint(78, 3400, 42, 1.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(50, 2800, 49.0, 0.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(55, 3200, 47.0, 0.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(66, 3200, 44.0, 0.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(78, 3400, 42, 0.0));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(89, 3500, 41.0, 1.0));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(99, 3700, 38.0, 1.0));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(112, 3800, 36.0, 1.5));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(120, 3900, 34.0, 1.5));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(134, 4100, 31.5, 1.8));
-  mNoteInterpolator.addDataPoint(new NoteDataPoint(150, 4100, 31.5, 1.8));
-  mNoteInterpolator.addDataPoint(new NoteDataPoint(163, 4100, 31.5, 1.8));
-  mNoteInterpolator.addDataPoint(new NoteDataPoint(179, 4100, 31.5, 1.8));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(150, 4200, 30.5, 4.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(163, 4200, 31.5, 4.0));
 
   }
 
