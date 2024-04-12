@@ -1028,6 +1028,10 @@ public class Drivetrain extends SubsystemBase {
     endgameTargetAngle = angle;
    }
 
+   public double getEndgameTargetAngle () {
+    return endgameTargetAngle;
+   }
+   
    private double calculateDistanceFromSpeaker() {
     // goal changes depending on alliance
     if (DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == (DriverStation.Alliance.Red)) {

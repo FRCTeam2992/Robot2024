@@ -170,14 +170,12 @@ public class RobotContainer {
 
     // ABXY
     controller0.a().whileTrue(new AutoRotateBot(mDrivetrain, true));
-    // controller0.x().whileTrue(new XWheels());
-    controller0.y().whileTrue(new MoveIntake(mIntake, Constants.Intake.Speeds.outakingPieceSpeed, false)
-        .alongWith(new MoveFeeder(mFeeder, Constants.Feeder.Speeds.outakingPieceSpeed, false)));
-
-    //POV 
-    controller0.povUp().onTrue(new InstantCommand(() -> {mDrivetrain.setEndgameTargetAngle(180.0);}));
-    controller0.povLeft().onTrue(new InstantCommand(() -> {mDrivetrain.setEndgameTargetAngle(30.0);}));
-    controller0.povUp().onTrue(new InstantCommand(() -> {mDrivetrain.setEndgameTargetAngle(-30.0);}));
+    controller0.y().onTrue(new InstantCommand(() -> {mDrivetrain.setEndgameTargetAngle(180.0);}));
+    controller0.y().whileTrue(new AutoRotateBot(mDrivetrain, true));
+    controller0.x().onTrue(new InstantCommand(() -> {mDrivetrain.setEndgameTargetAngle(60.0);}));
+    controller0.x().whileTrue(new AutoRotateBot(mDrivetrain, true));
+    controller0.b().onTrue(new InstantCommand(() -> {mDrivetrain.setEndgameTargetAngle(-60.0);}));
+    controller0.b().whileTrue(new AutoRotateBot(mDrivetrain, true));
 
     // Start/Back
     controller0.start().onTrue(new ResetGyro(mDrivetrain));
