@@ -34,7 +34,6 @@ public class Robot extends TimedRobot {
     mRobotContainer.mShooterPivot.zeroPivotEncoder();
     mRobotContainer.resetAllSubsystemState();
 
-
     CommandScheduler.getInstance().schedule(mRobotContainer.setOnTargetCommand);
 
     mRobotContainer.setNoteLocationCommand.schedule();
