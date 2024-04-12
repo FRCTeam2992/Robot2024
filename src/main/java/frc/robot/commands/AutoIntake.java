@@ -30,7 +30,7 @@ public class AutoIntake extends SequentialCommandGroup {
         new InstantCommand(() -> {if (mRobotState.getLEDMode() == LEDModeState.idle){mRobotState.setLEDMode(LEDModeState.idle);}}),
 
         new ParallelRaceGroup(
-            new MoveFeeder(mFeeder, 0.15, false).withTimeout(0.3),
+            new MoveFeeder(mFeeder, 0.15, false).withTimeout(0.35),
             new MoveIntake(mIntake, 0.05, false)
         )
         

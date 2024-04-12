@@ -15,7 +15,21 @@ public class Constants {
     public static final boolean debugDashboard = true;
 
     public static class Vision {
-        public static final double targetAreaThreshold = 0.2;
+        public static class LimeLight3g {
+            public static final double targetAreaThreshold = 0.09;
+            // Degrees/sec angular velocity
+            public static final double angularVelocityThreshold = 720.0;
+            // Meters moved in a single cycle
+            public static final double distanceMovedInCycleThreshold = 2.0 / 50.0;
+        }
+        public static class LimeLight2Plus {
+            public static final double targetAreaThreshold = 0.16;
+            // Degrees/sec angular velocity
+            public static final double angularVelocityThreshold = 360.0;
+            // Meters moved in a single cycle
+            public static final double distanceMovedInCycleThreshold = 1.0 / 50.0;
+        }
+        public static final double totalTargetAreaThreshold = Math.min(LimeLight3g.targetAreaThreshold, LimeLight2Plus.targetAreaThreshold);
     }
 
     public static class DrivetrainConstants {
@@ -50,10 +64,10 @@ public class Constants {
 
         // Analog Encoder Offsets (Degrees) - Opposite of Raw Reading - Bevel Gear to
         // Right
-        public static final double frontLeftOffset = 31.3; // -174.3;
-        public static final double frontRightOffset = 159.7; // 95.0; //90.8
-        public static final double rearLeftOffset = -161.0; // 180.6;//170.6
-        public static final double rearRightOffset = -20.92; // 28.3;//31.0
+        public static final double frontLeftOffset = 34.63; // 31.30; // -174.3;
+        public static final double frontRightOffset = 153.37; // 159.79; // 95.0; //90.8
+        public static final double rearLeftOffset = -167.52; // -161.00; // 180.6;//170.6
+        public static final double rearRightOffset = -19.34; // -20.84; // 28.3;//31.0
 
         public static class PIDConstants {
             // Swerve Drive PID (Velocity Control)
@@ -161,7 +175,7 @@ public class Constants {
         public static final int intakeBeamBreakID = 0;
 
         public static class Speeds {
-            public static final double intakingPieceSpeed = 0.35;
+            public static final double intakingPieceSpeed = 0.6;
             public static final double outakingPieceSpeed = -0.4;
         }
     }
@@ -206,7 +220,7 @@ public class Constants {
     public static class ShooterPivot {
         public static final int pivotMotorID = 7;
 
-        public static final double pivotTargetedThreshold = 2.0; // Place holder
+        public static final double pivotTargetedThreshold = 1.0; // Place holder
 
         public static final double pivotHeight = 14.9397244; // Pivot axis height above ground when elevator at
                                                              // 0 (in)
@@ -312,7 +326,7 @@ public class Constants {
         public static class Positions {
             public static final double intakingPiece = 0.0; // Place holder
             public static final double safeZoneTop = 7.5; // placeholder
-            public static final double speakerShooting = 1.5;
+            public static final double speakerShooting = 0.0;
             public static final double ampScoring = 22.0; // placeholder
             public static final double trapScoring = 20.0; // placeholder
         }

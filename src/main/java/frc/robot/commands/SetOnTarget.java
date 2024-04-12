@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.MyRobotState;
 import frc.robot.subsystems.Elevator;
@@ -34,11 +35,15 @@ public class SetOnTarget extends Command {
   @Override
   public void execute() {
     mRobotState.setOnTarget((mElevator.atPosition() && mPivot.atTarget() && mShooter.atShooterRPM()));
+    SmartDashboard.putBoolean("IS setontarget running", true);
+    SmartDashboard.putBoolean("Is on Target (set)", (mElevator.atPosition() && mPivot.atTarget() && mShooter.atShooterRPM()));
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+      SmartDashboard.putBoolean("IS setontarget running", false);
+  }
 
   // Returns true when the command should end.
   @Override
