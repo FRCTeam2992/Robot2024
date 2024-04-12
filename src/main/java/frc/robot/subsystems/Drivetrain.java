@@ -168,6 +168,7 @@ public class Drivetrain extends SubsystemBase {
     private int lastOdometryResetCount = -1;
     private boolean simpleOdometryReset = true;
     public Pose2d resetPose = Constants.DrivetrainConstants.zeroPose;
+    private double endgameTargetAngle = 180.0;
 
     private boolean odomReadingTesting = false;
 
@@ -1023,6 +1024,14 @@ public class Drivetrain extends SubsystemBase {
         limelightAngleMedianFilter.reset();
    }
 
+   public void setEndgameTargetAngle(double angle) {
+    endgameTargetAngle = angle;
+   }
+
+   public double getEndgameTargetAngle () {
+    return endgameTargetAngle;
+   }
+   
    private double calculateDistanceFromSpeaker() {
     // goal changes depending on alliance
     if (DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == (DriverStation.Alliance.Red)) {

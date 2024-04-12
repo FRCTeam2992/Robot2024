@@ -129,6 +129,9 @@ public class Constants {
         public static final double maxSpeedToX = 0.25; // m/sec
         public static final double maxTurnToX = 20.0; // degrees/sec
 
+        // Amp Auto Align
+        public static final double maxAmpAutoAlignError = 1.0; //Meters
+
         public static class CanIDs {
             public static int frontLeftDrive = 2;
             public static int frontLeftTurn = 3;
@@ -156,6 +159,9 @@ public class Constants {
             public static double redGoalY = blueGoalY;
             public static Translation2d redGoalTarget = new Translation2d(redGoalX, redGoalY);
             public static Translation2d blueGoalTarget = new Translation2d(blueGoalX, blueGoalY);
+            public static double redAmpX = 14.679242;
+            public static double blueAmpX = 1.821445;
+
         }
 
         public static class StageAngles{

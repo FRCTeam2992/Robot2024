@@ -170,9 +170,12 @@ public class RobotContainer {
 
     // ABXY
     controller0.a().whileTrue(new AutoRotateBot(mDrivetrain, true));
-    // controller0.x().whileTrue(new XWheels());
-    controller0.y().whileTrue(new MoveIntake(mIntake, Constants.Intake.Speeds.outakingPieceSpeed, false)
-        .alongWith(new MoveFeeder(mFeeder, Constants.Feeder.Speeds.outakingPieceSpeed, false)));
+    controller0.y().onTrue(new InstantCommand(() -> {mDrivetrain.setEndgameTargetAngle(180.0);}));
+    controller0.y().whileTrue(new AutoRotateBot(mDrivetrain, true));
+    controller0.x().onTrue(new InstantCommand(() -> {mDrivetrain.setEndgameTargetAngle(60.0);}));
+    controller0.x().whileTrue(new AutoRotateBot(mDrivetrain, true));
+    controller0.b().onTrue(new InstantCommand(() -> {mDrivetrain.setEndgameTargetAngle(-60.0);}));
+    controller0.b().whileTrue(new AutoRotateBot(mDrivetrain, true));
 
     // Start/Back
     controller0.start().onTrue(new ResetGyro(mDrivetrain));
@@ -224,9 +227,6 @@ public class RobotContainer {
     controller1.y().onTrue(new InstantCommand(() -> { mRobotState.setRobotMode(RobotModeState.DefaultSpeaker); }));
     // controller1.x().whileTrue(new SetShooterSpeedTarget(mShooter, 500));
     controller1.x().onTrue(new SetShooterSpeedTarget(mShooter, 0.0));
-
-    controller0.povUp().whileTrue(new MoveElevator(mElevator, mShooterPivot, 0.07));
-    controller0.povDown().whileTrue(new MoveElevator(mElevator, mShooterPivot, -0.05));
 
     controller1.axisGreaterThan(1, Constants.Elevator.Climb.joyStickDeadBand)
         .whileTrue(new ElevatorSticks(mElevator, mShooterPivot));
