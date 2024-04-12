@@ -35,30 +35,34 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import frc.lib.drive.swerve.SwerveController;
 import frc.lib.drive.swerve.SwerveModuleFalconFalcon;
 import frc.lib.vision.LimeLight;
+import frc.lib.vision.LimelightHelpers;
 import frc.lib.vision.LimeLight.CoordinateSpace;
+import frc.lib.vision.LimeLight.LimeLightModel;
 import frc.lib.vision.LimeLight.StreamMode;
-import edu.wpi.first.math.MatBuilder;
-import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.Publisher;
+import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
-import edu.wpi.first.util.datalog.IntegerLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -118,13 +122,17 @@ public class Drivetrain extends SubsystemBase {
     private double[] limelightBackBotPose;
     private double[] limelightLeftBotPose;
     private double[] limelightRightBotPose;
-    private boolean isUpdatingLimelightOdometry = true;
     private double limelightTotalArea = 0.0;
     private MedianFilter limelightXMedianFilter;
     private MedianFilter limelightYMedianFilter;
     private MedianFilter limelightAngleMedianFilter;
+    private LimelightHelpers.PoseEstimate limelightPoseEstimate = null;
+    private Translation2d lastOdometryTranslation = new Translation2d();
+    private double lastDistanceMoved = 0.0;
 
     private DataLog mDataLog;
+    private StructPublisher<Pose2d> odometryPosePublisher;
+    private StructPublisher<Pose2d> limelightPosePublisher;
 
     private DoubleArrayLogEntry swerveCANCoderLog;
 
@@ -160,6 +168,7 @@ public class Drivetrain extends SubsystemBase {
     private int lastOdometryResetCount = -1;
     private boolean simpleOdometryReset = true;
     public Pose2d resetPose = Constants.DrivetrainConstants.zeroPose;
+    private double endgameTargetAngle = 180.0;
 
     private boolean odomReadingTesting = false;
 
@@ -290,17 +299,17 @@ public class Drivetrain extends SubsystemBase {
                 Constants.DrivetrainConstants.swerveWidth);
 
         // Limelight
-        limeLightCameraFront = new LimeLight("limelight-front");
+        limeLightCameraFront = new LimeLight("limelight-front", LimeLightModel.LL3);
         limelightFrontBotPose = new double[7];
 
-        limeLightCameraBack = new LimeLight("limelight-back");
+        limeLightCameraBack = new LimeLight("limelight-back", LimeLightModel.LL3);
         limelightBackBotPose = new double[7];
 
-        limeLightCameraLeft = new LimeLight("limelight-left");
+        limeLightCameraLeft = new LimeLight("limelight-left", LimeLightModel.LL2);
         limelightLeftBotPose = new double[7];
         limeLightCameraLeft.setStreamMode(StreamMode.PiPSecondary);
 
-        limeLightCameraRight = new LimeLight("limelight-right");
+        limeLightCameraRight = new LimeLight("limelight-right", LimeLightModel.LL2);
         limelightRightBotPose = new double[7];
 
         limelightList = new ArrayList<LimeLight>();
@@ -340,9 +349,14 @@ public class Drivetrain extends SubsystemBase {
                 swerveDriveModulePositions,
                 new Pose2d(0.0, 0.0, new Rotation2d()),
                 // State measurement standard deviations. X, Y, theta.
-                MatBuilder.fill(Nat.N3(), Nat.N1(), 0.002, 0.002, 0.01),
+                VecBuilder.fill(0.1, 0.1, 0.1),
                 // Global measurement standard deviations. X, Y, and theta.
-                MatBuilder.fill(Nat.N3(), Nat.N1(), 0.01, 0.01, .9999));
+                VecBuilder.fill(0.9, 0.9, 9999999.0));
+
+        odometryPosePublisher = NetworkTableInstance.getDefault()
+            .getStructTopic("OdometryPose", Pose2d.struct).publish();
+        limelightPosePublisher = NetworkTableInstance.getDefault()
+            .getStructTopic("LimelightPose", Pose2d.struct).publish();
 
         // Configure AutoBuilder last
         AutoBuilder.configureHolonomic(
@@ -406,11 +420,24 @@ public class Drivetrain extends SubsystemBase {
                 resetOdometry();
                 lastOdometryResetCount = getOdometryResetCount();
             } else {
+                for (LimeLight limelight: limelightList) {
+                    limelight.setRobotOrientation(-getGyroYaw());
+                }
+
                 if (useLimeLightForOdometry()) {
-                    calculateBlendedVisionPose();
-                    if (latestVisionPoseValid) {
+                    // calculateBlendedVisionPose();
+                    // if (latestVisionPoseValid) {
+                    //     swerveDrivePoseEstimator.addVisionMeasurement(
+                    //             latestVisionPose, Timer.getFPGATimestamp() - limeLightBlendedLatency / 1000);
+                    // }
+                    limelightPoseEstimate = findBestLimelightPose(lastDistanceMoved);
+                    if (limelightPoseEstimate != null) {
+                        // TODO: Do we still need to do trust calibration scaled by something here?
                         swerveDrivePoseEstimator.addVisionMeasurement(
-                                latestVisionPose, Timer.getFPGATimestamp() - limeLightBlendedLatency / 1000);
+                                limelightPoseEstimate.pose,
+                                // timestamp is latency-corrected NT-referenced FPGA time
+                                limelightPoseEstimate.timestampSeconds);
+                        limelightPosePublisher.set(limelightPoseEstimate.pose);
                     }
                 }
 
@@ -433,6 +460,15 @@ public class Drivetrain extends SubsystemBase {
 
         if (dashboardCounter++ >= 5) {
             if (Constants.debugDashboard) {
+                if (limelightPoseEstimate != null) {
+                    SmartDashboard.putNumber("LLMT2 X (m)", limelightPoseEstimate.pose.getX());
+                    SmartDashboard.putNumber("LLMT2 Y (m)", limelightPoseEstimate.pose.getY());
+                    SmartDashboard.putNumber("LLMT2 Th (deg)", limelightPoseEstimate.pose.getRotation().getDegrees());
+                    SmartDashboard.putNumber("LLMT2 # Tags", limelightPoseEstimate.tagCount);
+                    SmartDashboard.putNumber("LLMT2 Tag Dist", limelightPoseEstimate.avgTagDist);
+                    SmartDashboard.putNumber("LLMT2 Tag Dist", limelightPoseEstimate.latency);
+                }
+
                 SmartDashboard.putNumber("Odometry Rotation (deg)", latestSwervePose.getRotation().getDegrees());
                 SmartDashboard.putNumber("Odometry X (in)", (latestSwervePose.getX() * (100 / 2.54)));
                 SmartDashboard.putNumber("Odometry Y (in)", (latestSwervePose.getY() * (100 / 2.54)));
@@ -456,6 +492,7 @@ public class Drivetrain extends SubsystemBase {
                 SmartDashboard.putBoolean("IsAutoRotate", isAutoRotate());
 
                 SmartDashboard.putData("Drivetrain", this);
+                SmartDashboard.putNumber("Speaker Aim Difference", calculateDistanceFromSpeaker());
             }
 
             if (Constants.debugDashboard) {
@@ -648,6 +685,10 @@ public class Drivetrain extends SubsystemBase {
         return angle; // Navx is opposite sign from everything else
     }
 
+    public double getGyroYawRate() {
+        return navx.getRate();
+    }
+
     public double getGyroOffset() {
         return gyroOffset;
     }
@@ -723,6 +764,7 @@ public class Drivetrain extends SubsystemBase {
                     swerveDriveModulePositions,
                     resetPose);
             latestSwervePose = resetPose;
+            this.odometryPosePublisher.set(this.latestSwervePose);
         }
     }
 
@@ -764,6 +806,33 @@ public class Drivetrain extends SubsystemBase {
         });
     }
 
+    public LimelightHelpers.PoseEstimate findBestLimelightPose(double distanceMoved) {
+        LimelightHelpers.PoseEstimate limelightPoseEstimate = null;
+        LimelightHelpers.PoseEstimate bestLimelightEstimate = null;
+
+        for (LimeLight limelight: limelightList) {
+            if (distanceMoved > limelight.model.distanceMovedInCycleThreshold || getGyroYawRate() >= limelight.model.angularVelocityThreshold) {
+                continue;
+            }
+
+            limelightPoseEstimate = limelight.getLimelightMeasurement();
+            
+            // If we got a reading from the LimeLight, keep the one with the most tags seen.
+            // LL3s come first in the list, so we'll always land on a 3g if a LL2 and LL3
+            // see the same max number of tags.
+            if (limelightPoseEstimate != null) {
+                if (bestLimelightEstimate == null) {
+                    bestLimelightEstimate = limelightPoseEstimate;
+                }
+                if (limelightPoseEstimate.avgTagDist < bestLimelightEstimate.avgTagDist) {
+                    bestLimelightEstimate = limelightPoseEstimate;
+                }
+            }
+        }
+
+        return bestLimelightEstimate;
+    }
+
     public void calculateBlendedVisionPose() {
         double x = 0.0;
         double y = 0.0;
@@ -772,64 +841,37 @@ public class Drivetrain extends SubsystemBase {
         limeLightBlendedLatency = 0.0;
         latestVisionPoseValid = false;
 
+        double[] limelightBotPose = new double[7];
+
         SmartDashboard.putString("Alliance Color", getAllianceCoordinateSpace().toString());
         limelightFrontBotPose = limeLightCameraFront.getBotPose(CoordinateSpace.Blue);
         limelightBackBotPose = limeLightCameraBack.getBotPose(CoordinateSpace.Blue);
         limelightLeftBotPose = limeLightCameraLeft.getBotPose(CoordinateSpace.Blue);
         limelightRightBotPose = limeLightCameraRight.getBotPose(CoordinateSpace.Blue);
 
-        if (limelightFrontBotPose != null && limeLightCameraFront.getTargetID() != -1) {
-            double limelightFrontTargetArea = limeLightCameraFront.getTargetArea();
-            if (limelightFrontTargetArea >= Constants.Vision.targetAreaThresholdLL3) {
-                limelightTotalArea += limelightFrontTargetArea;
-                x += limelightFrontBotPose[0] * limelightFrontTargetArea;
-                y += limelightFrontBotPose[1] * limelightFrontTargetArea;
-                theta += limelightFrontBotPose[5] * limelightFrontTargetArea;
-                limeLightBlendedLatency += limelightFrontBotPose[6];
-            }
-        }
-        if (limelightBackBotPose != null && limeLightCameraBack.getTargetID() != -1) {
-            double limelightBackTargetArea = limeLightCameraBack.getTargetArea();
-            if (limelightBackTargetArea >= Constants.Vision.targetAreaThresholdLL3) {
-                limelightTotalArea += limelightBackTargetArea;
-                x += limelightBackBotPose[0] * limelightBackTargetArea;
-                y += limelightBackBotPose[1] * limelightBackTargetArea;
-                theta += limelightBackBotPose[5] * limelightBackTargetArea;
-                limeLightBlendedLatency += limelightBackBotPose[6];
-            }
-        }
-        if (limelightLeftBotPose != null && limeLightCameraLeft.getTargetID() != -1) {
-            double limelightLeftTargetArea = limeLightCameraLeft.getTargetArea();
-            if (limelightLeftTargetArea >= Constants.Vision.targetAreaThresholdLL2) {
-                limelightTotalArea += limelightLeftTargetArea;
-                x += limelightLeftBotPose[0] * limelightLeftTargetArea;
-                y += limelightLeftBotPose[1] * limelightLeftTargetArea;
-                theta += limelightLeftBotPose[5] * limelightLeftTargetArea;
-                limeLightBlendedLatency += limelightLeftBotPose[6];
-            }
-        }
-        if (limelightRightBotPose != null && limeLightCameraRight.getTargetID() != -1) {
-            double limelightRightTargetArea = limeLightCameraRight.getTargetArea();
-            if (limelightRightTargetArea >= Constants.Vision.targetAreaThresholdLL2) {
-                limelightTotalArea += limelightRightTargetArea;
-                x += limelightRightBotPose[0] * limelightRightTargetArea;
-                y += limelightRightBotPose[1] * limelightRightTargetArea;
-                theta += limelightRightBotPose[5] * limelightRightTargetArea;
-                limeLightBlendedLatency += limelightRightBotPose[6];
+        for (LimeLight limelight: limelightList) {
+            limelightBotPose = limelight.getBotPose(CoordinateSpace.Blue);
+            if (limelightBotPose != null && limelight.getTargetID() != -1) {
+                double limelightTargetArea = limelight.getTargetArea();
+                if (limelightTargetArea >= limelight.model.targetAreaThreshold) {
+                    limelightTotalArea += limelightTargetArea;
+                    x += limelightBotPose[0] * limelightTargetArea;
+                    y += limelightBotPose[1] * limelightTargetArea;
+                    theta += limelightBotPose[5] * limelightTargetArea;
+                    limeLightBlendedLatency += limelightBotPose[6];
+                }
             }
         }
 
         if (limelightTotalArea <= Constants.Vision.totalTargetAreaThreshold) {
             limeLightBlendedLatency = 0.0;
             latestVisionPoseValid = false;
-            isUpdatingLimelightOdometry = false;
             limelightXMedianFilter.reset();
             limelightYMedianFilter.reset();
             limelightAngleMedianFilter.reset();
             return;
         } else {
             latestVisionPoseValid = true;
-            isUpdatingLimelightOdometry = true;
 
             x /= limelightTotalArea;
             y /= limelightTotalArea;
@@ -841,7 +883,6 @@ public class Drivetrain extends SubsystemBase {
                     limelightXMedianFilter.calculate(x),
                     limelightYMedianFilter.calculate(y),
                     Rotation2d.fromDegrees(limelightAngleMedianFilter.calculate(theta)));
-            isUpdatingLimelightOdometry = false;
             return;
         }
     }
@@ -948,11 +989,14 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void updateOdometryPose(SwerveModulePosition[] modulePositions) {
-        odomReadingTesting = true;
+        this.odomReadingTesting = true;
+        this.lastOdometryTranslation = this.latestSwervePose.getTranslation();
         this.latestSwervePose = this.swerveDrivePoseEstimator.updateWithTime(
                 Timer.getFPGATimestamp(),
                 Rotation2d.fromDegrees(-getGyroYaw()),
                 modulePositions);
+        this.lastDistanceMoved = lastOdometryTranslation.getDistance(this.latestSwervePose.getTranslation());
+        this.odometryPosePublisher.set(this.latestSwervePose);
     }
 
     public ChassisSpeeds getRobotChassisSpeeds() {
@@ -979,4 +1023,23 @@ public class Drivetrain extends SubsystemBase {
         limelightYMedianFilter.reset();
         limelightAngleMedianFilter.reset();
    }
+
+   public void setEndgameTargetAngle(double angle) {
+    endgameTargetAngle = angle;
+   }
+
+   public double getEndgameTargetAngle () {
+    return endgameTargetAngle;
+   }
+   
+   private double calculateDistanceFromSpeaker() {
+    // goal changes depending on alliance
+    if (DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == (DriverStation.Alliance.Red)) {
+      return latestSwervePose.getTranslation()
+          .getDistance(Constants.DrivetrainConstants.Field.redGoalTarget) * 39.3701; // Inches
+    } else {
+      return latestSwervePose.getTranslation()
+          .getDistance(Constants.DrivetrainConstants.Field.blueGoalTarget) * 39.3701; // Inches
+    }
+  }
 }
