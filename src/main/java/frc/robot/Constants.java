@@ -15,9 +15,21 @@ public class Constants {
     public static final boolean debugDashboard = true;
 
     public static class Vision {
-        public static final double targetAreaThresholdLL3 = 0.09;
-        public static final double targetAreaThresholdLL2 = 0.16;
-        public static final double totalTargetAreaThreshold = 0.09;
+        public static class LimeLight3g {
+            public static final double targetAreaThreshold = 0.09;
+            // Degrees/sec angular velocity
+            public static final double angularVelocityThreshold = 720.0;
+            // Meters moved in a single cycle
+            public static final double distanceMovedInCycleThreshold = 2.0 / 50.0;
+        }
+        public static class LimeLight2Plus {
+            public static final double targetAreaThreshold = 0.16;
+            // Degrees/sec angular velocity
+            public static final double angularVelocityThreshold = 360.0;
+            // Meters moved in a single cycle
+            public static final double distanceMovedInCycleThreshold = 1.0 / 50.0;
+        }
+        public static final double totalTargetAreaThreshold = Math.min(LimeLight3g.targetAreaThreshold, LimeLight2Plus.targetAreaThreshold);
     }
 
     public static class DrivetrainConstants {

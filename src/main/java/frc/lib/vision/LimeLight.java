@@ -18,7 +18,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  */
 public class LimeLight {
 
-    String networkTableName;
+    public String networkTableName;
 
     // LimeLight Network Table
     NetworkTable limelightTable;
@@ -61,14 +61,26 @@ public class LimeLight {
     public LimeLightModel model;
 
     public enum LimeLightModel {
-        LL3(Constants.Vision.targetAreaThresholdLL3, 0.0016),
-        LL2(Constants.Vision.targetAreaThresholdLL2, 0.0009);
+        LL3(
+            Constants.Vision.LimeLight3g.targetAreaThreshold,
+            Constants.Vision.LimeLight3g.angularVelocityThreshold,
+            Constants.Vision.LimeLight3g.distanceMovedInCycleThreshold,
+            0.0009),
+        LL2(
+            Constants.Vision.LimeLight2Plus.targetAreaThreshold,
+            Constants.Vision.LimeLight2Plus.angularVelocityThreshold,
+            Constants.Vision.LimeLight2Plus.distanceMovedInCycleThreshold,
+            0.0016);
 
         public double targetAreaThreshold;
+        public double angularVelocityThreshold;
+        public double distanceMovedInCycleThreshold;
         public double trustFactor;
 
-        private LimeLightModel(double targetAreaThreshold, double trustFactor) {
+        private LimeLightModel(double targetAreaThreshold, double angularVelocityThreshold, double distanceMovedInCycleThreshold, double trustFactor) {
             this.targetAreaThreshold = targetAreaThreshold;
+            this.angularVelocityThreshold = angularVelocityThreshold;
+            this.distanceMovedInCycleThreshold = distanceMovedInCycleThreshold;
             this.trustFactor = trustFactor;
         }
     }
@@ -187,10 +199,10 @@ public class LimeLight {
 
     }
 
-    public PoseEstimate getLimelightMeasurement(double gyroYawRate) {
+    public PoseEstimate getLimelightMeasurement() {
         this.limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(this.networkTableName);
-        // Only return a measurement if we see a tag and our angular velocity is <= 720 deg/sec
-        if (Math.abs(gyroYawRate) <= 720 && this.limelightMeasurement.tagCount > 0) {
+        // Only return a measurement if we see a tag
+        if (this.limelightMeasurement.tagCount > 0 && this.limelightMeasurement.avgTagArea > this.model.targetAreaThreshold) {
             return this.limelightMeasurement;
         }
         return null;

@@ -39,8 +39,6 @@ import frc.lib.vision.LimelightHelpers;
 import frc.lib.vision.LimeLight.CoordinateSpace;
 import frc.lib.vision.LimeLight.LimeLightModel;
 import frc.lib.vision.LimeLight.StreamMode;
-import edu.wpi.first.math.MatBuilder;
-import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -48,20 +46,23 @@ import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.Publisher;
+import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
-import edu.wpi.first.util.datalog.IntegerLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -126,8 +127,12 @@ public class Drivetrain extends SubsystemBase {
     private MedianFilter limelightYMedianFilter;
     private MedianFilter limelightAngleMedianFilter;
     private LimelightHelpers.PoseEstimate limelightPoseEstimate = null;
+    private Translation2d lastOdometryTranslation = new Translation2d();
+    private double lastDistanceMoved = 0.0;
 
     private DataLog mDataLog;
+    private StructPublisher<Pose2d> odometryPosePublisher;
+    private StructPublisher<Pose2d> limelightPosePublisher;
 
     private DoubleArrayLogEntry swerveCANCoderLog;
 
@@ -343,9 +348,14 @@ public class Drivetrain extends SubsystemBase {
                 swerveDriveModulePositions,
                 new Pose2d(0.0, 0.0, new Rotation2d()),
                 // State measurement standard deviations. X, Y, theta.
-                MatBuilder.fill(Nat.N3(), Nat.N1(), 0.002, 0.002, 0.01),
+                VecBuilder.fill(0.1, 0.1, 0.1),
                 // Global measurement standard deviations. X, Y, and theta.
-                MatBuilder.fill(Nat.N3(), Nat.N1(), 0.01, 0.01, .9999));
+                VecBuilder.fill(0.9, 0.9, 9999999.0));
+
+        odometryPosePublisher = NetworkTableInstance.getDefault()
+            .getStructTopic("OdometryPose", Pose2d.struct).publish();
+        limelightPosePublisher = NetworkTableInstance.getDefault()
+            .getStructTopic("LimelightPose", Pose2d.struct).publish();
 
         // Configure AutoBuilder last
         AutoBuilder.configureHolonomic(
@@ -419,11 +429,14 @@ public class Drivetrain extends SubsystemBase {
                     //     swerveDrivePoseEstimator.addVisionMeasurement(
                     //             latestVisionPose, Timer.getFPGATimestamp() - limeLightBlendedLatency / 1000);
                     // }
-                    limelightPoseEstimate = findBestLimelightPose();
+                    limelightPoseEstimate = findBestLimelightPose(lastDistanceMoved);
                     if (limelightPoseEstimate != null) {
-                        // TODO: Do we still need to do trust calibration scaled by something here? # of tags seen?
+                        // TODO: Do we still need to do trust calibration scaled by something here?
                         swerveDrivePoseEstimator.addVisionMeasurement(
-                                limelightPoseEstimate.pose, limelightPoseEstimate.timestampSeconds);
+                                limelightPoseEstimate.pose,
+                                // timestamp is latency-corrected NT-referenced FPGA time
+                                limelightPoseEstimate.timestampSeconds);
+                        limelightPosePublisher.set(limelightPoseEstimate.pose);
                     }
                 }
 
@@ -446,6 +459,15 @@ public class Drivetrain extends SubsystemBase {
 
         if (dashboardCounter++ >= 5) {
             if (Constants.debugDashboard) {
+                if (limelightPoseEstimate != null) {
+                    SmartDashboard.putNumber("LLMT2 X (m)", limelightPoseEstimate.pose.getX());
+                    SmartDashboard.putNumber("LLMT2 Y (m)", limelightPoseEstimate.pose.getY());
+                    SmartDashboard.putNumber("LLMT2 Th (deg)", limelightPoseEstimate.pose.getRotation().getDegrees());
+                    SmartDashboard.putNumber("LLMT2 # Tags", limelightPoseEstimate.tagCount);
+                    SmartDashboard.putNumber("LLMT2 Tag Dist", limelightPoseEstimate.avgTagDist);
+                    SmartDashboard.putNumber("LLMT2 Tag Dist", limelightPoseEstimate.latency);
+                }
+
                 SmartDashboard.putNumber("Odometry Rotation (deg)", latestSwervePose.getRotation().getDegrees());
                 SmartDashboard.putNumber("Odometry X (in)", (latestSwervePose.getX() * (100 / 2.54)));
                 SmartDashboard.putNumber("Odometry Y (in)", (latestSwervePose.getY() * (100 / 2.54)));
@@ -741,6 +763,7 @@ public class Drivetrain extends SubsystemBase {
                     swerveDriveModulePositions,
                     resetPose);
             latestSwervePose = resetPose;
+            this.odometryPosePublisher.set(this.latestSwervePose);
         }
     }
 
@@ -782,12 +805,16 @@ public class Drivetrain extends SubsystemBase {
         });
     }
 
-    public LimelightHelpers.PoseEstimate findBestLimelightPose() {
+    public LimelightHelpers.PoseEstimate findBestLimelightPose(double distanceMoved) {
         LimelightHelpers.PoseEstimate limelightPoseEstimate = null;
         LimelightHelpers.PoseEstimate bestLimelightEstimate = null;
 
         for (LimeLight limelight: limelightList) {
-            limelightPoseEstimate = limelight.getLimelightMeasurement(getGyroYawRate());
+            if (distanceMoved > limelight.model.distanceMovedInCycleThreshold || getGyroYawRate() >= limelight.model.angularVelocityThreshold) {
+                continue;
+            }
+
+            limelightPoseEstimate = limelight.getLimelightMeasurement();
             
             // If we got a reading from the LimeLight, keep the one with the most tags seen.
             // LL3s come first in the list, so we'll always land on a 3g if a LL2 and LL3
@@ -796,7 +823,7 @@ public class Drivetrain extends SubsystemBase {
                 if (bestLimelightEstimate == null) {
                     bestLimelightEstimate = limelightPoseEstimate;
                 }
-                if (limelightPoseEstimate.tagCount > bestLimelightEstimate.tagCount) {
+                if (limelightPoseEstimate.avgTagDist < bestLimelightEstimate.avgTagDist) {
                     bestLimelightEstimate = limelightPoseEstimate;
                 }
             }
@@ -961,11 +988,14 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void updateOdometryPose(SwerveModulePosition[] modulePositions) {
-        odomReadingTesting = true;
+        this.odomReadingTesting = true;
+        this.lastOdometryTranslation = this.latestSwervePose.getTranslation();
         this.latestSwervePose = this.swerveDrivePoseEstimator.updateWithTime(
                 Timer.getFPGATimestamp(),
                 Rotation2d.fromDegrees(-getGyroYaw()),
                 modulePositions);
+        this.lastDistanceMoved = lastOdometryTranslation.getDistance(this.latestSwervePose.getTranslation());
+        this.odometryPosePublisher.set(this.latestSwervePose);
     }
 
     public ChassisSpeeds getRobotChassisSpeeds() {
