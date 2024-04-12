@@ -177,23 +177,24 @@ public class Constants {
     public static class Shooter {
 
         public static class DeviceIDs {
-            public static int shooterMotorID = 60;
+            public static int shooterMotorID = 8;
+            public static int followMotorID = 20;
         }
 
         public static final double defaultShooterSpeed = 3300; // RPM
 
-        public static final double encoderToFlywheelRotations = 0.666667;
+        public static final double encoderToFlywheelRotations = 1.0;
 
         public static class ShooterPIDConstants {
             public static final boolean useCodePID = true; // Whether to overwrite PID values in motor
 
-            public static double P = 0.04; 
+            public static double P = 0.02; 
             public static double I = 0.0; 
             public static double D = 0.0; 
             public static double V = 0.01006; 
             public static double S = 0.00;
-            public static double acceleration = 100; // Place holder
-            public static double jerk = 50;
+            public static double acceleration = 150.0; // Place holder
+            public static double jerk = 0.0;
             // public static double cruiseVelocity = 0.0; // Place holder
 
         }
@@ -262,10 +263,10 @@ public class Constants {
         public static final double encoderToInches = gearRatio * (sprocketPitchDiameter * Math.PI) * 2; // calculates
 
         public static class PIDConstants {
-            public static final double kP0 = 0.00001; // placeholder
+            public static final double kP0 = 0.15; // placeholder
             public static final double kI0 = 0.00; // placeholder
             public static final double kD0 = 0.0; //0.001; // placeholder
-            public static final double kIZone0 = 0.75; // placeholder
+            public static final double kIZone0 = 0.0; // placeholder
             public static final double kF0 = 0.07; // Place holder
 
             public static final double kP1 = 0.2; // placeholder
@@ -279,7 +280,7 @@ public class Constants {
 
 
             public static final double kMinOutput = -0.6; // placeholder
-            public static final double kMaxOutput = 0.75; // placeholder
+            public static final double kMaxOutput = 1.0; // placeholder
 
             public static final double SmartMotionMaxVel = 350.0; // placeholder
             public static final double SmartMotionMinVel = -350.0; // placeholder

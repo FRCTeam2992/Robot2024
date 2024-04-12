@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityDutyCycle;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -20,6 +21,7 @@ import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
   private TalonFX shooterMotor;
+  private TalonFX followMotor;
 
   private TalonFXConfiguration shooterMotorConfigs;
 
@@ -36,6 +38,7 @@ public class Shooter extends SubsystemBase {
   /** Creates a new Shooter. */
   public Shooter() {
     shooterMotor = new TalonFX(Constants.Shooter.DeviceIDs.shooterMotorID);
+    followMotor = new TalonFX(Constants.Shooter.DeviceIDs.followMotorID);
     shooterMotorConfigs = new TalonFXConfiguration();
 
     shooterMotorConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
@@ -76,6 +79,10 @@ public class Shooter extends SubsystemBase {
     }
 
     shooterMotor.getConfigurator().apply(shooterMotorConfigs);
+    followMotor.getConfigurator().apply(shooterMotorConfigs);
+
+    followMotor.setControl(new Follower(Constants.Shooter.DeviceIDs.shooterMotorID,
+        false));
 
     percentOutControlRequest = new DutyCycleOut(0.0).withEnableFOC(true);
     velocityControlRequest = new VelocityDutyCycle(0.0).withEnableFOC(true).withSlot(0);

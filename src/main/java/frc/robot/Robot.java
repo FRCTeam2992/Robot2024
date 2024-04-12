@@ -123,7 +123,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().schedule(new SetNoteLocation(mRobotContainer.mFeeder, mRobotContainer.mIntake, mRobotContainer.mRobotState));
 
 
-    mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralModeValue.Coast);
+    mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralModeValue.Brake);
         mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralModeValue.Brake);
 
     mRobotContainer.mDrivetrain.setDriveCurrentLimit(40.0, 40.0);

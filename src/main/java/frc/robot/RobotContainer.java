@@ -223,9 +223,9 @@ public class RobotContainer {
     // }));
     controller1.y().onTrue(new InstantCommand(() -> { mRobotState.setRobotMode(RobotModeState.DefaultSpeaker); }));
     // controller1.x().whileTrue(new SetShooterSpeedTarget(mShooter, 500));
-    controller1.x().onTrue(new MoveShooter(mShooter, 0.1));
+    controller1.x().onTrue(new SetShooterSpeedTarget(mShooter, 0.0));
 
-    controller0.povUp().whileTrue(new MoveElevator(mElevator, mShooterPivot, 0.3));
+    controller0.povUp().whileTrue(new MoveElevator(mElevator, mShooterPivot, 0.07));
     controller0.povDown().whileTrue(new MoveElevator(mElevator, mShooterPivot, -0.05));
 
     controller1.axisGreaterThan(1, Constants.Elevator.Climb.joyStickDeadBand)
@@ -302,7 +302,7 @@ public class RobotContainer {
     mNoteInterpolator = new NoteInterpolator();
 
   //  mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 2700, 56.0, 0.0));
-  mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 2800, 56.0, 1.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 2800, 53.0, 0.0));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(50, 2800, 53.0, 1.0));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(55, 2800, 52.6, 1.0));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(66, 3100, 44.5, 1.0));
