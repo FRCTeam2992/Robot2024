@@ -1,6 +1,9 @@
 
 package frc.lib.vision;
 
+import frc.lib.vision.LimelightHelpers.PoseEstimate;
+import frc.robot.Constants;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -14,6 +17,8 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  * LimeLight and getting the distance to the target.
  */
 public class LimeLight {
+
+    public String networkTableName;
 
     // LimeLight Network Table
     NetworkTable limelightTable;
@@ -44,11 +49,41 @@ public class LimeLight {
     NetworkTableEntry stream;
     NetworkTableEntry snapshot;
 
+    // LimeLight MegaTag2 bot pose estimate
+    LimelightHelpers.PoseEstimate limelightMeasurement;
+
     MedianFilter xFilter = new MedianFilter(5);
     MedianFilter yFilter = new MedianFilter(5);
 
     double xMedian = 0;
     double yMedian = 0;
+
+    public LimeLightModel model;
+
+    public enum LimeLightModel {
+        LL3(
+            Constants.Vision.LimeLight3g.targetAreaThreshold,
+            Constants.Vision.LimeLight3g.angularVelocityThreshold,
+            Constants.Vision.LimeLight3g.distanceMovedInCycleThreshold,
+            0.0009),
+        LL2(
+            Constants.Vision.LimeLight2Plus.targetAreaThreshold,
+            Constants.Vision.LimeLight2Plus.angularVelocityThreshold,
+            Constants.Vision.LimeLight2Plus.distanceMovedInCycleThreshold,
+            0.0016);
+
+        public double targetAreaThreshold;
+        public double angularVelocityThreshold;
+        public double distanceMovedInCycleThreshold;
+        public double trustFactor;
+
+        private LimeLightModel(double targetAreaThreshold, double angularVelocityThreshold, double distanceMovedInCycleThreshold, double trustFactor) {
+            this.targetAreaThreshold = targetAreaThreshold;
+            this.angularVelocityThreshold = angularVelocityThreshold;
+            this.distanceMovedInCycleThreshold = distanceMovedInCycleThreshold;
+            this.trustFactor = trustFactor;
+        }
+    }
 
     public enum LedMode {
         /**
@@ -126,9 +161,12 @@ public class LimeLight {
     /**
      * @param networkTableName the name of the LimeLight's network table.
      */
-    public LimeLight(String networkTableName) {
-        limelightTable = NetworkTableInstance.getDefault().getTable(networkTableName);
+    public LimeLight(String networkTableName, LimeLightModel model) {
+        this.model = model;
+        this.networkTableName = networkTableName;
+        this.limelightTable = NetworkTableInstance.getDefault().getTable(networkTableName);
         getTableEntries();
+        this.limelightMeasurement = null;
     }
 
     private void getTableEntries() {
@@ -159,6 +197,15 @@ public class LimeLight {
         stream = limelightTable.getEntry("stream");
         snapshot = limelightTable.getEntry("snapshot");
 
+    }
+
+    public PoseEstimate getLimelightMeasurement() {
+        this.limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(this.networkTableName);
+        // Only return a measurement if we see a tag
+        if (this.limelightMeasurement.tagCount > 0 && this.limelightMeasurement.avgTagArea > this.model.targetAreaThreshold) {
+            return this.limelightMeasurement;
+        }
+        return null;
     }
 
     /**
@@ -351,5 +398,9 @@ public class LimeLight {
                 setActivePipline(0);
                 break;
         }
+    }
+
+    public void setRobotOrientation(double gyroYaw) {
+        LimelightHelpers.SetRobotOrientation(this.networkTableName, gyroYaw, 0, 0, 0, 0, 0);
     }
 }
