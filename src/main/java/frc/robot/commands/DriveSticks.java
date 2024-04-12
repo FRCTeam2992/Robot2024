@@ -330,6 +330,22 @@ public class DriveSticks extends Command {
                     case Override:
                     case Auto:
                     case Endgame: {
+
+                        targetAngle = mDriveTrain.getEndgameTargetAngle();
+
+                        SmartDashboard.putNumber("Endgame target angle", targetAngle);
+                        x2 = mDriveTrain.getGyroYaw() - targetAngle;
+                        if (x2 > 180) {
+                            x2 -= 360;
+                        } else if (x2 < -180) {
+                            x2 += 360;
+                        }
+                        x2 = x2 * Constants.DrivetrainConstants.driveRotationP;
+
+                        x2 = Math.min(x2, .90);
+                        x2 = Math.max(x2, -.90);
+
+                        gyroTargetRecorded = false;
                         break;
                     }
 

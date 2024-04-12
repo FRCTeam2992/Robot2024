@@ -173,6 +173,11 @@ public class RobotContainer {
     controller0.y().whileTrue(new MoveIntake(mIntake, Constants.Intake.Speeds.outakingPieceSpeed, false)
         .alongWith(new MoveFeeder(mFeeder, Constants.Feeder.Speeds.outakingPieceSpeed, false)));
 
+    //POV 
+    controller0.povUp().onTrue(new InstantCommand(() -> {mDrivetrain.setEndgameTargetAngle(180.0);}));
+    controller0.povLeft().onTrue(new InstantCommand(() -> {mDrivetrain.setEndgameTargetAngle(30.0);}));
+    controller0.povUp().onTrue(new InstantCommand(() -> {mDrivetrain.setEndgameTargetAngle(-30.0);}));
+
     // Start/Back
     controller0.start().onTrue(new ResetGyro(mDrivetrain));
 
@@ -223,9 +228,6 @@ public class RobotContainer {
     controller1.y().onTrue(new InstantCommand(() -> { mRobotState.setRobotMode(RobotModeState.DefaultSpeaker); }));
     // controller1.x().whileTrue(new SetShooterSpeedTarget(mShooter, 500));
     controller1.x().onTrue(new MoveShooter(mShooter, 0.1));
-
-    controller0.povUp().whileTrue(new MoveElevator(mElevator, mShooterPivot, 0.3));
-    controller0.povDown().whileTrue(new MoveElevator(mElevator, mShooterPivot, -0.05));
 
     controller1.axisGreaterThan(1, Constants.Elevator.Climb.joyStickDeadBand)
         .whileTrue(new ElevatorSticks(mElevator, mShooterPivot));
