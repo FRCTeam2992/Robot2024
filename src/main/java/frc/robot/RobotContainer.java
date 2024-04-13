@@ -227,6 +227,7 @@ public class RobotContainer {
     controller1.y().onTrue(new InstantCommand(() -> { mRobotState.setRobotMode(RobotModeState.DefaultSpeaker); }));
     // controller1.x().whileTrue(new SetShooterSpeedTarget(mShooter, 500));
     controller1.x().onTrue(new SetShooterSpeedTarget(mShooter, 0.0));
+    controller1.x().onTrue(new StartShooter(mShooter));
 
     controller1.axisGreaterThan(1, Constants.Elevator.Climb.joyStickDeadBand)
         .whileTrue(new ElevatorSticks(mElevator, mShooterPivot));
@@ -301,14 +302,14 @@ public class RobotContainer {
   private void initNoteInterp() {
     mNoteInterpolator = new NoteInterpolator();
 
-  //  mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 2700, 56.0, 0.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(38, 2800, 56.0, 0.0));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 2800, 53.0, 0.0));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(50, 2800, 49.0, 0.0));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(55, 3200, 47.0, 0.0));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(66, 3200, 44.0, 0.0));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(78, 3400, 42, 0.0));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(89, 3500, 41.0, 1.0));
-  mNoteInterpolator.addDataPoint(new NoteDataPoint(99, 3700, 38.0, 1.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(99, 3700, 37.5, 1.0));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(112, 3800, 36.0, 1.5));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(120, 3900, 34.0, 1.5));
   mNoteInterpolator.addDataPoint(new NoteDataPoint(134, 4100, 31.5, 1.8));

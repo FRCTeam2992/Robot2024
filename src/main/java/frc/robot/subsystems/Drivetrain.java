@@ -676,6 +676,12 @@ public class Drivetrain extends SubsystemBase {
 
     public double getGyroYaw() {
         double angle = navx.getYaw() + gyroOffset;
+        
+        if (DriverStation.getAlliance()
+            .orElse(DriverStation.Alliance.Red) == DriverStation.Alliance.Red) {
+                angle += 180;
+            }
+
         while (angle > 180) {
             angle -= 360;
         }

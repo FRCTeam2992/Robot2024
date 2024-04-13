@@ -78,14 +78,15 @@ public class DriveSticks extends Command {
         double y1;
         double x2;
 
-        if (isLeftStrafe) {
+        if (DriverStation.getAlliance()
+            .orElse(DriverStation.Alliance.Red) == DriverStation.Alliance.Red) {
+            x1 = Robot.mRobotContainer.getController0().getLeftX();
+            y1 = Robot.mRobotContainer.getController0().getLeftY();
+            x2 = -Robot.mRobotContainer.getController0().getRightX();
+        } else {
             x1 = -Robot.mRobotContainer.getController0().getLeftX();
             y1 = -Robot.mRobotContainer.getController0().getLeftY();
             x2 = -Robot.mRobotContainer.getController0().getRightX();
-        } else {
-            x1 = -Robot.mRobotContainer.getController0().getRightX();
-            y1 = -Robot.mRobotContainer.getController0().getRightY();
-            x2 = -Robot.mRobotContainer.getController0().getLeftX();
         }
 
         // Get the Joystick Magnitude
@@ -248,14 +249,6 @@ public class DriveSticks extends Command {
                         targetAngle = -Math.atan2((botY - goalY), (botX - goalX));
                         targetAngle = targetAngle * 180.0 / Math.PI;
 
-                        // Have to transform this angle to gyro coordinate space for Red
-                        if (mDriveTrain.getAllianceCoordinateSpace() == CoordinateSpace.Red) {
-                            targetAngle += 180.0;
-                            if (targetAngle > 180.0) {
-                                targetAngle -= 360.0;
-                            }
-                        }
-
                         SmartDashboard.putNumber("Speaker Target Angle", targetAngle);
                         x2 = mDriveTrain.getGyroYaw() - targetAngle;
 
@@ -281,10 +274,6 @@ public class DriveSticks extends Command {
                     case Amp: {
 
                         targetAngle = -90.0;
-                        if (DriverStation.getAlliance()
-                                .orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red) {
-                            targetAngle *= -1.0;
-                        }
 
                         SmartDashboard.putNumber("Amp target angle", targetAngle);
                         x2 = mDriveTrain.getGyroYaw() - targetAngle;
@@ -330,10 +319,16 @@ public class DriveSticks extends Command {
                     case Override:
                     case Auto:
                     case Endgame: {
-
+                        
                         targetAngle = mDriveTrain.getEndgameTargetAngle();
+                        
+                        if (DriverStation.getAlliance()
+                                .orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red) {
+                            targetAngle += 180;
+                        }
 
                         SmartDashboard.putNumber("Endgame target angle", targetAngle);
+
                         x2 = mDriveTrain.getGyroYaw() - targetAngle;
                         if (x2 > 180) {
                             x2 -= 360;
@@ -395,7 +390,12 @@ public class DriveSticks extends Command {
                         SmartDashboard.putBoolean("Is Field Oriented", true);
                     }
                 } else {
-                    swerveStates = mDriveTrain.swerveController.calculate(x1, y1, x2);
+                    if (DriverStation.getAlliance()
+                        .orElse(DriverStation.Alliance.Red) == DriverStation.Alliance.Red) {
+                        swerveStates = mDriveTrain.swerveController.calculate(-x1, -y1, x2);
+                    } else {
+                        swerveStates = mDriveTrain.swerveController.calculate(-x1, -y1, x2);
+                    }
                     if (Constants.debugDashboard) {
                         SmartDashboard.putBoolean("Is Field Oriented", false);
                     }

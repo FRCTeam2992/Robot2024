@@ -66,12 +66,12 @@ public class AutoShoot extends Command {
       case Speaker:
       case DefaultSpeaker:
       case Auto: {
-        if (timer.get() > mWaitTime ||
-            (mElevator.atPosition() && mPivot.atTarget() && mShooter.atShooterRPM())) {
+        // if (timer.get() > mWaitTime ||
+        //     (mElevator.atPosition() && mPivot.atTarget() && mShooter.atShooterRPM())) {
           mIntake.setIntakeSpeed(Constants.Intake.Speeds.intakingPieceSpeed);
           mFeeder.setBeamBreakControl(false);
           mFeeder.setFeederSpeed(Constants.Feeder.Speeds.speekerShootingSpeed);
-        }
+        // }
         break;
       }
       case Amp: {
