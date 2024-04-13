@@ -39,8 +39,10 @@ import frc.lib.vision.LimelightHelpers;
 import frc.lib.vision.LimeLight.CoordinateSpace;
 import frc.lib.vision.LimeLight.LimeLightModel;
 import frc.lib.vision.LimeLight.StreamMode;
+import frc.lib.vision.LimelightHelpers.PoseEstimate;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -441,9 +443,8 @@ public class Drivetrain extends SubsystemBase {
                 for (LimeLight limelight: limelightList) {
                     limelight.setRobotOrientation(-getGyroYaw());
                     if (Constants.debugDashboard) {
-                        tempPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelight.networkTableName);
-                        SmartDashboard.putNumber("LL #Tags " + limelight.networkTableName, tempPoseEstimate.tagCount);
-                        if (tempPoseEstimate.tagCount > 0) {
+                        tempPoseEstimate = limelight.getLimelightMeasurement();
+                        if (tempPoseEstimate != null) {
                             if (limelight.networkTableName == limeLightCameraBack.networkTableName) {
                                 limelightBackPosePublisher.set(tempPoseEstimate.pose);
                                 fieldForBackPosePublishing.setRobotPose(tempPoseEstimate.pose);
@@ -461,28 +462,34 @@ public class Drivetrain extends SubsystemBase {
                                 fieldForRightPosePublishing.setRobotPose(tempPoseEstimate.pose);
                                 SmartDashboard.putData("LL Field " + limelight.networkTableName, fieldForRightPosePublishing);
                             }
+                            SmartDashboard.putNumber("LL #Tags " + limelight.networkTableName,
+                                    tempPoseEstimate.tagCount);
                             SmartDashboard.putNumber("LL Dist " + limelight.networkTableName, tempPoseEstimate.avgTagDist);
                         } else {
+                            SmartDashboard.putNumber("LL #Tags " + limelight.networkTableName, 0.0);
                             SmartDashboard.putNumber("LL Dist " + limelight.networkTableName, -1.0);
                         }
                     }
                 }
 
                 if (useLimeLightForOdometry()) {
+                    doLimelightPoseUpdate();
+                    //
+
                     // calculateBlendedVisionPose();
                     // if (latestVisionPoseValid) {
                     //     swerveDrivePoseEstimator.addVisionMeasurement(
                     //             latestVisionPose, Timer.getFPGATimestamp() - limeLightBlendedLatency / 1000);
                     // }
-                    limelightPoseEstimate = findBestLimelightPose(lastDistanceMoved);
-                    if (limelightPoseEstimate != null) {
-                        // TODO: Do we still need to do trust calibration scaled by something here?
-                        swerveDrivePoseEstimator.addVisionMeasurement(
-                                limelightPoseEstimate.pose,
-                                // timestamp is latency-corrected NT-referenced FPGA time
-                                limelightPoseEstimate.timestampSeconds);
-                        limelightPosePublisher.set(limelightPoseEstimate.pose);
-                    }
+                    // limelightPoseEstimate = findBestLimelightPose(lastDistanceMoved);
+                    // if (limelightPoseEstimate != null) {
+                    // // TODO: Do we still need to do trust calibration scaled by something here?
+                    // swerveDrivePoseEstimator.addVisionMeasurement(
+                    // limelightPoseEstimate.pose,
+                    // // timestamp is latency-corrected NT-referenced FPGA time
+                    // limelightPoseEstimate.timestampSeconds);
+                    // limelightPosePublisher.set(limelightPoseEstimate.pose);
+                    // }
                 }
 
                 // Update odometry via wheel encoders
@@ -858,31 +865,39 @@ public class Drivetrain extends SubsystemBase {
         });
     }
 
-    public LimelightHelpers.PoseEstimate findBestLimelightPose(double distanceMoved) {
+    public void doLimelightPoseUpdate() {
+        double trustFactor = -1.0;
         LimelightHelpers.PoseEstimate limelightPoseEstimate = null;
-        LimelightHelpers.PoseEstimate bestLimelightEstimate = null;
 
-        for (LimeLight limelight: limelightList) {
-            if (distanceMoved > limelight.model.distanceMovedInCycleThreshold || getGyroYawRate() >= limelight.model.angularVelocityThreshold) {
-                continue;
-            }
-
+        for (LimeLight limelight : limelightList) {
             limelightPoseEstimate = limelight.getLimelightMeasurement();
             
             // If we got a reading from the LimeLight, keep the one with the most tags seen.
             // LL3s come first in the list, so we'll always land on a 3g if a LL2 and LL3
             // see the same max number of tags.
             if (limelightPoseEstimate != null) {
-                if (bestLimelightEstimate == null) {
-                    bestLimelightEstimate = limelightPoseEstimate;
-                }
-                if (limelightPoseEstimate.avgTagDist < bestLimelightEstimate.avgTagDist) {
-                    bestLimelightEstimate = limelightPoseEstimate;
+                trustFactor = calculateVisionTrustFactor(limelightPoseEstimate, limelight);
+                if (trustFactor > 0.0) {
+                    swerveDrivePoseEstimator.addVisionMeasurement(
+                            limelightPoseEstimate.pose,
+                            // timestamp is latency-corrected NT-referenced FPGA time
+                            limelightPoseEstimate.timestampSeconds,
+                            VecBuilder.fill(trustFactor, trustFactor, 9999999.9));
                 }
             }
         }
 
-        return bestLimelightEstimate;
+    }
+
+    public double calculateVisionTrustFactor(PoseEstimate visionEstimate, LimeLight ll) {
+        // Anything less than 1m treat as 1M
+        double distance = Math.max(visionEstimate.avgTagDist, 1.0);
+        if (distance > ll.model.maxDistanceFromTag || this.lastDistanceMoved > ll.model.distanceMovedInCycleThreshold
+                || Math.abs(this.getGyroYawRate()) >= ll.model.angularVelocityThreshold) {
+            return -1; // Don't trust any readings further than this
+        } else {
+            return distance * ll.model.trustFactor;
+        }
     }
 
     public void calculateBlendedVisionPose() {

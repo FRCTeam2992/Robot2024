@@ -237,7 +237,9 @@ public class RobotContainer {
         .whileTrue(new ElevatorSticks(mElevator, mShooterPivot));
 
     //middle buttos
-    controller1.start().onTrue(new InstantCommand(() -> {mShooterPivot.zeroPivotEncoder();}));    
+    controller1.start().onTrue(new InstantCommand(() -> {
+      mShooterPivot.zeroPivotEncoder();
+    }).ignoringDisable(true));
     controller1.back().onTrue(new InstantCommand(() -> {mElevator.zeroElevatorEncoders();}));
 
 
@@ -283,7 +285,7 @@ public class RobotContainer {
 
     SmartDashboard.putData("Zero pivot encoder", new InstantCommand(() -> {
       mShooterPivot.zeroPivotEncoder();
-    }));
+    }).ignoringDisable(true));
 
     SmartDashboard.putNumber("Set Elevator Position", 0.0);
     SmartDashboard.putData("Move Elevator", new MoveElevatorToTarget(mElevator));

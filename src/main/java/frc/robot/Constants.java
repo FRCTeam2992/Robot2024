@@ -21,6 +21,10 @@ public class Constants {
             public static final double angularVelocityThreshold = 720.0;
             // Meters moved in a single cycle
             public static final double distanceMovedInCycleThreshold = 2.0 / 50.0;
+            // Max distance meters from tag to use
+            public static final double maxDistanceFromTag = 5.0;
+            // Default kalman trust factor at 1m
+            public static final double trustFactor = 1.8;
         }
         public static class LimeLight2Plus {
             public static final double targetAreaThreshold = 0.16;
@@ -28,6 +32,10 @@ public class Constants {
             public static final double angularVelocityThreshold = 360.0;
             // Meters moved in a single cycle
             public static final double distanceMovedInCycleThreshold = 1.0 / 50.0;
+            // Max distance meters from tag to use
+            public static final double maxDistanceFromTag = 3.0;
+            // Default kalman trust factor at 1m
+            public static final double trustFactor = 1.8;
         }
         public static final double totalTargetAreaThreshold = Math.min(LimeLight3g.targetAreaThreshold, LimeLight2Plus.targetAreaThreshold);
     }
