@@ -65,22 +65,28 @@ public class LimeLight {
             Constants.Vision.LimeLight3g.targetAreaThreshold,
             Constants.Vision.LimeLight3g.angularVelocityThreshold,
             Constants.Vision.LimeLight3g.distanceMovedInCycleThreshold,
-            0.0009),
+                Constants.Vision.LimeLight3g.maxDistanceFromTag,
+                Constants.Vision.LimeLight3g.trustFactor),
         LL2(
             Constants.Vision.LimeLight2Plus.targetAreaThreshold,
             Constants.Vision.LimeLight2Plus.angularVelocityThreshold,
             Constants.Vision.LimeLight2Plus.distanceMovedInCycleThreshold,
-            0.0016);
+                Constants.Vision.LimeLight2Plus.maxDistanceFromTag,
+                Constants.Vision.LimeLight2Plus.trustFactor);
 
         public double targetAreaThreshold;
         public double angularVelocityThreshold;
         public double distanceMovedInCycleThreshold;
+        public double maxDistanceFromTag;
         public double trustFactor;
 
-        private LimeLightModel(double targetAreaThreshold, double angularVelocityThreshold, double distanceMovedInCycleThreshold, double trustFactor) {
+        private LimeLightModel(double targetAreaThreshold, double angularVelocityThreshold,
+                double distanceMovedInCycleThreshold,
+                double maxDistance, double trustFactor) {
             this.targetAreaThreshold = targetAreaThreshold;
             this.angularVelocityThreshold = angularVelocityThreshold;
             this.distanceMovedInCycleThreshold = distanceMovedInCycleThreshold;
+            this.maxDistanceFromTag = maxDistance;
             this.trustFactor = trustFactor;
         }
     }
@@ -202,7 +208,7 @@ public class LimeLight {
     public PoseEstimate getLimelightMeasurement() {
         this.limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(this.networkTableName);
         // Only return a measurement if we see a tag
-        if (this.limelightMeasurement.tagCount > 0 && this.limelightMeasurement.avgTagArea > this.model.targetAreaThreshold) {
+        if (this.limelightMeasurement.tagCount > 0) {
             return this.limelightMeasurement;
         }
         return null;
