@@ -172,9 +172,12 @@ public class RobotContainer {
 
     // ABXY
     controller0.a().whileTrue(new AutoRotateBot(mDrivetrain, true));
-    // controller0.x().whileTrue(new XWheels());
-    controller0.y().whileTrue(new MoveIntake(mIntake, Constants.Intake.Speeds.outakingPieceSpeed, false)
-        .alongWith(new MoveFeeder(mFeeder, Constants.Feeder.Speeds.outakingPieceSpeed, false)));
+    controller0.y().onTrue(new InstantCommand(() -> {mDrivetrain.setEndgameTargetAngle(180.0);}));
+    controller0.y().whileTrue(new AutoRotateBot(mDrivetrain, true));
+    controller0.x().onTrue(new InstantCommand(() -> {mDrivetrain.setEndgameTargetAngle(60.0);}));
+    controller0.x().whileTrue(new AutoRotateBot(mDrivetrain, true));
+    controller0.b().onTrue(new InstantCommand(() -> {mDrivetrain.setEndgameTargetAngle(-60.0);}));
+    controller0.b().whileTrue(new AutoRotateBot(mDrivetrain, true));
 
     // Start/Back
     controller0.start().onTrue(new ResetGyro(mDrivetrain));
@@ -225,10 +228,8 @@ public class RobotContainer {
     // }));
     controller1.y().onTrue(new InstantCommand(() -> { mRobotState.setRobotMode(RobotModeState.DefaultSpeaker); }));
     // controller1.x().whileTrue(new SetShooterSpeedTarget(mShooter, 500));
-    controller1.x().onTrue(new MoveShooter(mShooter, 0.1));
-
-    controller0.povUp().whileTrue(new MoveElevator(mElevator, mShooterPivot, 0.3));
-    controller0.povDown().whileTrue(new MoveElevator(mElevator, mShooterPivot, -0.05));
+    controller1.x().onTrue(new SetShooterSpeedTarget(mShooter, 0.0));
+    controller1.x().onTrue(new StartShooter(mShooter));
 
     controller1.axisGreaterThan(1, Constants.Elevator.Climb.joyStickDeadBand)
         .whileTrue(new ElevatorSticks(mElevator, mShooterPivot));
@@ -303,18 +304,19 @@ public class RobotContainer {
   private void initNoteInterp() {
     mNoteInterpolator = new NoteInterpolator();
 
-  //  mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 2700, 56.0, 0.0));
-  mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 2800, 56.0, 1.0));
-  mNoteInterpolator.addDataPoint(new NoteDataPoint(50, 2800, 53.0, 1.0));
-  mNoteInterpolator.addDataPoint(new NoteDataPoint(55, 2800, 52.6, 1.0));
-  mNoteInterpolator.addDataPoint(new NoteDataPoint(66, 3100, 44.5, 1.0));
-  mNoteInterpolator.addDataPoint(new NoteDataPoint(78, 3100, 43.5, 1.0));
-  mNoteInterpolator.addDataPoint(new NoteDataPoint(89, 3300, 41.0, 1.0));
-  mNoteInterpolator.addDataPoint(new NoteDataPoint(99, 3700, 37.0, 1.0));
-  mNoteInterpolator.addDataPoint(new NoteDataPoint(112, 3800, 33.0, 1.5));
-  mNoteInterpolator.addDataPoint(new NoteDataPoint(120, 3800, 32.6, 1.5));
-  mNoteInterpolator.addDataPoint(new NoteDataPoint(134, 3800, 31.8, 1.5));
-  mNoteInterpolator.addDataPoint(new NoteDataPoint(170, 3800, 26, 1.5));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(38, 2800, 56.0, 0.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(42, 2800, 53.0, 0.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(50, 2800, 49.0, 0.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(55, 3200, 47.0, 0.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(66, 3200, 44.0, 0.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(78, 3400, 42, 0.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(89, 3500, 41.0, 1.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(99, 3700, 37.5, 1.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(112, 3800, 36.0, 1.5));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(120, 3900, 34.0, 1.5));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(134, 4100, 31.5, 1.8));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(150, 4200, 30.5, 4.0));
+  mNoteInterpolator.addDataPoint(new NoteDataPoint(163, 4200, 31.5, 4.0));
 
   }
 

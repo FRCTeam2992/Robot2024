@@ -64,8 +64,8 @@ public class Elevator extends SubsystemBase {
     // followMotor2.setInverted(true);
     // followMotor3.setInverted(true);
 
-    leadMotor.setClosedLoopRampRate(0.3);
-    followMotor1.setClosedLoopRampRate(0.3);
+    leadMotor.setClosedLoopRampRate(0.0);
+    followMotor1.setClosedLoopRampRate(0.0);
     // followMotor2.setClosedLoopRampRate(0.3);
     // followMotor3.setClosedLoopRampRate(0.3);
 
@@ -80,19 +80,12 @@ public class Elevator extends SubsystemBase {
     // followMotor3.follow(leadMotor, true);
 
     PIDController = leadMotor.getPIDController();
+
     PIDController.setP(Constants.Elevator.PIDConstants.kP0, 0);
     PIDController.setI(Constants.Elevator.PIDConstants.kI0, 0);
     PIDController.setD(Constants.Elevator.PIDConstants.kD0, 0);
     PIDController.setIZone(Constants.Elevator.PIDConstants.kIZone0, 0);
     PIDController.setOutputRange(Constants.Elevator.PIDConstants.kMinOutput, Constants.Elevator.PIDConstants.kMaxOutput, 0);
-    
-    PIDController.setP(Constants.Elevator.PIDConstants.kP1, 1);
-    PIDController.setI(Constants.Elevator.PIDConstants.kI1, 1);
-    PIDController.setD(Constants.Elevator.PIDConstants.kD1, 1);
-    PIDController.setIZone(Constants.Elevator.PIDConstants.kIZone1, 1);
-    PIDController.setOutputRange(Constants.Elevator.PIDConstants.kMinOutput, Constants.Elevator.PIDConstants.kMaxOutput, 0);
-
-
   }
 
   @Override
@@ -294,6 +287,7 @@ public class Elevator extends SubsystemBase {
     holdPosition = position;
 
     PIDController.setReference(position, CANSparkMax.ControlType.kPosition, 0, Constants.Elevator.PIDConstants.kF0);
+    // smSparkPIDController.setReference(position, CANSparkMax.ControlType.kPosition, 0, Constants.Elevator.PIDConstants.kF0);
     // PIDController.setReference(position, ControlType.kSmartMotion);
 
     // leadMotor.getPIDController().setReference(position, CANSparkMax.ControlType.kPosition);

@@ -65,7 +65,7 @@ public class AutoAim extends Command {
         mShooter.setShooterToTargetRPM();
         mShooterPivot.setPivotTarget(mInterpolator.calcPivotPosition(distance));
         mShooterPivot.setPivotToPID();
-        mElevator.setElevatorTargetPosition(Constants.Elevator.Positions.speakerShooting); // All the way down
+        mElevator.setElevatorTargetPosition(mInterpolator.calcElevatorHeight(distance)); // All the way down
         mElevator.moveElevatorToTargetPosition();        
         break;
       }

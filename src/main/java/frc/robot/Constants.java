@@ -15,9 +15,21 @@ public class Constants {
     public static final boolean debugDashboard = true;
 
     public static class Vision {
-        public static final double targetAreaThresholdLL3 = 0.09;
-        public static final double targetAreaThresholdLL2 = 0.16;
-        public static final double totalTargetAreaThreshold = 0.09;
+        public static class LimeLight3g {
+            public static final double targetAreaThreshold = 0.09;
+            // Degrees/sec angular velocity
+            public static final double angularVelocityThreshold = 720.0;
+            // Meters moved in a single cycle
+            public static final double distanceMovedInCycleThreshold = 2.0 / 50.0;
+        }
+        public static class LimeLight2Plus {
+            public static final double targetAreaThreshold = 0.16;
+            // Degrees/sec angular velocity
+            public static final double angularVelocityThreshold = 360.0;
+            // Meters moved in a single cycle
+            public static final double distanceMovedInCycleThreshold = 1.0 / 50.0;
+        }
+        public static final double totalTargetAreaThreshold = Math.min(LimeLight3g.targetAreaThreshold, LimeLight2Plus.targetAreaThreshold);
     }
 
     public static class DrivetrainConstants {
@@ -117,6 +129,9 @@ public class Constants {
         public static final double maxSpeedToX = 0.25; // m/sec
         public static final double maxTurnToX = 20.0; // degrees/sec
 
+        // Amp Auto Align
+        public static final double maxAmpAutoAlignError = 1.0; //Meters
+
         public static class CanIDs {
             public static int frontLeftDrive = 2;
             public static int frontLeftTurn = 3;
@@ -144,6 +159,9 @@ public class Constants {
             public static double redGoalY = blueGoalY;
             public static Translation2d redGoalTarget = new Translation2d(redGoalX, redGoalY);
             public static Translation2d blueGoalTarget = new Translation2d(blueGoalX, blueGoalY);
+            public static double redAmpX = 14.679242;
+            public static double blueAmpX = 1.821445;
+
         }
 
         public static class StageAngles{
@@ -178,22 +196,23 @@ public class Constants {
 
         public static class DeviceIDs {
             public static int shooterMotorID = 8;
+            public static int followMotorID = 20;
         }
 
         public static final double defaultShooterSpeed = 3300; // RPM
 
-        public static final double encoderToFlywheelRotations = 0.666667;
+        public static final double encoderToFlywheelRotations = 1.0;
 
         public static class ShooterPIDConstants {
             public static final boolean useCodePID = true; // Whether to overwrite PID values in motor
 
-            public static double P = 0.04; 
+            public static double P = 0.02; 
             public static double I = 0.0; 
             public static double D = 0.0; 
             public static double V = 0.01006; 
             public static double S = 0.00;
-            public static double acceleration = 100; // Place holder
-            public static double jerk = 50;
+            public static double acceleration = 150.0; // Place holder
+            public static double jerk = 0.0;
             // public static double cruiseVelocity = 0.0; // Place holder
 
         }
@@ -218,14 +237,14 @@ public class Constants {
 
         public static class PIDController {
             public static final boolean useCodePID = true; // Whether to overwrite PID values in motor
-            public static final double P = 0.2; // Place holder
-            public static final double I = 0.02; // Place holder
+            public static final double P = 0.4; // Place holder
+            public static final double I = 0.0009; // Place holder
             public static final double D = 0.001; // Place holder
             public static final double G = 0.0225; // Place holder
 
-            public static final double maxVelocity = 48.0; // degrees/second //Place holder
-            public static final double maxAcceleration = 480.0; // degrees/second^2 //Place holder
-            public static final double jerk = 4000.0;
+            public static final double maxVelocity = 70.0; // degrees/second //Place holder
+            public static final double maxAcceleration = 500.0; // degrees/second^2 //Place holder
+            public static final double jerk = 6500.0;
 
             public static final double peakForwardDutyCycle = 1.0; // Max forward motor power
             public static final double peakReverseDutyCycle = -1.0; // Max reverse power
@@ -264,20 +283,24 @@ public class Constants {
         public static final double encoderToInches = gearRatio * (sprocketPitchDiameter * Math.PI) * 2; // calculates
 
         public static class PIDConstants {
-            public static final double kP0 = 0.1; // placeholder
-            public static final double kI0 = 0.0015; // placeholder
+            public static final double kP0 = 0.15; // placeholder
+            public static final double kI0 = 0.00; // placeholder
             public static final double kD0 = 0.0; //0.001; // placeholder
-            public static final double kIZone0 = 0.75; // placeholder
-            public static final double kF0 = 0.05; // Place holder
+            public static final double kIZone0 = 0.0; // placeholder
+            public static final double kF0 = 0.07; // Place holder
 
-            public static final double kP1 = 0.03; // placeholder
-            public static final double kI1 = 0.0; // placeholder
+            public static final double kP1 = 0.2; // placeholder
+            public static final double kI1 = 0.0015; // placeholder
             public static final double kD1 = 0.0; // placeholder
-            public static final double kIZone1 = 0.0; // placeholder
-            public static final double kF1 = 0.0; // Place holder
+            public static final double kIZone1 = 0.75; // placeholder
+            public static final double kF1 = 0.007; // Place holder
+            public static final double kSmartMaxAccel = 0.0001; //rpm/s
+            public static final double kSmartMaxVel = 2920; //rpm
+            public static final double kSmartMinVel = -500.0; //rpm
+
 
             public static final double kMinOutput = -0.6; // placeholder
-            public static final double kMaxOutput = 0.85; // placeholder
+            public static final double kMaxOutput = 1.0; // placeholder
 
             public static final double SmartMotionMaxVel = 350.0; // placeholder
             public static final double SmartMotionMinVel = -350.0; // placeholder
