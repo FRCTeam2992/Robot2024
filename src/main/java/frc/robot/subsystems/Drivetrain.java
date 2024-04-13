@@ -61,6 +61,7 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -133,6 +134,16 @@ public class Drivetrain extends SubsystemBase {
     private DataLog mDataLog;
     private StructPublisher<Pose2d> odometryPosePublisher;
     private StructPublisher<Pose2d> limelightPosePublisher;
+    private StructPublisher<Pose2d> limelightBackPosePublisher;
+    private StructPublisher<Pose2d> limelightFrontPosePublisher;
+    private StructPublisher<Pose2d> limelightLeftPosePublisher;
+    private StructPublisher<Pose2d> limelightRightPosePublisher;
+    private LimelightHelpers.PoseEstimate tempPoseEstimate;
+    private final Field2d fieldForPosePublishing = new Field2d();
+    private final Field2d fieldForFrontPosePublishing = new Field2d();
+    private final Field2d fieldForBackPosePublishing = new Field2d();
+    private final Field2d fieldForLeftPosePublishing = new Field2d();
+    private final Field2d fieldForRightPosePublishing = new Field2d();
 
     private DoubleArrayLogEntry swerveCANCoderLog;
 
@@ -356,7 +367,15 @@ public class Drivetrain extends SubsystemBase {
         odometryPosePublisher = NetworkTableInstance.getDefault()
             .getStructTopic("OdometryPose", Pose2d.struct).publish();
         limelightPosePublisher = NetworkTableInstance.getDefault()
-            .getStructTopic("LimelightPose", Pose2d.struct).publish();
+            .getStructTopic("LLBestMT2Pose", Pose2d.struct).publish();
+        limelightFrontPosePublisher = NetworkTableInstance.getDefault()
+            .getStructTopic("LLFrontMT2Pose", Pose2d.struct).publish();
+        limelightBackPosePublisher = NetworkTableInstance.getDefault()
+            .getStructTopic("LLBackMT2Pose", Pose2d.struct).publish();
+        limelightLeftPosePublisher = NetworkTableInstance.getDefault()
+            .getStructTopic("LLLeftMT2Pose", Pose2d.struct).publish();
+        limelightRightPosePublisher = NetworkTableInstance.getDefault()
+            .getStructTopic("LLRightMT2Pose", Pose2d.struct).publish();
 
         // Configure AutoBuilder last
         AutoBuilder.configureHolonomic(
@@ -422,6 +441,32 @@ public class Drivetrain extends SubsystemBase {
             } else {
                 for (LimeLight limelight: limelightList) {
                     limelight.setRobotOrientation(-getGyroYaw());
+                    if (Constants.debugDashboard) {
+                        tempPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelight.networkTableName);
+                        SmartDashboard.putNumber("LL #Tags " + limelight.networkTableName, tempPoseEstimate.tagCount);
+                        if (tempPoseEstimate.tagCount > 0) {
+                            if (limelight.networkTableName == limeLightCameraBack.networkTableName) {
+                                limelightBackPosePublisher.set(tempPoseEstimate.pose);
+                                fieldForBackPosePublishing.setRobotPose(tempPoseEstimate.pose);
+                                SmartDashboard.putData("LL Field " + limelight.networkTableName, fieldForBackPosePublishing);
+                            } else if (limelight.networkTableName == limeLightCameraFront.networkTableName) {
+                                limelightFrontPosePublisher.set(tempPoseEstimate.pose);
+                                fieldForFrontPosePublishing.setRobotPose(tempPoseEstimate.pose);
+                                SmartDashboard.putData("LL Field " + limelight.networkTableName, fieldForFrontPosePublishing);
+                            } else if (limelight.networkTableName == limeLightCameraLeft.networkTableName) {
+                                limelightLeftPosePublisher.set(tempPoseEstimate.pose);
+                                fieldForLeftPosePublishing.setRobotPose(tempPoseEstimate.pose);
+                                SmartDashboard.putData("LL Field " + limelight.networkTableName, fieldForLeftPosePublishing);
+                            } else if (limelight.networkTableName == limeLightCameraRight.networkTableName) {
+                                limelightRightPosePublisher.set(tempPoseEstimate.pose);
+                                fieldForRightPosePublishing.setRobotPose(tempPoseEstimate.pose);
+                                SmartDashboard.putData("LL Field " + limelight.networkTableName, fieldForRightPosePublishing);
+                            }
+                            SmartDashboard.putNumber("LL Dist " + limelight.networkTableName, tempPoseEstimate.avgTagDist);
+                        } else {
+                            SmartDashboard.putNumber("LL Dist " + limelight.networkTableName, -1.0);
+                        }
+                    }
                 }
 
                 if (useLimeLightForOdometry()) {
@@ -770,6 +815,8 @@ public class Drivetrain extends SubsystemBase {
                     swerveDriveModulePositions,
                     resetPose);
             latestSwervePose = resetPose;
+            fieldForPosePublishing.setRobotPose(this.latestSwervePose);
+            SmartDashboard.putData("Odom Pose Field", fieldForPosePublishing);
             this.odometryPosePublisher.set(this.latestSwervePose);
         }
     }
@@ -1002,6 +1049,8 @@ public class Drivetrain extends SubsystemBase {
                 Rotation2d.fromDegrees(-getGyroYaw()),
                 modulePositions);
         this.lastDistanceMoved = lastOdometryTranslation.getDistance(this.latestSwervePose.getTranslation());
+        fieldForPosePublishing.setRobotPose(this.latestSwervePose);
+        SmartDashboard.putData("Odom Pose Field", fieldForPosePublishing);
         this.odometryPosePublisher.set(this.latestSwervePose);
     }
 
