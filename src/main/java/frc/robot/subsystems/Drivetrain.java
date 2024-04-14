@@ -16,7 +16,7 @@ import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.kauailabs.navx.frc.AHRS;
+// import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -30,7 +30,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
  */
 // import com.kauailabs.navx.frc.AHRS;
 
-// import frc.lib.NavX.AHRS;
+import frc.lib.NavX.AHRS;
 
 import frc.lib.drive.swerve.SwerveController;
 import frc.lib.drive.swerve.SwerveModuleFalconFalcon;
@@ -398,7 +398,7 @@ public class Drivetrain extends SubsystemBase {
                                 Constants.DrivetrainConstants.thetaCorrectionP,
                                 Constants.DrivetrainConstants.thetaCorrectionI,
                                 Constants.DrivetrainConstants.thetaCorrectionD),
-                        3.0, // Max module speed, in m/s
+                        Constants.DrivetrainConstants.maxPathFollowingVelocity, // Max module speed, in m/s
                         Constants.DrivetrainConstants.driveBaseRadius, // Drive base radius in meters. Distance from
                                                                        // robot center to furthest module.
                         new ReplanningConfig() // Default path replanning config. See the API for the options here
@@ -878,6 +878,9 @@ public class Drivetrain extends SubsystemBase {
             if (limelightPoseEstimate != null) {
                 trustFactor = calculateVisionTrustFactor(limelightPoseEstimate, limelight);
                 if (trustFactor > 0.0) {
+                    if (DriverStation.isDisabled()) {
+                        trustFactor /= 10.0; // Move to odometry fast under disable
+                    }
                     swerveDrivePoseEstimator.addVisionMeasurement(
                             limelightPoseEstimate.pose,
                             // timestamp is latency-corrected NT-referenced FPGA time
