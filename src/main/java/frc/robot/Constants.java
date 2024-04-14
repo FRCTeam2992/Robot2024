@@ -24,7 +24,7 @@ public class Constants {
             // Max distance meters from tag to use
             public static final double maxDistanceFromTag = 5.0;
             // Default kalman trust factor at 1m
-            public static final double trustFactor = 1.8;
+            public static final double trustFactor = 5.0;
         }
         public static class LimeLight2Plus {
             public static final double targetAreaThreshold = 0.16;
@@ -35,7 +35,7 @@ public class Constants {
             // Max distance meters from tag to use
             public static final double maxDistanceFromTag = 3.0;
             // Default kalman trust factor at 1m
-            public static final double trustFactor = 1.8;
+            public static final double trustFactor = 5.0;
         }
         public static final double totalTargetAreaThreshold = Math.min(LimeLight3g.targetAreaThreshold, LimeLight2Plus.targetAreaThreshold);
     }
@@ -116,18 +116,18 @@ public class Constants {
         public static final double driveBaseRadius = 0.43984;
 
         // Swerve Translation Correction PID (Path Following)
-        public static final double xyCorrectionP = 2.0;
+        public static final double xyCorrectionP = 5.0;
         public static final double xyCorrectionI = 0.0;
         public static final double xyCorrectionD = 0.0;
 
         // Swerve Theta Axis Correction PID (Path Following)
-        public static final double thetaCorrectionP = 3.0;
+        public static final double thetaCorrectionP = 5.0;
         public static final double thetaCorrectionI = 0.0;
         public static final double thetaCorrectionD = 0.0;
 
         // Max Path Following Drive Speeds
-        public static final double maxPathFollowingVelocity = 3.0; // (Meters per Second)
-        public static final double maxPathFollowingAcceleration = 2; // (Meters per Second Squared)
+        public static final double maxPathFollowingVelocity = 3.7; // (Meters per Second)
+        public static final double maxPathFollowingAcceleration = 2.5; // (Meters per Second Squared)
 
         // Max Path Following Turn Speeds
         public static final double maxThetaVelocity = 6.28; // (Radians per Second)
