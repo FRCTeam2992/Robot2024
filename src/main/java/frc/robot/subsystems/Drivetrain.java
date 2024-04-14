@@ -899,7 +899,7 @@ public class Drivetrain extends SubsystemBase {
                 || Math.abs(this.getGyroYawRate()) >= ll.model.angularVelocityThreshold) {
             return -1; // Don't trust any readings further than this
         } else {
-            return distance * ll.model.trustFactor;
+            return Math.pow(distance, 1.3) * ll.model.trustFactor;
         }
     }
 
