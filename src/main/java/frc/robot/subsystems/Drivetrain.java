@@ -871,19 +871,21 @@ public class Drivetrain extends SubsystemBase {
         LimelightHelpers.PoseEstimate limelightPoseEstimate = null;
 
         Pose2d adjustedRobotPose;
-        Translation2d robotPoseAdjustment;
+        double xAdjustment;
+        double yAdjustment;
 
         if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
-            robotPoseAdjustment = new Translation2d(Constants.Vision.redXAdjustment,
-                    Constants.Vision.redYAdjustment);
+            xAdjustment = Constants.Vision.redXAdjustment;
+            yAdjustment = Constants.Vision.redYAdjustment;
         } else {
-            robotPoseAdjustment = new Translation2d(Constants.Vision.blueXAdjustment,
-                    Constants.Vision.blueYAdjustment);
+            xAdjustment = Constants.Vision.blueXAdjustment;
+            yAdjustment = Constants.Vision.blueYAdjustment;
         }
 
         for (LimeLight limelight : limelightList) {
             limelightPoseEstimate = limelight.getLimelightMeasurement();
             
+
             // If we got a reading from the LimeLight, keep the one with the most tags seen.
             // LL3s come first in the list, so we'll always land on a 3g if a LL2 and LL3
             // see the same max number of tags.
@@ -893,12 +895,13 @@ public class Drivetrain extends SubsystemBase {
                     if (DriverStation.isDisabled()) {
                         trustFactor /= 10.0; // Move to odometry fast under disable
                     }
-                    adjustedRobotPose = new Pose2d(limelightPoseEstimate.pose.getX(),
-                            limelightPoseEstimate.pose.getY(),
+
+                    adjustedRobotPose = new Pose2d(limelightPoseEstimate.pose.getX() + xAdjustment,
+                            limelightPoseEstimate.pose.getY() + yAdjustment,
                             limelightPoseEstimate.pose.getRotation());
 
                     swerveDrivePoseEstimator.addVisionMeasurement(
-                            limelightPoseEstimate.pose,
+                            adjustedRobotPose,
                             // timestamp is latency-corrected NT-referenced FPGA time
                             limelightPoseEstimate.timestampSeconds,
                             VecBuilder.fill(trustFactor, trustFactor, 9999999.9));
