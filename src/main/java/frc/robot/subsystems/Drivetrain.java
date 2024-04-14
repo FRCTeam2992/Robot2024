@@ -60,6 +60,7 @@ import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -869,6 +870,17 @@ public class Drivetrain extends SubsystemBase {
         double trustFactor = -1.0;
         LimelightHelpers.PoseEstimate limelightPoseEstimate = null;
 
+        Pose2d adjustedRobotPose;
+        Translation2d robotPoseAdjustment;
+
+        if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
+            robotPoseAdjustment = new Translation2d(Constants.Vision.redXAdjustment,
+                    Constants.Vision.redYAdjustment);
+        } else {
+            robotPoseAdjustment = new Translation2d(Constants.Vision.blueXAdjustment,
+                    Constants.Vision.blueYAdjustment);
+        }
+
         for (LimeLight limelight : limelightList) {
             limelightPoseEstimate = limelight.getLimelightMeasurement();
             
@@ -881,6 +893,10 @@ public class Drivetrain extends SubsystemBase {
                     if (DriverStation.isDisabled()) {
                         trustFactor /= 10.0; // Move to odometry fast under disable
                     }
+                    adjustedRobotPose = new Pose2d(limelightPoseEstimate.pose.getX(),
+                            limelightPoseEstimate.pose.getY(),
+                            limelightPoseEstimate.pose.getRotation());
+
                     swerveDrivePoseEstimator.addVisionMeasurement(
                             limelightPoseEstimate.pose,
                             // timestamp is latency-corrected NT-referenced FPGA time
@@ -899,7 +915,7 @@ public class Drivetrain extends SubsystemBase {
                 || Math.abs(this.getGyroYawRate()) >= ll.model.angularVelocityThreshold) {
             return -1; // Don't trust any readings further than this
         } else {
-            return Math.pow(distance, 1.3) * ll.model.trustFactor;
+            return Math.pow(distance, 1.) * ll.model.trustFactor;
         }
     }
 

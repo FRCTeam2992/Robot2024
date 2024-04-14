@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7464529275894165,
-      "y": 6.710361957550049
+      "x": 2.8,
+      "y": 5.55
     },
-    "rotation": 59.98868115019719
+    "rotation": 2.2897004161426155e-18
   },
   "command": {
     "type": "sequential",
@@ -56,7 +56,7 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "Amp4FarPt1"
+                              "pathName": "Ch_CenterRingButtonHookForSourceRing.1"
                             }
                           }
                         ]

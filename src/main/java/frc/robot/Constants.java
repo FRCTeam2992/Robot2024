@@ -38,6 +38,10 @@ public class Constants {
             public static final double trustFactor = 5.0;
         }
         public static final double totalTargetAreaThreshold = Math.min(LimeLight3g.targetAreaThreshold, LimeLight2Plus.targetAreaThreshold);
+        public static final double blueXAdjustment = 0.0; // meters
+        public static final double blueYAdjustment = -0.1;
+        public static final double redXAdjustment = 0.0;
+        public static final double redYAdjustment = -0.1;
     }
 
     public static class DrivetrainConstants {
