@@ -17,6 +17,43 @@ public class Constants {
     public static final double inchesPerMeter = 39.3701;
 
     public static class Vision {
+        public static FieldCalibrationSetting fieldCalibrationSetting = FieldCalibrationSetting.TeamShop;
+
+        /**
+         * Poses are adjusted by a constant translation to correct for odometry differences based on field
+         * calibration on both blue and red alliance sides.
+         * 
+         * To calibrate for a new field:
+         * 
+         * - Set the above fieldCalibrationSetting variable to FieldCalibrationSetting.NewFieldCalibration and deploy
+         * - Add a new entry into the enum below for the field with all 0.0 values for the adjustments
+         * - Ensure the robot is powered on and started
+         * - Put the robot in known starting spots on the field (auto start poses are usually a good choice)
+         * - For each spot, wait a few seconds for Limelight updates to converge on a consistent pose of the robot
+         * - Compute the distance from the expected starting pose to the measured one, and update the adjustment values
+         *   for the correct side of the field with X and Y adjustments for that side of the field that bring the measured
+         *   pose into agreement with the expected pose. (You may need to average and choose something close.)
+         * - Repeat the process for the other alliance side of the field.
+         * - Once complete, update the variable above to the new field and redeploy.
+         * - If there's time, check that measured poses match expected poses.
+         */
+        public static enum FieldCalibrationSetting {
+            NewFieldCalibration(0.0, 0.0, 0.0, 0.0),
+            TeamShop(0.0, 0.1, 0.0, 0.1);
+
+            public double blueXAdjustmentMeters;
+            public double blueYAdjustmentMeters;
+            public double redXAdjustmentMeters;
+            public double redYAdjustmentMeters;
+
+            private FieldCalibrationSetting(double blueXAdjustmentMeters, double blueYAdjustmentMeters, double redXAdjustmentMeters, double redYAdjustmentMeters) {
+                this.blueXAdjustmentMeters = blueXAdjustmentMeters;
+                this.blueYAdjustmentMeters = blueYAdjustmentMeters;
+                this.redXAdjustmentMeters = redXAdjustmentMeters;
+                this.redYAdjustmentMeters = redYAdjustmentMeters;
+            }
+        }
+
         public static class LimeLight3g {
             public static final double targetAreaThreshold = 0.09;
             // Degrees/sec angular velocity
@@ -40,10 +77,7 @@ public class Constants {
             public static final double trustFactor = 5.0;
         }
         public static final double totalTargetAreaThreshold = Math.min(LimeLight3g.targetAreaThreshold, LimeLight2Plus.targetAreaThreshold);
-        public static final double blueXAdjustment = 0.0; // meters
-        public static final double blueYAdjustment = 0.1;
-        public static final double redXAdjustment = 0.0;
-        public static final double redYAdjustment = 0.1;
+
     }
 
     public static class DrivetrainConstants {

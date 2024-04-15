@@ -742,12 +742,13 @@ public class Drivetrain extends SubsystemBase {
         double xAdjustment;
         double yAdjustment;
 
+        // Poses are adjusted by a constant translation based on field calibration
         if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
-            xAdjustment = Constants.Vision.redXAdjustment;
-            yAdjustment = Constants.Vision.redYAdjustment;
+            xAdjustment = Constants.Vision.fieldCalibrationSetting.redXAdjustmentMeters;
+            yAdjustment = Constants.Vision.fieldCalibrationSetting.redYAdjustmentMeters;
         } else {
-            xAdjustment = Constants.Vision.blueXAdjustment;
-            yAdjustment = Constants.Vision.blueYAdjustment;
+            xAdjustment = Constants.Vision.fieldCalibrationSetting.blueXAdjustmentMeters;
+            yAdjustment = Constants.Vision.fieldCalibrationSetting.blueYAdjustmentMeters;
         }
 
         for (LimeLight limelight : limelightList) {

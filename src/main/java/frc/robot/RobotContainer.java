@@ -4,18 +4,13 @@
 
 package frc.robot;
 
-import com.fasterxml.jackson.databind.deser.impl.NullsAsEmptyProvider;
-import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -33,12 +28,10 @@ import frc.robot.commands.AutoRotateBot;
 import frc.robot.commands.AutoRotateToHeading;
 import frc.robot.commands.AutoShoot;
 import frc.robot.commands.AutonomousLimitedAim;
-import frc.robot.commands.DisableFieldOrientToggle;
 import frc.robot.commands.DriveSticks;
 import frc.robot.commands.ElevatorSticks;
 import frc.robot.commands.HoldElevatorPosition;
 import frc.robot.commands.HoldShooterPivot;
-import frc.robot.commands.MoveElevator;
 import frc.robot.commands.MoveElevatorToTarget;
 import frc.robot.commands.MoveFeeder;
 import frc.robot.commands.MoveIntake;
@@ -46,7 +39,6 @@ import frc.robot.commands.MoveShooter;
 import frc.robot.commands.MoveShooterPivot;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.SetElevatorTargetPosition;
-import frc.robot.commands.SetLEDStripColor;
 import frc.robot.commands.SetNoteLocation;
 import frc.robot.commands.SetOnTarget;
 import frc.robot.commands.SetPivotTargetAngle;
@@ -54,7 +46,6 @@ import frc.robot.commands.SetPivotToTargetAngle;
 import frc.robot.commands.SetShooterSpeedTarget;
 import frc.robot.commands.SetSwerveAngle;
 import frc.robot.commands.StartShooter;
-import frc.robot.commands.StopElevator;
 import frc.robot.commands.StopIntake;
 import frc.robot.commands.StopShooter;
 import frc.robot.commands.StopShooterPivot;
@@ -357,7 +348,7 @@ public class RobotContainer {
       new StartShooter(mShooter)));
     NamedCommands.registerCommand("rotateAmpStart", new AutoRotateToHeading(mDrivetrain, -40.5));
     NamedCommands.registerCommand("rotateSourceStart", new AutoRotateToHeading(mDrivetrain, 40.5));
-
-    
+    NamedCommands.registerCommand("turnOnLimelightOdometry", new InstantCommand(() -> mDrivetrain.setLimeLightOdometryUpdates(true)));
+    NamedCommands.registerCommand("turnOffLimelightOdometry", new InstantCommand(() -> mDrivetrain.setLimeLightOdometryUpdates(false)));
   }
 }
