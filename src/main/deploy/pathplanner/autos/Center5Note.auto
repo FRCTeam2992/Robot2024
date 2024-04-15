@@ -3,9 +3,9 @@
   "startingPose": {
     "position": {
       "x": 1.45,
-      "y": 4.01
+      "y": 5.54
     },
-    "rotation": 0.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -26,22 +26,9 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "deadline",
+                      "type": "wait",
                       "data": {
-                        "commands": [
-                          {
-                            "type": "wait",
-                            "data": {
-                              "waitTime": 1.3
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "rotateSourceStart"
-                            }
-                          }
-                        ]
+                        "waitTime": 1.1
                       }
                     },
                     {
@@ -57,7 +44,7 @@
                           {
                             "type": "wait",
                             "data": {
-                              "waitTime": 3.0
+                              "waitTime": 10.0
                             }
                           },
                           {
@@ -69,10 +56,16 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "SourceToSource1Ring"
+                              "pathName": "CenterToCenterRing"
                             }
                           }
                         ]
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "driveStop"
                       }
                     },
                     {
@@ -94,7 +87,7 @@
                           {
                             "type": "wait",
                             "data": {
-                              "waitTime": 3.0
+                              "waitTime": 10.0
                             }
                           },
                           {
@@ -106,10 +99,102 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "SourceFarToAmp"
+                              "pathName": "CenterRingtoSourceRing"
                             }
                           }
                         ]
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "driveStop"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.3
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "autoShoot"
+                      }
+                    },
+                    {
+                      "type": "race",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 10.0
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "autoIntake"
+                            }
+                          },
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "SourceRingtoAmpRing"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "driveStop"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.3
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "autoShoot"
+                      }
+                    },
+                    {
+                      "type": "race",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 10.0
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "autoIntake"
+                            }
+                          },
+                          {
+                            "type": "path",
+                            "data": {
+                              "pathName": "AmpRingToAmpFar"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "driveStop"
                       }
                     },
                     {
