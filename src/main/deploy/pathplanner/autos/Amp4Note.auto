@@ -26,7 +26,7 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "race",
+                      "type": "deadline",
                       "data": {
                         "commands": [
                           {
@@ -57,7 +57,7 @@
                           {
                             "type": "wait",
                             "data": {
-                              "waitTime": 2.4
+                              "waitTime": 2.5
                             }
                           },
                           {
@@ -98,6 +98,12 @@
                       "data": {
                         "commands": [
                           {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 10.0
+                            }
+                          },
+                          {
                             "type": "named",
                             "data": {
                               "name": "autoIntake"
@@ -106,7 +112,7 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "AmpRingToAmpFar"
+                              "pathName": "AmpRingToAmpFar2"
                             }
                           }
                         ]
@@ -134,6 +140,12 @@
                       "type": "race",
                       "data": {
                         "commands": [
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 10.0
+                            }
+                          },
                           {
                             "type": "named",
                             "data": {
