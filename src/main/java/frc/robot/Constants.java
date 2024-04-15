@@ -14,6 +14,8 @@ public class Constants {
     public static final boolean dataLogging = false;
     public static final boolean debugDashboard = false;
 
+    public static final double inchesPerMeter = 39.3701;
+
     public static class Vision {
         public static class LimeLight3g {
             public static final double targetAreaThreshold = 0.09;

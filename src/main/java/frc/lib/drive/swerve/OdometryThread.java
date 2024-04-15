@@ -59,13 +59,7 @@ public class OdometryThread extends Thread {
                 if (drivetrain.useLimeLightForOdometry()) {
                     if (slowLoopCount >= odometryCyclesForLimelightRefresh) {
                         slowLoopCount = 0;
-                        drivetrain.calculateBlendedVisionPose();
-                        if (drivetrain.latestVisionPoseValid) {
-                            drivetrain.swerveDrivePoseEstimator.addVisionMeasurement(
-                                drivetrain.latestVisionPose,
-                                Timer.getFPGATimestamp() - drivetrain.limeLightBlendedLatency / 1000
-                            );
-                        }
+                        drivetrain.doLimelightPoseUpdate();
                     } else {
                         slowLoopCount++;
                     }

@@ -120,25 +120,13 @@ public class Drivetrain extends SubsystemBase {
     public final LimeLight limeLightCameraRight;
     public final ArrayList<LimeLight> limelightList;
     public double limeLightBlendedLatency = 0.0;
-    private double[] limelightFrontBotPose;
-    private double[] limelightBackBotPose;
-    private double[] limelightLeftBotPose;
-    private double[] limelightRightBotPose;
-    private double limelightTotalArea = 0.0;
     private MedianFilter limelightXMedianFilter;
     private MedianFilter limelightYMedianFilter;
     private MedianFilter limelightAngleMedianFilter;
-    private LimelightHelpers.PoseEstimate limelightPoseEstimate = null;
     private Translation2d lastOdometryTranslation = new Translation2d();
     private double lastDistanceMoved = 0.0;
 
     private DataLog mDataLog;
-    private StructPublisher<Pose2d> odometryPosePublisher;
-    private StructPublisher<Pose2d> limelightPosePublisher;
-    private StructPublisher<Pose2d> limelightBackPosePublisher;
-    private StructPublisher<Pose2d> limelightFrontPosePublisher;
-    private StructPublisher<Pose2d> limelightLeftPosePublisher;
-    private StructPublisher<Pose2d> limelightRightPosePublisher;
     private LimelightHelpers.PoseEstimate tempPoseEstimate;
     private final Field2d fieldForPosePublishing = new Field2d();
     private final Field2d fieldForFrontPosePublishing = new Field2d();
@@ -313,17 +301,10 @@ public class Drivetrain extends SubsystemBase {
 
         // Limelight
         limeLightCameraFront = new LimeLight("limelight-front", LimeLightModel.LL3);
-        limelightFrontBotPose = new double[7];
-
         limeLightCameraBack = new LimeLight("limelight-back", LimeLightModel.LL3);
-        limelightBackBotPose = new double[7];
-
         limeLightCameraLeft = new LimeLight("limelight-left", LimeLightModel.LL2);
-        limelightLeftBotPose = new double[7];
         limeLightCameraLeft.setStreamMode(StreamMode.PiPSecondary);
-
         limeLightCameraRight = new LimeLight("limelight-right", LimeLightModel.LL2);
-        limelightRightBotPose = new double[7];
 
         limelightList = new ArrayList<LimeLight>();
         limelightList.add(limeLightCameraFront);
@@ -365,19 +346,6 @@ public class Drivetrain extends SubsystemBase {
                 VecBuilder.fill(0.1, 0.1, 0.1),
                 // Global measurement standard deviations. X, Y, and theta.
                 VecBuilder.fill(0.9, 0.9, 9999999.0));
-
-        odometryPosePublisher = NetworkTableInstance.getDefault()
-            .getStructTopic("OdometryPose", Pose2d.struct).publish();
-        limelightPosePublisher = NetworkTableInstance.getDefault()
-            .getStructTopic("LLBestMT2Pose", Pose2d.struct).publish();
-        limelightFrontPosePublisher = NetworkTableInstance.getDefault()
-            .getStructTopic("LLFrontMT2Pose", Pose2d.struct).publish();
-        limelightBackPosePublisher = NetworkTableInstance.getDefault()
-            .getStructTopic("LLBackMT2Pose", Pose2d.struct).publish();
-        limelightLeftPosePublisher = NetworkTableInstance.getDefault()
-            .getStructTopic("LLLeftMT2Pose", Pose2d.struct).publish();
-        limelightRightPosePublisher = NetworkTableInstance.getDefault()
-            .getStructTopic("LLRightMT2Pose", Pose2d.struct).publish();
 
         // Configure AutoBuilder last
         AutoBuilder.configureHolonomic(
@@ -447,50 +415,34 @@ public class Drivetrain extends SubsystemBase {
                         tempPoseEstimate = limelight.getLimelightMeasurement();
                         if (tempPoseEstimate != null) {
                             if (limelight.networkTableName == limeLightCameraBack.networkTableName) {
-                                limelightBackPosePublisher.set(tempPoseEstimate.pose);
                                 fieldForBackPosePublishing.setRobotPose(tempPoseEstimate.pose);
                                 SmartDashboard.putData("LL Field " + limelight.networkTableName, fieldForBackPosePublishing);
                             } else if (limelight.networkTableName == limeLightCameraFront.networkTableName) {
-                                limelightFrontPosePublisher.set(tempPoseEstimate.pose);
                                 fieldForFrontPosePublishing.setRobotPose(tempPoseEstimate.pose);
                                 SmartDashboard.putData("LL Field " + limelight.networkTableName, fieldForFrontPosePublishing);
                             } else if (limelight.networkTableName == limeLightCameraLeft.networkTableName) {
-                                limelightLeftPosePublisher.set(tempPoseEstimate.pose);
                                 fieldForLeftPosePublishing.setRobotPose(tempPoseEstimate.pose);
                                 SmartDashboard.putData("LL Field " + limelight.networkTableName, fieldForLeftPosePublishing);
                             } else if (limelight.networkTableName == limeLightCameraRight.networkTableName) {
-                                limelightRightPosePublisher.set(tempPoseEstimate.pose);
                                 fieldForRightPosePublishing.setRobotPose(tempPoseEstimate.pose);
                                 SmartDashboard.putData("LL Field " + limelight.networkTableName, fieldForRightPosePublishing);
                             }
                             SmartDashboard.putNumber("LL #Tags " + limelight.networkTableName,
                                     tempPoseEstimate.tagCount);
                             SmartDashboard.putNumber("LL Dist " + limelight.networkTableName, tempPoseEstimate.avgTagDist);
+                            SmartDashboard.putNumber("LL Area " + limelight.networkTableName, tempPoseEstimate.avgTagArea);
+                            SmartDashboard.putNumber("LL Latency " + limelight.networkTableName, tempPoseEstimate.latency);
                         } else {
                             SmartDashboard.putNumber("LL #Tags " + limelight.networkTableName, 0.0);
                             SmartDashboard.putNumber("LL Dist " + limelight.networkTableName, -1.0);
+                            SmartDashboard.putNumber("LL Area " + limelight.networkTableName, -1.0);
+                            SmartDashboard.putNumber("LL Latency " + limelight.networkTableName, -1.0);
                         }
                     }
                 }
 
                 if (useLimeLightForOdometry()) {
                     doLimelightPoseUpdate();
-                    //
-
-                    // calculateBlendedVisionPose();
-                    // if (latestVisionPoseValid) {
-                    //     swerveDrivePoseEstimator.addVisionMeasurement(
-                    //             latestVisionPose, Timer.getFPGATimestamp() - limeLightBlendedLatency / 1000);
-                    // }
-                    // limelightPoseEstimate = findBestLimelightPose(lastDistanceMoved);
-                    // if (limelightPoseEstimate != null) {
-                    // // TODO: Do we still need to do trust calibration scaled by something here?
-                    // swerveDrivePoseEstimator.addVisionMeasurement(
-                    // limelightPoseEstimate.pose,
-                    // // timestamp is latency-corrected NT-referenced FPGA time
-                    // limelightPoseEstimate.timestampSeconds);
-                    // limelightPosePublisher.set(limelightPoseEstimate.pose);
-                    // }
                 }
 
                 // Update odometry via wheel encoders
@@ -512,14 +464,7 @@ public class Drivetrain extends SubsystemBase {
 
         if (dashboardCounter++ >= 5) {
             if (Constants.debugDashboard) {
-                if (limelightPoseEstimate != null) {
-                    SmartDashboard.putNumber("LLMT2 X (m)", limelightPoseEstimate.pose.getX());
-                    SmartDashboard.putNumber("LLMT2 Y (m)", limelightPoseEstimate.pose.getY());
-                    SmartDashboard.putNumber("LLMT2 Th (deg)", limelightPoseEstimate.pose.getRotation().getDegrees());
-                    SmartDashboard.putNumber("LLMT2 # Tags", limelightPoseEstimate.tagCount);
-                    SmartDashboard.putNumber("LLMT2 Tag Dist", limelightPoseEstimate.avgTagDist);
-                    SmartDashboard.putNumber("LLMT2 Tag Dist", limelightPoseEstimate.latency);
-                }
+                SmartDashboard.putData("Drivetrain", this);
 
                 SmartDashboard.putNumber("Odometry Rotation (deg)", latestSwervePose.getRotation().getDegrees());
                 SmartDashboard.putNumber("Odometry X (in)", (latestSwervePose.getX() * (100 / 2.54)));
@@ -542,88 +487,12 @@ public class Drivetrain extends SubsystemBase {
                 SmartDashboard.putNumber("Gyro Yaw (adj deg)", getGyroYaw());
 
                 SmartDashboard.putBoolean("IsAutoRotate", isAutoRotate());
-
-                SmartDashboard.putData("Drivetrain", this);
                 SmartDashboard.putNumber("Speaker Aim Difference", calculateDistanceFromSpeaker());
-            }
 
-            if (Constants.debugDashboard) {
-                SmartDashboard.putNumber("Wheel speed (m)", frontLeftModule.getWheelSpeedMeters());
-                SmartDashboard.putBoolean(
-                    "LL Seeing Target?",
-                    (limeLightCameraBack.getTargetID() > -1) || (limeLightCameraFront.getTargetID() > -1) ||
-                        (limeLightCameraLeft.getTargetID() > -1) || (limeLightCameraRight.getTargetID() > -1));
-                SmartDashboard.putBoolean("Latest LL Pose OK?", latestVisionPoseValid);
-
-                if (limelightFrontBotPose != null && limelightFrontBotPose.length >= 6) {
-                    SmartDashboard.putNumber("LL Front X (m)",
-                            limelightFrontBotPose[0]);
-                    SmartDashboard.putNumber("LL Front Y (m)",
-                            limelightFrontBotPose[1]);
-                    SmartDashboard.putNumber("LL Front Yaw (deg)",
-                            limelightFrontBotPose[5]);
-                    // SmartDashboard.putNumber("LL Front Latency (ms)",
-                    // limelightFrontBotPose[6]);
-                    SmartDashboard.putNumber("LL Front Tid",
-                            limeLightCameraFront.getTargetID());
-                    SmartDashboard.putNumber("LL Front Ta",
-                            limeLightCameraFront.getTargetArea());
-                }
-                if (limelightBackBotPose != null && limelightBackBotPose.length >= 6) {
-                    SmartDashboard.putNumber("LL Back X (m)",
-                            limelightBackBotPose[0]);
-                    SmartDashboard.putNumber("LL Back Y (m)",
-                            limelightBackBotPose[1]);
-                    SmartDashboard.putNumber("LL Back Yaw (deg)",
-                            limelightBackBotPose[5]);
-                    // SmartDashboard.putNumber("LL Back Latency (ms)",
-                    // limelightBackBotPose[6]);
-                    SmartDashboard.putNumber("LL Back Tid",
-                            limeLightCameraBack.getTargetID());
-                    SmartDashboard.putNumber("LL Back Ta",
-                            limeLightCameraBack.getTargetArea());
-                }
-                if (limelightLeftBotPose != null && limelightLeftBotPose.length >= 6) {
-                    SmartDashboard.putNumber("LL Left X (m)",
-                            limelightLeftBotPose[0]);
-                    SmartDashboard.putNumber("LL Left Y (m)",
-                            limelightLeftBotPose[1]);
-                    SmartDashboard.putNumber("LL Left Yaw (deg)",
-                            limelightLeftBotPose[5]);
-                    // SmartDashboard.putNumber("LL Left Latency (ms)",
-                    // limelightLeftBotPose[6]);
-                    SmartDashboard.putNumber("LL Left Tid",
-                            limeLightCameraLeft.getTargetID());
-                    SmartDashboard.putNumber("LL Left Ta",
-                            limeLightCameraLeft.getTargetArea());
-                }
-                if (limelightRightBotPose != null && limelightRightBotPose.length >= 6) {
-                    SmartDashboard.putNumber("LL Right X (m)",
-                            limelightRightBotPose[0]);
-                    SmartDashboard.putNumber("LL Right Y (m)",
-                            limelightRightBotPose[1]);
-                    SmartDashboard.putNumber("LL Right Yaw (deg)",
-                            limelightRightBotPose[5]);
-                    // SmartDashboard.putNumber("LL Right Latency (ms)",
-                    // limelightRightBotPose[6]);
-                    SmartDashboard.putNumber("LL Right Tid",
-                            limeLightCameraRight.getTargetID());
-                    SmartDashboard.putNumber("LL Right Ta",
-                            limeLightCameraRight.getTargetArea());
-                }
-
-                if (latestVisionPose != null) {
-                    SmartDashboard.putNumber("LL All X (m)", latestVisionPose.getX());
-                    SmartDashboard.putNumber("LL All Y (m)", latestVisionPose.getY());
-                    SmartDashboard.putNumber("LL All Th (deg)", latestVisionPose.getRotation().getDegrees());
-                    SmartDashboard.putNumber("LL All FPGATime", Timer.getFPGATimestamp());
-                    SmartDashboard.putNumber("LL All Latency", limeLightBlendedLatency);
-                }
-
-                SmartDashboard.putBoolean("LL updating Odom", useLimelightOdometryUpdates);
-                SmartDashboard.putBoolean("Latest LL Pose Valid?", latestVisionPoseValid);
-                SmartDashboard.putNumber("LL Total Area", limelightTotalArea);
-
+                SmartDashboard.putNumber("FL wheel speed (m)", frontLeftModule.getWheelSpeedMeters());
+                SmartDashboard.putNumber("FR wheel speed (m)", frontRightModule.getWheelSpeedMeters());
+                SmartDashboard.putNumber("RL wheel speed (m)", rearLeftModule.getWheelSpeedMeters());
+                SmartDashboard.putNumber("RR wheel speed (m)", rearRightModule.getWheelSpeedMeters());
             }
             dashboardCounter = 0;
         }
@@ -824,7 +693,6 @@ public class Drivetrain extends SubsystemBase {
             latestSwervePose = resetPose;
             fieldForPosePublishing.setRobotPose(this.latestSwervePose);
             SmartDashboard.putData("Odom Pose Field", fieldForPosePublishing);
-            this.odometryPosePublisher.set(this.latestSwervePose);
         }
     }
 
@@ -885,10 +753,8 @@ public class Drivetrain extends SubsystemBase {
         for (LimeLight limelight : limelightList) {
             limelightPoseEstimate = limelight.getLimelightMeasurement();
             
-
-            // If we got a reading from the LimeLight, keep the one with the most tags seen.
-            // LL3s come first in the list, so we'll always land on a 3g if a LL2 and LL3
-            // see the same max number of tags.
+            // If we got a reading from the LimeLight, add it to the pose estimator with.
+            // a trust factor calculated based on average distance from the targets seen.
             if (limelightPoseEstimate != null) {
                 trustFactor = calculateVisionTrustFactor(limelightPoseEstimate, limelight);
                 if (trustFactor > 0.0) {
@@ -896,6 +762,9 @@ public class Drivetrain extends SubsystemBase {
                         trustFactor /= 10.0; // Move to odometry fast under disable
                     }
 
+                    // We see consistent errors based on Limelight readings, so this adjustment
+                    // factor corrects for that so that our odometry values match actual robot 
+                    // position on the field. This can be calibrated on the field at competitions.
                     adjustedRobotPose = new Pose2d(limelightPoseEstimate.pose.getX() + xAdjustment,
                             limelightPoseEstimate.pose.getY() + yAdjustment,
                             limelightPoseEstimate.pose.getRotation());
@@ -908,7 +777,6 @@ public class Drivetrain extends SubsystemBase {
                 }
             }
         }
-
     }
 
     public double calculateVisionTrustFactor(PoseEstimate visionEstimate, LimeLight ll) {
@@ -919,60 +787,6 @@ public class Drivetrain extends SubsystemBase {
             return -1; // Don't trust any readings further than this
         } else {
             return Math.pow(distance, 1.) * ll.model.trustFactor;
-        }
-    }
-
-    public void calculateBlendedVisionPose() {
-        double x = 0.0;
-        double y = 0.0;
-        double theta = 0.0;
-        limelightTotalArea = 0.0;
-        limeLightBlendedLatency = 0.0;
-        latestVisionPoseValid = false;
-
-        double[] limelightBotPose = new double[7];
-
-        SmartDashboard.putString("Alliance Color", getAllianceCoordinateSpace().toString());
-        limelightFrontBotPose = limeLightCameraFront.getBotPose(CoordinateSpace.Blue);
-        limelightBackBotPose = limeLightCameraBack.getBotPose(CoordinateSpace.Blue);
-        limelightLeftBotPose = limeLightCameraLeft.getBotPose(CoordinateSpace.Blue);
-        limelightRightBotPose = limeLightCameraRight.getBotPose(CoordinateSpace.Blue);
-
-        for (LimeLight limelight: limelightList) {
-            limelightBotPose = limelight.getBotPose(CoordinateSpace.Blue);
-            if (limelightBotPose != null && limelight.getTargetID() != -1) {
-                double limelightTargetArea = limelight.getTargetArea();
-                if (limelightTargetArea >= limelight.model.targetAreaThreshold) {
-                    limelightTotalArea += limelightTargetArea;
-                    x += limelightBotPose[0] * limelightTargetArea;
-                    y += limelightBotPose[1] * limelightTargetArea;
-                    theta += limelightBotPose[5] * limelightTargetArea;
-                    limeLightBlendedLatency += limelightBotPose[6];
-                }
-            }
-        }
-
-        if (limelightTotalArea <= Constants.Vision.totalTargetAreaThreshold) {
-            limeLightBlendedLatency = 0.0;
-            latestVisionPoseValid = false;
-            limelightXMedianFilter.reset();
-            limelightYMedianFilter.reset();
-            limelightAngleMedianFilter.reset();
-            return;
-        } else {
-            latestVisionPoseValid = true;
-
-            x /= limelightTotalArea;
-            y /= limelightTotalArea;
-            theta /= limelightTotalArea;
- 
-            limeLightBlendedLatency /= limelightTotalArea;
-
-            latestVisionPose = new Pose2d(
-                    limelightXMedianFilter.calculate(x),
-                    limelightYMedianFilter.calculate(y),
-                    Rotation2d.fromDegrees(limelightAngleMedianFilter.calculate(theta)));
-            return;
         }
     }
 
@@ -1087,7 +901,6 @@ public class Drivetrain extends SubsystemBase {
         this.lastDistanceMoved = lastOdometryTranslation.getDistance(this.latestSwervePose.getTranslation());
         fieldForPosePublishing.setRobotPose(this.latestSwervePose);
         SmartDashboard.putData("Odom Pose Field", fieldForPosePublishing);
-        this.odometryPosePublisher.set(this.latestSwervePose);
     }
 
     public ChassisSpeeds getRobotChassisSpeeds() {
@@ -1127,10 +940,10 @@ public class Drivetrain extends SubsystemBase {
     // goal changes depending on alliance
     if (DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == (DriverStation.Alliance.Red)) {
       return latestSwervePose.getTranslation()
-          .getDistance(Constants.DrivetrainConstants.Field.redGoalTarget) * 39.3701; // Inches
+          .getDistance(Constants.DrivetrainConstants.Field.redGoalTarget) * Constants.inchesPerMeter; // Inches
     } else {
       return latestSwervePose.getTranslation()
-          .getDistance(Constants.DrivetrainConstants.Field.blueGoalTarget) * 39.3701; // Inches
+          .getDistance(Constants.DrivetrainConstants.Field.blueGoalTarget) * Constants.inchesPerMeter; // Inches
     }
   }
 }
