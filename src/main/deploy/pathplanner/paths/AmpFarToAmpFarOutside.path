@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.8,
-        "y": 5.54
+        "x": 3.6,
+        "y": 6.25
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.131192813869048,
-        "y": 5.3407977965345115
+        "x": 5.112834841054298,
+        "y": 6.747527113287845
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.4699559370628714,
-        "y": 4.31
+        "x": 8.10653837831892,
+        "y": 7.320540680967402
       },
       "prevControl": {
-        "x": 1.673849816814228,
-        "y": 4.091070816931623
+        "x": 8.591962477170956,
+        "y": 7.403166059495408
       },
       "nextControl": {
-        "x": 2.9377221147604686,
-        "y": 4.438635698866839
+        "x": 7.556913119524241,
+        "y": 7.2269874454278815
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.73,
-        "y": 5.25
+        "x": 3.6,
+        "y": 6.25
       },
       "prevControl": {
-        "x": 2.5518150181599504,
-        "y": 5.0583214835945345
+        "x": 4.804497907571315,
+        "y": 6.577436324388319
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,28 +46,28 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": -20.0,
+      "waypointRelativePos": 0.4,
+      "rotationDegrees": 14.0,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.3,
-    "maxAcceleration": 2.5,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 360.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -0.7468323649635134,
+    "rotation": 14.0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 14.0,
     "velocity": 0
   },
   "useDefaultConstraints": false

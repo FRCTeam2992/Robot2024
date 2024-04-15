@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.25,
-        "y": 6.58
+        "x": 3.2,
+        "y": 7.05
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.2499999999999996,
-        "y": 6.58
+        "x": 4.5865978911445,
+        "y": 7.71814193201036
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.53530363256189,
-        "y": 5.451373974301177
+        "x": 8.153314996088682,
+        "y": 5.613194132371171
       },
       "prevControl": {
-        "x": 9.306330349190889,
-        "y": 5.307927143300431
+        "x": 8.866658417077518,
+        "y": 5.432835029202822
       },
       "nextControl": {
-        "x": 7.919248229421416,
-        "y": 5.565988933024987
+        "x": 7.372823330965771,
+        "y": 5.810530748382581
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.0670278113984466,
-        "y": 6.84
+        "x": 3.6,
+        "y": 6.25
       },
       "prevControl": {
-        "x": 5.505170661301183,
-        "y": 6.597523561539269
+        "x": 4.804497907571315,
+        "y": 6.577436324388319
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,13 +46,18 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.75,
-      "rotationDegrees": -16.520420304174753,
+      "waypointRelativePos": 0.35,
+      "rotationDegrees": -25.0,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 0.25,
-      "rotationDegrees": 43.24641433285081,
+      "waypointRelativePos": 1.2,
+      "rotationDegrees": -25.0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.75,
+      "rotationDegrees": 14.0,
       "rotateFast": false
     }
   ],
@@ -66,13 +71,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 37.53530207460961,
+    "rotation": 14.0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 40.33385576185418,
+    "rotation": 28.29,
     "velocity": 0
   },
   "useDefaultConstraints": false
