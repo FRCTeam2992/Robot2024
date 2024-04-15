@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import frc.lib.drive.swerve.OdometryThread;
@@ -340,7 +341,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("pivot1stShot", new SetPivotTargetAngle(mShooterPivot, 56));
     NamedCommands.registerCommand("autoShoot",
         new AutoShoot(mIntake, mFeeder, mRobotState, mElevator, mShooterPivot, mShooter, 0).withTimeout(0.4));
-    NamedCommands.registerCommand("autoIntake", new AutoIntake(mFeeder, mIntake, mRobotState));
+    NamedCommands.registerCommand("autoIntake",
+        new AutoIntake(mFeeder, mIntake, mRobotState).andThen(new WaitCommand(10.0)));
     NamedCommands.registerCommand("stopShooter", new StopShooter(mShooter).withTimeout(0.1));
     NamedCommands.registerCommand("stopIntake", new StopIntake(mIntake).withTimeout(0.1));
     NamedCommands.registerCommand("stopFeeder", new MoveFeeder(mFeeder, 0, false));
@@ -353,8 +355,8 @@ public class RobotContainer {
       new SetShooterSpeedTarget(mShooter, 3000.0),
       new SetPivotToTargetAngle(mShooterPivot),
       new StartShooter(mShooter)));
-    NamedCommands.registerCommand("rotateAmpStart", new AutoRotateToHeading(mDrivetrain, -41.0));
-    NamedCommands.registerCommand("rotateSourceStart", new AutoRotateToHeading(mDrivetrain, 41.0));
+    NamedCommands.registerCommand("rotateAmpStart", new AutoRotateToHeading(mDrivetrain, -40.5));
+    NamedCommands.registerCommand("rotateSourceStart", new AutoRotateToHeading(mDrivetrain, 40.5));
 
     
   }

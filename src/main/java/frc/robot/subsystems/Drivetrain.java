@@ -242,7 +242,7 @@ public class Drivetrain extends SubsystemBase {
         setDriveNeutralMode(NeutralModeValue.Coast);
         setTurnNeutralMode(NeutralModeValue.Brake);
 
-        setDriveCurrentLimit(40.0, 60.0);
+        setDriveCurrentLimit(40.0, 50.0);
         setTurnCurrentLimit(60.0); // potentially unused
 
         frontLeftController = new PIDController(Constants.DrivetrainConstants.PIDConstants.turnP,
@@ -660,10 +660,10 @@ public class Drivetrain extends SubsystemBase {
 
     public void setDriveCurrentLimit(double currentLimit, double triggerCurrent) {
 
-        driveMotorConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
-        driveMotorConfigs.CurrentLimits.SupplyCurrentLimit = currentLimit;
-        driveMotorConfigs.CurrentLimits.SupplyCurrentThreshold = triggerCurrent;
-        driveMotorConfigs.CurrentLimits.SupplyTimeThreshold = 0.02;
+        driveMotorConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
+        driveMotorConfigs.CurrentLimits.StatorCurrentLimit = currentLimit;
+        // driveMotorConfigs.CurrentLimits.SupplyCurrentThreshold = triggerCurrent;
+        // driveMotorConfigs.CurrentLimits.SupplyTimeThreshold = 0.02;
 
         frontLeftDrive.getConfigurator().apply(driveMotorConfigs);
         frontRightDrive.getConfigurator().apply(driveMotorConfigs);
@@ -696,10 +696,10 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void setTurnCurrentLimit(double current) {
-        turnMotorConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
-        turnMotorConfigs.CurrentLimits.SupplyCurrentLimit = current;
-        turnMotorConfigs.CurrentLimits.SupplyCurrentThreshold = current;
-        turnMotorConfigs.CurrentLimits.SupplyTimeThreshold = 0;
+        turnMotorConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
+        turnMotorConfigs.CurrentLimits.StatorCurrentLimit = current;
+        // turnMotorConfigs.CurrentLimits.SupplyCurrentThreshold = current;
+        // turnMotorConfigs.CurrentLimits.SupplyTimeThreshold = 0;
 
         frontLeftTurn.getConfigurator().apply(turnMotorConfigs);
         frontRightTurn.getConfigurator().apply(turnMotorConfigs);

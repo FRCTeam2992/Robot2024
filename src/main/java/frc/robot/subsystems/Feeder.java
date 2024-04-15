@@ -37,8 +37,9 @@ public class Feeder extends SubsystemBase {
     feedMotorConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     feedMotorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     feedMotorConfigs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin; // Not sure if
-                                                                                                      // sensor settings
-                                                                                                      // are correct
+    feedMotorConfigs.CurrentLimits.StatorCurrentLimit = 50.0;
+    feedMotorConfigs.CurrentLimits.StatorCurrentLimitEnable = true; // sensor settings
+    // // are correct
     feedMotorConfigs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue.NormallyOpen;
     feedMotorConfigs.HardwareLimitSwitch.ReverseLimitEnable = true;
 
