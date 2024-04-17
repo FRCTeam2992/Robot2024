@@ -283,6 +283,8 @@ public class Constants {
 
         public static final double pivotGearRatio = 60.0;
 
+        public static final double joystickDeadband = 0.1;
+
         public static class PIDController {
             public static final boolean useCodePID = true; // Whether to overwrite PID values in motor
             public static final double P = 0.4; // Place holder

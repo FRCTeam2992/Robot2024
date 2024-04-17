@@ -33,11 +33,13 @@ import frc.robot.commands.DriveSticks;
 import frc.robot.commands.ElevatorSticks;
 import frc.robot.commands.HoldElevatorPosition;
 import frc.robot.commands.HoldShooterPivot;
+import frc.robot.commands.MoveElevator;
 import frc.robot.commands.MoveElevatorToTarget;
 import frc.robot.commands.MoveFeeder;
 import frc.robot.commands.MoveIntake;
 import frc.robot.commands.MoveShooter;
 import frc.robot.commands.MoveShooterPivot;
+import frc.robot.commands.PivotSticks;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.SetElevatorTargetPosition;
 import frc.robot.commands.SetNoteLocation;
@@ -172,6 +174,10 @@ public class RobotContainer {
     controller0.b().onTrue(new InstantCommand(() -> {mDrivetrain.setEndgameTargetAngle(-60.0);}));
     controller0.b().whileTrue(new AutoRotateBot(mDrivetrain, true));
 
+    // POV
+    controller0.povUp().whileTrue(new MoveElevator(mElevator, mShooterPivot, 0.15));
+    controller0.povDown().whileTrue(new MoveElevator(mElevator, mShooterPivot, -0.05));
+
     // Start/Back
     controller0.start().onTrue(new ResetGyro(mDrivetrain));
 
@@ -200,11 +206,9 @@ public class RobotContainer {
             .andThen(new MoveElevatorToTarget(mElevator)));
     controller1.rightBumper().onTrue(new SetOnTarget(mElevator, mShooter, mShooterPivot, mRobotState));
     // POV
-    controller1.povUp().whileTrue(new MoveShooterPivot(mShooterPivot, 0.13));
-    controller1.povDown().whileTrue(new MoveShooterPivot(mShooterPivot, -0.10));
     controller1.povLeft().onTrue( new AutoResetNote(mFeeder, mIntake));
-    // controller1.povLeft().whileTrue(new MoveFeeder(mFeeder, 0.4, false));
-    // controller1.povLeft().whileTrue(new MoveIntake(mIntake, 0.3));
+    controller1.povUp().whileTrue(new MoveFeeder(mFeeder, 0.3, false));
+    controller1.povUp().whileTrue(new MoveIntake(mIntake, 0.45, false));
     controller1.povRight().onTrue(new InstantCommand(() -> {mRobotState.setRobotMode(RobotModeState.Endgame); }));
 
     // ABXY
@@ -225,9 +229,14 @@ public class RobotContainer {
     controller1.x().onTrue(new StartShooter(mShooter));
 
     controller1.axisGreaterThan(1, Constants.Elevator.Climb.joyStickDeadBand)
-        .whileTrue(new ElevatorSticks(mElevator, mShooterPivot));
+        .whileTrue(new ElevatorSticks(mElevator));
     controller1.axisLessThan(1, -Constants.Elevator.Climb.joyStickDeadBand)
-        .whileTrue(new ElevatorSticks(mElevator, mShooterPivot));
+        .whileTrue(new ElevatorSticks(mElevator));
+
+    controller1.axisGreaterThan(5, Constants.ShooterPivot.joystickDeadband)
+        .whileTrue(new PivotSticks(mShooterPivot));
+    controller1.axisLessThan(5, -Constants.ShooterPivot.joystickDeadband)
+        .whileTrue(new PivotSticks(mShooterPivot));
 
     //middle buttos
     controller1.start().onTrue(new InstantCommand(() -> {
