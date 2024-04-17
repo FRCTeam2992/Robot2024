@@ -19,6 +19,7 @@ public class PivotSticks extends Command {
     mPivot = pivot;
 
     mMedianFilter = new MedianFilter(5);
+    addRequirements(mPivot);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -34,9 +35,9 @@ public class PivotSticks extends Command {
     pivotY = -mMedianFilter.calculate(Robot.mRobotContainer.controller1.getRightY());
 
     if (pivotY > 0.0){
-      mPivot.setPivotSpeed((pivotY * 0.16) + 0.022);
+      mPivot.setPivotSpeed((pivotY * 0.19) + 0.022);
     } else {
-      mPivot.setPivotSpeed((pivotY * 0.13) + 0.018);
+      mPivot.setPivotSpeed((pivotY * 0.16) + 0.018);
     }
   }
 

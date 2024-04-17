@@ -239,7 +239,7 @@ public class RobotContainer {
 
     controller1.axisGreaterThan(5, Constants.ShooterPivot.joystickDeadband)
         .whileTrue(new PivotSticks(mShooterPivot));
-    controller1.axisGreaterThan(5, -Constants.ShooterPivot.joystickDeadband)
+    controller1.axisLessThan(5, -Constants.ShooterPivot.joystickDeadband)
         .whileTrue(new PivotSticks(mShooterPivot));
 
     //middle buttos
