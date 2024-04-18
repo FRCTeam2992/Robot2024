@@ -25,6 +25,7 @@ public class AutoAim extends Command {
   private MyRobotState mState;
   private NoteInterpolator mInterpolator;
   private Drivetrain mDrivetrain;
+  private Double calcDistance;
 
   private boolean abort = false;
 
@@ -167,11 +168,17 @@ public class AutoAim extends Command {
   private double calculateDistance() {
     // goal changes depending on alliance
     if (DriverStation.getAlliance().orElse(DriverStation.Alliance.Red) == (DriverStation.Alliance.Red)) {
-      return mDrivetrain.latestSwervePose.getTranslation()
+      calcDistance =  mDrivetrain.latestSwervePose.getTranslation()
           .getDistance(Constants.DrivetrainConstants.Field.redGoalTarget) * 39.3701; // Inches
     } else {
-      return mDrivetrain.latestSwervePose.getTranslation()
+      calcDistance = mDrivetrain.latestSwervePose.getTranslation()
           .getDistance(Constants.DrivetrainConstants.Field.blueGoalTarget) * 39.3701; // Inches
     }
+
+    if (Constants.DrivetrainConstants.Field.isPracticeField){
+      calcDistance += 2.0;
+    }
+
+    return calcDistance;
   }
 }

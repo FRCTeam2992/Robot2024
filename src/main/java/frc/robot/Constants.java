@@ -210,6 +210,8 @@ public class Constants {
             public static double redAmpX = 14.679242;
             public static double blueAmpX = 1.821445;
 
+            public static boolean isPracticeField = false;
+
         }
 
         public static class StageAngles{
@@ -224,7 +226,7 @@ public class Constants {
 
         public static class Speeds {
             public static final double intakingPieceSpeed = 0.6;
-            public static final double outakingPieceSpeed = -0.8;
+            public static final double outakingPieceSpeed = 0.6;
         }
     }
 
@@ -234,7 +236,7 @@ public class Constants {
         public static class Speeds {
             public static final double intakingPieceSpeed = 0.40;
             public static final double outakingPieceSpeed = -0.4;
-            public static final double speekerShootingSpeed = 0.5;
+            public static final double speekerShootingSpeed = 0.8;
             public static final double ampShootingSpeed = -0.65;
             public static final double trapShootingSpeed = -0.65;
         }

@@ -94,6 +94,7 @@ public class AutoShoot extends Command {
   @Override
   public void end(boolean interrupted) {
     mState.setLEDMode(LEDModeState.idle);
+    mFeeder.setFeederSpeed(0.0);
   }
 
   // Returns true when the command should end.

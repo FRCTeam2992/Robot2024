@@ -188,9 +188,9 @@ public class RobotContainer {
     // Controller 1 (B)
 
     // Triggers
-    controller1.rightTrigger(0.3)
-        .onTrue(new SetPivotTargetAngle(mShooterPivot, 5.0)
-            .andThen(new SetPivotToTargetAngle(mShooterPivot).withTimeout(2.0)));
+    // controller1.rightTrigger(0.3)
+    //     .onTrue(new SetPivotTargetAngle(mShooterPivot, 5.0)
+    //         .andThen(new SetPivotToTargetAngle(mShooterPivot).withTimeout(2.0)));
     controller1.rightTrigger(0.3).whileTrue(new MoveIntake(mIntake, Constants.Intake.Speeds.outakingPieceSpeed, false)
         .alongWith(new MoveFeeder(mFeeder, Constants.Feeder.Speeds.outakingPieceSpeed, false)));
 
@@ -208,7 +208,10 @@ public class RobotContainer {
             .andThen(new MoveElevatorToTarget(mElevator)));
     controller1.rightBumper().onTrue(new SetOnTarget(mElevator, mShooter, mShooterPivot, mRobotState));
     // POV
-    controller1.povLeft().onTrue( new AutoResetNote(mFeeder, mIntake));
+    controller1.povLeft().onTrue(new SetPivotTargetAngle(mShooterPivot, 34.0)
+            .andThen(new SetPivotToTargetAngle(mShooterPivot).withTimeout(2.0)).andThen( new AutoResetNote(mFeeder, mIntake))
+            .andThen(new SetPivotTargetAngle(mShooterPivot, Constants.ShooterPivot.Positions.intakingPiece))
+            .andThen(new SetPivotToTargetAngle(mShooterPivot)));
     controller1.povUp().whileTrue(new MoveFeeder(mFeeder, 0.3, false));
     controller1.povUp().whileTrue(new MoveIntake(mIntake, 0.45, false));
     controller1.povRight().onTrue(new InstantCommand(() -> {mRobotState.setRobotMode(RobotModeState.Endgame); }));

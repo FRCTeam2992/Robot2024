@@ -20,7 +20,7 @@ public class AutoResetNote extends SequentialCommandGroup {
     addCommands(
         new ParallelRaceGroup(
           new MoveFeeder(mFeeder, Constants.Feeder.Speeds.outakingPieceSpeed, false),
-          new MoveIntake(mIntake, Constants.Intake.Speeds.outakingPieceSpeed, true)
+          new MoveIntake(mIntake, -Constants.Intake.Speeds.outakingPieceSpeed, true)
         ),
         new ParallelRaceGroup(
           new MoveFeeder(mFeeder, Constants.Feeder.Speeds.intakingPieceSpeed, true),

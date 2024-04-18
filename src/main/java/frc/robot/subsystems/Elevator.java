@@ -209,7 +209,7 @@ public class Elevator extends SubsystemBase {
     if (getElevatorInches() < Constants.Elevator.Limits.softStopBottom) {
       speed = Math.max(-0.1, speed);
     } else if (getElevatorInches() > Constants.Elevator.Limits.softStopTop) {
-      speed = Math.min(0.08, speed);
+      speed = Math.min(0.1, speed);
     }
 
     if (getElevatorInches() > Constants.Elevator.Limits.hardStopTop) {
