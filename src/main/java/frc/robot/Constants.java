@@ -11,7 +11,7 @@ import frc.lib.leds.Color;
 
 /** Add your docs here. */
 public class Constants {
-    public static final boolean dataLogging = false;
+    public static final boolean dataLogging = true;
     public static final boolean debugDashboard = true;
 
     public static final double inchesPerMeter = 39.3701;
