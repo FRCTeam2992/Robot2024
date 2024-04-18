@@ -230,7 +230,7 @@ public class Drivetrain extends SubsystemBase {
         setDriveNeutralMode(NeutralModeValue.Coast);
         setTurnNeutralMode(NeutralModeValue.Brake);
 
-        setDriveCurrentLimit(40.0, 50.0);
+        setDriveCurrentLimitTeleop(60.0, 50.0);
         setTurnCurrentLimit(60.0); // potentially unused
 
         frontLeftController = new PIDController(Constants.DrivetrainConstants.PIDConstants.turnP,
@@ -527,12 +527,23 @@ public class Drivetrain extends SubsystemBase {
         rearRightTurn.getConfigurator().apply(turnMotorConfigs);
     }
 
-    public void setDriveCurrentLimit(double currentLimit, double triggerCurrent) {
+    public void setDriveCurrentLimitTeleop(double currentLimit, double triggerCurrent) {
+        driveMotorConfigs.CurrentLimits.StatorCurrentLimitEnable = false;
+        driveMotorConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
+        driveMotorConfigs.CurrentLimits.SupplyCurrentLimit = currentLimit;
+        driveMotorConfigs.CurrentLimits.SupplyCurrentThreshold = triggerCurrent;
+        driveMotorConfigs.CurrentLimits.SupplyTimeThreshold = 0.02;
 
+        frontLeftDrive.getConfigurator().apply(driveMotorConfigs);
+        frontRightDrive.getConfigurator().apply(driveMotorConfigs);
+        rearLeftDrive.getConfigurator().apply(driveMotorConfigs);
+        rearRightDrive.getConfigurator().apply(driveMotorConfigs);
+    }
+
+    public void setDriveCurrentLimitAuto(double currentLimit) {
+        driveMotorConfigs.CurrentLimits.SupplyCurrentLimitEnable = false;
         driveMotorConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
         driveMotorConfigs.CurrentLimits.StatorCurrentLimit = currentLimit;
-        // driveMotorConfigs.CurrentLimits.SupplyCurrentThreshold = triggerCurrent;
-        // driveMotorConfigs.CurrentLimits.SupplyTimeThreshold = 0.02;
 
         frontLeftDrive.getConfigurator().apply(driveMotorConfigs);
         frontRightDrive.getConfigurator().apply(driveMotorConfigs);

@@ -86,7 +86,7 @@ public class Robot extends TimedRobot {
         mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralModeValue.Brake);
 
     // Set the Drive Motors Current Limit
-    mRobotContainer.mDrivetrain.setDriveCurrentLimit(60.0, 60.0);
+    mRobotContainer.mDrivetrain.setDriveCurrentLimitAuto(60.0);
 
     // Zero the gyro
     mRobotContainer.mDrivetrain.resetGyro();
@@ -122,12 +122,11 @@ public class Robot extends TimedRobot {
 
     CommandScheduler.getInstance().schedule(new SetNoteLocation(mRobotContainer.mFeeder, mRobotContainer.mIntake, mRobotContainer.mRobotState));
 
-
     mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralModeValue.Brake);
-        mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralModeValue.Brake);
+    mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralModeValue.Brake);
 
-    mRobotContainer.mDrivetrain.setDriveCurrentLimit(40.0, 40.0);
-        mRobotContainer.mDrivetrain.setDriveRampRate(0.25);
+    mRobotContainer.mDrivetrain.setDriveCurrentLimitTeleop(60.0, 50.0);
+    mRobotContainer.mDrivetrain.setDriveRampRate(0.25);
 
     // Reset state of all subsystems EXCEPT Shooter
     mRobotContainer.mDrivetrain.resetSubsystemState();
