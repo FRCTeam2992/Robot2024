@@ -27,6 +27,7 @@ import frc.robot.commands.AutoMoveForwardBack;
 import frc.robot.commands.AutoResetNote;
 import frc.robot.commands.AutoRotateBot;
 import frc.robot.commands.AutoRotateToHeading;
+import frc.robot.commands.AmpAutoRotate;
 import frc.robot.commands.AutoShoot;
 import frc.robot.commands.AutonomousLimitedAim;
 import frc.robot.commands.DriveSticks;
@@ -48,6 +49,7 @@ import frc.robot.commands.SetPivotTargetAngle;
 import frc.robot.commands.SetPivotToTargetAngle;
 import frc.robot.commands.SetShooterSpeedTarget;
 import frc.robot.commands.SetSwerveAngle;
+import frc.robot.commands.SourceAutoRotate;
 import frc.robot.commands.StartShooter;
 import frc.robot.commands.StopIntake;
 import frc.robot.commands.StopShooter;
@@ -359,8 +361,8 @@ public class RobotContainer {
       new SetShooterSpeedTarget(mShooter, 1200.0),
       new SetPivotToTargetAngle(mShooterPivot),
       new StartShooter(mShooter)));
-    NamedCommands.registerCommand("rotateAmpStart", new AutoRotateToHeading(mDrivetrain, -40.5));
-    NamedCommands.registerCommand("rotateSourceStart", new AutoRotateToHeading(mDrivetrain, 43.0));
+    NamedCommands.registerCommand("rotateAmpStart", new AmpAutoRotate(mDrivetrain));
+    NamedCommands.registerCommand("rotateSourceStart", new SourceAutoRotate(mDrivetrain));
     NamedCommands.registerCommand("turnOnLimelightOdometry", new InstantCommand(() -> mDrivetrain.setLimeLightOdometryUpdates(true)));
     NamedCommands.registerCommand("turnOffLimelightOdometry", new InstantCommand(() -> mDrivetrain.setLimeLightOdometryUpdates(false)));
     NamedCommands.registerCommand("setSourceStartAimTarget", new SequentialCommandGroup( 
