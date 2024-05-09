@@ -81,7 +81,7 @@ public class AutoAim extends Command {
       }
 
       case Passing: {
-        mShooter.setShooterTargetRPM(3000);
+        mShooter.setShooterTargetRPM(3200);
         mShooter.setShooterToTargetRPM();
         mShooterPivot.setPivotTarget(50);
         mShooterPivot.setPivotToPID();

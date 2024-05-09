@@ -39,7 +39,7 @@ public class Constants {
          */
         public static enum FieldCalibrationSetting {
             NewFieldCalibration(0.0, 0.0, 0.0, 0.0),
-            TeamShop(0.0, 0.1, 0.0, 0.1);
+            TeamShop(0.0, 0.0, 0.0, 0.0);
 
             public double blueXAdjustmentMeters;
             public double blueYAdjustmentMeters;
@@ -107,7 +107,7 @@ public class Constants {
 
         // Swerve Wheels and Gear Ratio
         public static final double driveGearRatio = 6.12;// 6.12:1
-        public static final double driveWheelDiameter = 0.09927
+        public static final double driveWheelDiameter = 0.1016
         ; // 0.098552 (Tread) 0.1016 (Colson)
 
         // Analog Encoder Offsets (Degrees) - Opposite of Raw Reading - Bevel Gear to
@@ -309,7 +309,7 @@ public class Constants {
             public static final double maxPivotAngle = 60.0; // PlaceHolder
 
             public static final double maxPivotAmp = 29.0; // Max pivot angle when in Amp mode
-            public static final double maxPivotEndgame = 1.5; // Max pivot angle in in Endgame mode
+            public static final double maxPivotEndgame = 17.0; // Max pivot angle in in Endgame mode
 
             public static final double pivotCollisionZone = 10.0; // PlaceHolder
 

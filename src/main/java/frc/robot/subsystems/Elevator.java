@@ -64,8 +64,8 @@ public class Elevator extends SubsystemBase {
     // followMotor2.setInverted(true);
     // followMotor3.setInverted(true);
 
-    leadMotor.setClosedLoopRampRate(0.0);
-    followMotor1.setClosedLoopRampRate(0.0);
+    leadMotor.setClosedLoopRampRate(0.15);
+    followMotor1.setClosedLoopRampRate(0.15);
     // followMotor2.setClosedLoopRampRate(0.3);
     // followMotor3.setClosedLoopRampRate(0.3);
 

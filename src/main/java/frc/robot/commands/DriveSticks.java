@@ -230,7 +230,46 @@ public class DriveSticks extends Command {
 
                 switch (mRobotState.getRobotMode()) {
 
-                    case Passing:
+                    case Passing: {
+                        // botX = mDriveTrain.latestVisionPose.getX();
+                        // botY = mDriveTrain.latestSwervePose.getY();
+                        botX = mDriveTrain.latestSwervePose.getX();
+                        botY = mDriveTrain.latestSwervePose.getY();
+
+                        if (DriverStation.getAlliance()
+                                .orElse(DriverStation.Alliance.Red) == DriverStation.Alliance.Red) {
+                            goalX = Constants.DrivetrainConstants.Field.redGoalX;
+                            goalY = Constants.DrivetrainConstants.Field.redGoalY + 1.0;
+                        } else {
+                            goalX = Constants.DrivetrainConstants.Field.blueGoalX;
+                            goalY = Constants.DrivetrainConstants.Field.blueGoalY + 1.0;
+                        }
+
+                        targetAngle = -Math.atan2((botY - goalY), (botX - goalX));
+                        targetAngle = targetAngle * 180.0 / Math.PI;
+
+                        SmartDashboard.putNumber("Speaker Target Angle", targetAngle);
+                        x2 = mDriveTrain.getGyroYaw() - targetAngle;
+
+                        if (x2 > 180) {
+                            x2 -= 360;
+                        } else if (x2 < -180) {
+                            x2 += 360;
+                        }
+                        if (Math.abs(x2 - targetAngle) > Constants.DrivetrainConstants.autoAngleThreshold) {
+                            x2 = x2 * Constants.DrivetrainConstants.driveRotationP;
+                        } else {
+                            x2 = 0.0;
+                        }
+
+                        x2 = Math.min(x2, .90);
+                        x2 = Math.max(x2, -.90);
+
+                        gyroTargetRecorded = false;
+
+                        break;
+                    }
+
                     case Speaker: {
                         // botX = mDriveTrain.latestVisionPose.getX();
                         // botY = mDriveTrain.latestSwervePose.getY();

@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import java.sql.Driver;
 import java.util.ArrayList;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
@@ -773,6 +774,10 @@ public class Drivetrain extends SubsystemBase {
                     if (DriverStation.isDisabled()) {
                         trustFactor /= 10.0; // Move to odometry fast under disable
                     }
+                    if (DriverStation.isTeleop()){
+                        trustFactor /= 11.0;
+                    }    
+
 
                     // We see consistent errors based on Limelight readings, so this adjustment
                     // factor corrects for that so that our odometry values match actual robot 
@@ -794,8 +799,8 @@ public class Drivetrain extends SubsystemBase {
     public double calculateVisionTrustFactor(PoseEstimate visionEstimate, LimeLight ll) {
         // Anything less than 1m treat as 1M
         double distance = Math.max(visionEstimate.avgTagDist, 1.0);
-        if (distance > ll.model.maxDistanceFromTag || this.lastDistanceMoved > ll.model.distanceMovedInCycleThreshold
-                || Math.abs(this.getGyroYawRate()) >= ll.model.angularVelocityThreshold) {
+        if (DriverStation.isAutonomous() && (distance > ll.model.maxDistanceFromTag || this.lastDistanceMoved > ll.model.distanceMovedInCycleThreshold
+                || Math.abs(this.getGyroYawRate()) >= ll.model.angularVelocityThreshold)) {
             return -1; // Don't trust any readings further than this
         } else {
             return Math.pow(distance, 1.) * ll.model.trustFactor;
