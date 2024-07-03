@@ -578,4 +578,63 @@ public void calculateBlendedVisionPose() {
         limelightYMedianFilter.reset();
         limelightAngleMedianFilter.reset();
    }
+
+   // Move robot straight at a heading and speed
+   public void moveRobotFrontBack(boolean forward, double velocity) {
+
+    // Calculate the Swerve States
+    ChassisSpeeds swerveStates;
+
+    double y1 = velocity / Constants.DrivetrainConstants.swerveMaxSpeed;
+    if (!forward) {
+        y1 *= -1;
+    }
+
+    // swerveStates = swerveController.calculate(0.0, y1, 0.0);
+    swerveStates = swerveDrive.swerveController.getTargetSpeeds(0.0, y1, 0.0, swerveDrive.getOdometryHeading().getRadians(), maxSpeed);
+
+    // Command the Swerve Modules
+    // frontLeft.setDriveVelocity(swerveStates[0], swerveStates[1]);
+    // frontRight.setDriveVelocity(swerveStates[2], swerveStates[3]);
+    // rearLeft.setDriveVelocity(swerveStates[4], swerveStates[5]);
+    // rearRight.setDriveVelocity(swerveStates[6], swerveStates[7]);
+    swerveDrive.setChassisSpeeds(swerveStates);
+    // frontLeft.setDrive(velocity, 0);
+    // frontRight.setDrive(velocity, 0);
+    // rearLeft.setDrive(velocity, 0);
+    // rearRight.setDrive(velocity, 0);
+}
+
+public void turnRobot( double heading) {
+
+    // Calculate the Swerve States
+    ChassisSpeeds swerveStates;
+
+    double x2 = getGyroYaw() - heading;
+
+    if (x2 > 180) {
+         x2 -= 360;
+    } else if (x2 < -180) {
+        x2 += 360;
+    }
+    if (Math.abs(x2 - heading) > Constants.DrivetrainConstants.autoAngleThreshold) {
+        x2 = x2 * Constants.DrivetrainConstants.driveRotationP;
+    } else {
+        x2 = 0.0;
+    }
+
+x2 = Math.min(x2, .90);
+x2 = Math.max(x2, -.90);
+
+
+    // swerveStates = swerveController.calculate(0.0, 0.0, x2);
+    swerveStates = swerveDrive.swerveController.getTargetSpeeds(0.0, 0.0, x2, swerveDrive.getOdometryHeading().getRadians(), maxSpeed);
+
+    // Command the Swerve Modules
+    // frontLeft.setDriveVelocity(swerveStates[0], swerveStates[1]);
+    // frontRight.setDriveVelocity(swerveStates[2], swerveStates[3]);
+    // rearLeft.setDriveVelocity(swerveStates[4], swerveStates[5]);
+    // rearRight.setDriveVelocity(swerveStates[6], swerveStates[7]);
+    swerveDrive.setChassisSpeeds(swerveStates);
+}
 }
