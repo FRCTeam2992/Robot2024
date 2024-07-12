@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import java.io.File;
 import java.util.ArrayList;
 
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -34,6 +35,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.drive.swerve.SwerveModuleFalconFalcon;
 import frc.lib.vision.LimeLight;
@@ -48,7 +50,7 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 public class DrivetrainUpdated extends SubsystemBase {
   /** Creates a new DrivetrainUpdated. */
 
-  private SwerveDrive swerveDrive;
+  public SwerveDrive swerveDrive;
   public double maxSpeed;
   public File swerveJsonDirectory;
 
@@ -598,7 +600,7 @@ public void calculateBlendedVisionPose() {
     // frontRight.setDriveVelocity(swerveStates[2], swerveStates[3]);
     // rearLeft.setDriveVelocity(swerveStates[4], swerveStates[5]);
     // rearRight.setDriveVelocity(swerveStates[6], swerveStates[7]);
-    swerveDrive.setChassisSpeeds(swerveStates);
+    swerveDrive.setChassisSpeeds(swerveStates); // POTENTIALLY THE ROOT OF SOME PROBLEMS!
     // frontLeft.setDrive(velocity, 0);
     // frontRight.setDrive(velocity, 0);
     // rearLeft.setDrive(velocity, 0);
@@ -635,6 +637,34 @@ x2 = Math.max(x2, -.90);
     // frontRight.setDriveVelocity(swerveStates[2], swerveStates[3]);
     // rearLeft.setDriveVelocity(swerveStates[4], swerveStates[5]);
     // rearRight.setDriveVelocity(swerveStates[6], swerveStates[7]);
-    swerveDrive.setChassisSpeeds(swerveStates);
+    swerveDrive.setChassisSpeeds(swerveStates); // POTENTIALLY THE ROOT OF SOME PROBLEMS!
 }
+
+public void scheduleOdometryReset() {
+    this.simpleOdometryReset = true;
+    this.odometryResetCount++;
+}
+
+public Command ResetOdometry() {
+        return runOnce(() -> {
+            this.scheduleOdometryReset();
+        });
+}
+
+    public void onDisable() {
+        setDriveNeutralMode(true);    
+        // setTurnNeutralMode(NeutralModeValue.Brake);
+        stopDrive();
+    }
+
+    public void setDriveNeutralMode(boolean mode) {
+        // driveMotorConfigs.MotorOutput.NeutralMode = mode;
+
+        // frontLeftDrive.getConfigurator().apply(driveMotorConfigs);
+        // frontRightDrive.getConfigurator().apply(driveMotorConfigs);
+        // rearLeftDrive.getConfigurator().apply(driveMotorConfigs);
+        // rearRightDrive.getConfigurator().apply(driveMotorConfigs);
+        swerveDrive.setMotorIdleMode(mode);
+
+    }
 }

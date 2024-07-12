@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,12 +15,12 @@ import frc.lib.vision.LimeLight.CoordinateSpace;
 import frc.robot.Constants;
 import frc.robot.MyRobotState;
 import frc.robot.Robot;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.DrivetrainUpdated;
 
 public class DriveSticks extends Command {
 
     // Subsystem Instance
-    private Drivetrain mDriveTrain;
+    private DrivetrainUpdated mDriveTrain;
 
     // Robot state instance
     private MyRobotState mRobotState;
@@ -38,7 +39,7 @@ public class DriveSticks extends Command {
     private double goalY = 0.0;
     private double targetAngle = 0.0;
 
-    public DriveSticks(Drivetrain subsystem, MyRobotState robotState) {
+    public DriveSticks(DrivetrainUpdated subsystem, MyRobotState robotState) {
         // Subsystem Instance
         mDriveTrain = subsystem;
         mRobotState = robotState;
@@ -325,7 +326,7 @@ public class DriveSticks extends Command {
             // x1 * Constants.DrivetrainConstants.swerveMaxSpeed);
 
             // Calculate the Swerve States
-            double[] swerveStates;
+            ChassisSpeeds swerveStates;
 
             // Make sure we don't creep in AutoRotate mode
             if (mDriveTrain.isAutoRotate() && Math.abs(x1) < 0.05 && Math.abs(y1) < 0.05 && Math.abs(x2) < 0.01) {
@@ -334,34 +335,37 @@ public class DriveSticks extends Command {
             } else {
                 // Check for Field Centric Enabled
                 if (Constants.DrivetrainConstants.isFieldCentric && mDriveTrain.getDoFieldOrient()) {
-                    swerveStates = mDriveTrain.swerveController.calculate(x1, y1, x2, gyroValue);
+                    // swerveStates = mDriveTrain.swerveController.calculate(x1, y1, x2, gyroValue);
+                    swerveStates = mDriveTrain.swerveDrive.swerveController.getTargetSpeeds(x1, y1, x2, gyroValue, Constants.DrivetrainConstants.swerveMaxSpeed);
                     if (Constants.debugDashboard) {
                         SmartDashboard.putBoolean("Is Field Oriented", true);
                     }
                 } else {
-                    swerveStates = mDriveTrain.swerveController.calculate(x1, y1, x2);
+                    swerveStates = mDriveTrain.swerveDrive.swerveController.getTargetSpeeds(x1, y1, x2, mDriveTrain.swerveDrive.getOdometryHeading().getRadians(), Constants.DrivetrainConstants.swerveMaxSpeed); //mDriveTrain.swerveController.calculate(x1, y1, x2);
                     if (Constants.debugDashboard) {
                         SmartDashboard.putBoolean("Is Field Oriented", false);
                     }
                 }
 
                 // Get the Swerve Modules
-                SwerveModuleFalconFalcon frontLeft = mDriveTrain.frontLeftModule;
-                SwerveModuleFalconFalcon frontRight = mDriveTrain.frontRightModule;
-                SwerveModuleFalconFalcon rearLeft = mDriveTrain.rearLeftModule;
-                SwerveModuleFalconFalcon rearRight = mDriveTrain.rearRightModule;
+                // SwerveModuleFalconFalcon frontLeft = mDriveTrain.frontLeftModule;
+                // SwerveModuleFalconFalcon frontRight = mDriveTrain.frontRightModule;
+                // SwerveModuleFalconFalcon rearLeft = mDriveTrain.rearLeftModule;
+                // SwerveModuleFalconFalcon rearRight = mDriveTrain.rearRightModule;
 
                 // Command the Swerve Modules
                 if (Constants.DrivetrainConstants.isVelocityControlled) {
-                    frontLeft.setDriveVelocity(swerveStates[0], swerveStates[1]);
-                    frontRight.setDriveVelocity(swerveStates[2], swerveStates[3]);
-                    rearLeft.setDriveVelocity(swerveStates[4], swerveStates[5]);
-                    rearRight.setDriveVelocity(swerveStates[6], swerveStates[7]);
+                    // frontLeft.setDriveVelocity(swerveStates[0], swerveStates[1]);
+                    // frontRight.setDriveVelocity(swerveStates[2], swerveStates[3]);
+                    // rearLeft.setDriveVelocity(swerveStates[4], swerveStates[5]);
+                    // rearRight.setDriveVelocity(swerveStates[6], swerveStates[7]);
+                    mDriveTrain.swerveDrive.setChassisSpeeds(swerveStates); // POTENTIALLY THE ROOT OF SOME PROBLEMS!
                 } else {
-                    frontLeft.setDrive(swerveStates[0], swerveStates[1]);
-                    frontRight.setDrive(swerveStates[2], swerveStates[3]);
-                    rearLeft.setDrive(swerveStates[4], swerveStates[5]);
-                    rearRight.setDrive(swerveStates[6], swerveStates[7]);
+                    // frontLeft.setDrive(swerveStates[0], swerveStates[1]);
+                    // frontRight.setDrive(swerveStates[2], swerveStates[3]);
+                    // rearLeft.setDrive(swerveStates[4], swerveStates[5]);
+                    // rearRight.setDrive(swerveStates[6], swerveStates[7]);
+                    mDriveTrain.swerveDrive.setChassisSpeeds(swerveStates); // POTENTIALLY THE ROOT OF SOME PROBLEMS!
                 }
 
             }

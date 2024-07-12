@@ -5,15 +5,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.DrivetrainUpdated;
 
 public class AutoMoveForwardBack extends Command {
 
-  private Drivetrain mDrivetrain;
+  private DrivetrainUpdated mDrivetrain;
   private boolean mIsFoward;
   private double mVelocity;
   /** Creates a new AutoMoveForwardBack. */
-  public AutoMoveForwardBack(Drivetrain drivetrain, boolean foward, double velocity) {
+  public AutoMoveForwardBack(DrivetrainUpdated drivetrain, boolean foward, double velocity) {
 
     mDrivetrain = drivetrain;
     mIsFoward = foward;

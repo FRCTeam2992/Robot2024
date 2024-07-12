@@ -5,14 +5,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.DrivetrainUpdated;
 
 public class DisableFieldOrientToggle extends Command {
 
-  private Drivetrain mDrivetrain;
+  private DrivetrainUpdated mDrivetrain;
    
   /** Creates a new SetDoFieldOrient. */
-  public DisableFieldOrientToggle(Drivetrain subsystem) {
+  public DisableFieldOrientToggle(DrivetrainUpdated subsystem) {
 
     mDrivetrain = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.

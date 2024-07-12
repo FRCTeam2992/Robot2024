@@ -3,7 +3,8 @@ package frc.lib.drive.swerve;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.DrivetrainUpdated;
+import swervelib.SwerveModule;
 
 public class OdometryThread extends Thread {
     private int refreshTimeoutFastMillis = Constants.DrivetrainConstants.odometryFastRefreshTimeoutMillis;
@@ -11,8 +12,8 @@ public class OdometryThread extends Thread {
     private int odometryCyclesForLimelightRefresh = 4;
     private int lastOdometryResetCount = 0;
 
-    private Drivetrain drivetrain;
-    private SwerveModuleFalconFalcon[] modules;
+    private DrivetrainUpdated drivetrain;
+    private SwerveModule[] modules;
     private boolean fastMode;
     private boolean cancelled;
     private double rioTimestamp;
@@ -33,11 +34,11 @@ public class OdometryThread extends Thread {
      *     swerveDriveModulePositions[2] = rearLeftModule.getPosition();
      *     swerveDriveModulePositions[3] = rearRightModule.getPosition();
      */
-    public OdometryThread(Drivetrain subsystem) {
+    public OdometryThread(DrivetrainUpdated subsystem) {
         super();
     
         this.drivetrain = subsystem;
-        this.modules = this.drivetrain.getSwerveModules();
+        this.modules = this.drivetrain.swerveDrive.swerveDriveConfiguration.modules;
         this.rioTimestamp = Timer.getFPGATimestamp();
         this.fastMode = false;
         this.cancelled = false;

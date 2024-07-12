@@ -5,17 +5,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.DrivetrainUpdated;
 
 public class SetSwerveAngle extends Command {
-  private Drivetrain mDrivetrain;
+  private DrivetrainUpdated mDrivetrain;
 
   private double mFLAngle;
   private double mFRAngle;
   private double mRLAngle;
   private double mRRAngle;
 
-  public SetSwerveAngle(Drivetrain subsystem, double flAngle, double frAngle, double rlAngle, double rrAngle) {
+  public SetSwerveAngle(DrivetrainUpdated subsystem, double flAngle, double frAngle, double rlAngle, double rrAngle) {
     mDrivetrain = subsystem;
     mFLAngle = flAngle;
     mFRAngle = frAngle;
@@ -33,14 +33,20 @@ public class SetSwerveAngle extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    mDrivetrain.frontLeftModule.setTurnAngle(mFLAngle);
-    mDrivetrain.frontLeftModule.setDriveSpeed(0.0);
-    mDrivetrain.frontRightModule.setTurnAngle(mFRAngle);
-    mDrivetrain.frontRightModule.setDriveSpeed(0.0);
-    mDrivetrain.rearLeftModule.setTurnAngle(mRLAngle);
-    mDrivetrain.rearLeftModule.setDriveSpeed(0.0);
-    mDrivetrain.rearRightModule.setTurnAngle(mRRAngle);
-    mDrivetrain.rearRightModule.setDriveSpeed(0.0);
+    // mDrivetrain.frontLeftModule.setTurnAngle(mFLAngle);
+    // mDrivetrain.frontLeftModule.setDriveSpeed(0.0);
+    // mDrivetrain.frontRightModule.setTurnAngle(mFRAngle);
+    // mDrivetrain.frontRightModule.setDriveSpeed(0.0);
+    // mDrivetrain.rearLeftModule.setTurnAngle(mRLAngle);
+    // mDrivetrain.rearLeftModule.setDriveSpeed(0.0);
+    // mDrivetrain.rearRightModule.setTurnAngle(mRRAngle);
+    // mDrivetrain.rearRightModule.setDriveSpeed(0.0);
+
+    mDrivetrain.swerveDrive.swerveDriveConfiguration.modules[0].setAngle(mFLAngle);  // POTENTIALLY THE ROOT OF SOME PROBLEMS!
+    mDrivetrain.swerveDrive.swerveDriveConfiguration.modules[1].setAngle(mFRAngle);
+    mDrivetrain.swerveDrive.swerveDriveConfiguration.modules[2].setAngle(mRLAngle);
+    mDrivetrain.swerveDrive.swerveDriveConfiguration.modules[3].setAngle(mRRAngle);
+    mDrivetrain.stopDrive();
   }
 
   // Called once the command ends or is interrupted.

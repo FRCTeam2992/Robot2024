@@ -11,7 +11,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.MyRobotState;
 import frc.robot.MyRobotState.LEDModeState;
-import frc.robot.subsystems.Drivetrain;
+// import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.DrivetrainUpdated;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ShooterPivot;
@@ -24,13 +25,13 @@ public class AutoAim extends Command {
   private Shooter mShooter;
   private MyRobotState mState;
   private NoteInterpolator mInterpolator;
-  private Drivetrain mDrivetrain;
+  private DrivetrainUpdated mDrivetrain;
 
   private boolean abort = false;
 
   /** Creates a new AutoAim. */
   public AutoAim(Elevator elevator, ShooterPivot pivot, Shooter shooter, MyRobotState state,
-      NoteInterpolator interp, Drivetrain drivetrain) {
+      NoteInterpolator interp, DrivetrainUpdated drivetrain) {
     // Use addRequirements() here to declare subsystem dependencies.
     mElevator = elevator;
     mShooterPivot = pivot;

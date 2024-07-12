@@ -5,14 +5,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.DrivetrainUpdated;
 
 public class ResetGyro extends Command {
   // Subsystem Instance
-  private Drivetrain mDriveTrain;
+  private DrivetrainUpdated mDriveTrain;
   private double mGyroOffset;
 
-  public ResetGyro(Drivetrain subsystem) {
+  public ResetGyro(DrivetrainUpdated subsystem) {
     // Subsystem Instance
     mDriveTrain = subsystem;
     mGyroOffset = 0.0;
@@ -20,7 +20,7 @@ public class ResetGyro extends Command {
     // Set the Subsystem Requirement
   }
 
-  public ResetGyro(Drivetrain subsystem, double gyroOffset) {
+  public ResetGyro(DrivetrainUpdated subsystem, double gyroOffset) {
     mDriveTrain = subsystem;
     mGyroOffset = gyroOffset;
   }

@@ -5,14 +5,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.DrivetrainUpdated;
 
 public class AutoRotateToHeading extends Command {
 
-  private Drivetrain mDrivetrain;
+  private DrivetrainUpdated mDrivetrain;
   private double mHeading;
   /** Creates a new AutoRotateToHeading. */
-  public AutoRotateToHeading(Drivetrain drivetrain, double heading) {
+  public AutoRotateToHeading(DrivetrainUpdated drivetrain, double heading) {
 
     mDrivetrain = drivetrain;
     mHeading = heading;

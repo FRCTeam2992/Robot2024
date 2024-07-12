@@ -82,11 +82,11 @@ public class Robot extends TimedRobot {
   
     m_autonomousCommand = mRobotContainer.getAutonomousCommand();
 
-    mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralModeValue.Brake);
-        mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralModeValue.Brake);
+    mRobotContainer.mDrivetrain.setDriveNeutralMode(true);
+        // mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralModeValue.Brake);
 
     // Set the Drive Motors Current Limit
-    mRobotContainer.mDrivetrain.setDriveCurrentLimit(60.0, 60.0);
+    // mRobotContainer.mDrivetrain.setDriveCurrentLimit(60.0, 60.0); //Cannot do in YAGSL as the CurrentLimits are final
 
     // Zero the gyro
     mRobotContainer.mDrivetrain.resetGyro();
@@ -98,7 +98,7 @@ public class Robot extends TimedRobot {
     mRobotContainer.mElevator.zeroElevatorEncoders();
 
     // Set the Drive Motors Ramp Rate
-    mRobotContainer.mDrivetrain.setDriveRampRate(0.0);
+    // mRobotContainer.mDrivetrain.setDriveRampRate(0.0); //Cannot do in YAGSL as the RampRates are final
 
     CommandScheduler.getInstance().cancelAll();
 
@@ -123,11 +123,11 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().schedule(new SetNoteLocation(mRobotContainer.mFeeder, mRobotContainer.mIntake, mRobotContainer.mRobotState));
 
 
-    mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralModeValue.Brake);
-        mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralModeValue.Brake);
+    mRobotContainer.mDrivetrain.setDriveNeutralMode(true);
+        // mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralModeValue.Brake);
 
-    mRobotContainer.mDrivetrain.setDriveCurrentLimit(40.0, 40.0);
-        mRobotContainer.mDrivetrain.setDriveRampRate(0.25);
+    // mRobotContainer.mDrivetrain.setDriveCurrentLimit(40.0, 40.0);
+        // mRobotContainer.mDrivetrain.setDriveRampRate(0.25);
 
     // Reset state of all subsystems EXCEPT Shooter
     mRobotContainer.mDrivetrain.resetSubsystemState();

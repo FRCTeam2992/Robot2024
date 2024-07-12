@@ -56,7 +56,7 @@ import frc.robot.commands.StopIntake;
 import frc.robot.commands.StopShooter;
 import frc.robot.commands.StopShooterPivot;
 import frc.robot.commands.ZeroElevator;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.DrivetrainUpdated;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
@@ -71,7 +71,7 @@ public class RobotContainer {
 
   public OdometryThread mOdometryThread;
 
-  public final Drivetrain mDrivetrain;
+  public final DrivetrainUpdated mDrivetrain;
   public final Shooter mShooter;
   public final Intake mIntake;
   public final Feeder mFeeder;
@@ -96,7 +96,7 @@ public class RobotContainer {
 
     initNoteInterp();
 
-    mDrivetrain = new Drivetrain();
+    mDrivetrain = new DrivetrainUpdated();
     if (Constants.DrivetrainConstants.odometryThread) {
       mOdometryThread = new OdometryThread(mDrivetrain);
       mOdometryThread.setFastMode();

@@ -5,14 +5,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.DrivetrainUpdated;
 
 public class AutoRotateBot extends Command {
 
-  private Drivetrain mDrivetrain;
+  private DrivetrainUpdated mDrivetrain;
   private boolean mIsRotate;
   /** Creates a new AutoRotateBot. */
-  public AutoRotateBot(Drivetrain subsystem, boolean isRotate) {
+  public AutoRotateBot(DrivetrainUpdated subsystem, boolean isRotate) {
 
     mDrivetrain = subsystem;
     mIsRotate = isRotate;
