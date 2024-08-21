@@ -98,14 +98,15 @@ public class Elevator extends SubsystemBase {
     }
     // setElevatorTargetPosition(SmartDashboard.getNumber("Set Elevator Position",0.0));
 
+    if (mRobotState.getLoggingState() == MyRobotState.LoggingState.Debug) {
+      SmartDashboard.putData(this);
+      SmartDashboard.putNumber("Elevator Motor Position", getElevatorPosition()[0]);
+    }
     SmartDashboard.putNumber("Elevator Inches", getElevatorInches());
-    SmartDashboard.putNumber("Elevator Motor Position", getElevatorPosition()[0]);
     SmartDashboard.putBoolean("At hard stop", checkIfAtHardStop());
-    SmartDashboard.putData(this);
-
     SmartDashboard.putNumber("Ele Velocity", getElevatorVelocity());
-
     SmartDashboard.putNumber("Elevator target", encoderRotationsToInches(targetPosition));
+    
     // This method will be called once per scheduler run
     if (DriverStation.isDisabled()) {
       setElevatorSpeed(0.0);

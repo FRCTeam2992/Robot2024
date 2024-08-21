@@ -7,6 +7,21 @@ package frc.robot;
 /** Add your docs here. */
 public class MyRobotState {
 
+    public static enum LoggingState {
+        Debug,
+        MatchLogging
+    }
+
+    private LoggingState loggingState = LoggingState.MatchLogging;
+
+    public void setLoggingState(LoggingState mode) {
+        loggingState = mode;
+    }
+
+    public LoggingState getLoggingState() {
+        return loggingState;
+    }
+
     public static enum RobotModeState {
         Auto,
         Override,

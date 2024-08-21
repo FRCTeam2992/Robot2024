@@ -24,13 +24,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Feeder extends SubsystemBase {
   /** Creates a new feeder. */
+  private MyRobotState mRobotState;
+
   private TalonFX feedMotor;
   private TalonFXConfiguration feedMotorConfigs;
   private DutyCycleOut percentOutControlRequest;
 
 
-  public Feeder() {
-
+  public Feeder(MyRobotState state) {
+    mRobotState = state;
     feedMotor = new TalonFX(Constants.Feeder.feederMotorID);
     feedMotorConfigs = new TalonFXConfiguration();
 
@@ -50,9 +52,10 @@ public class Feeder extends SubsystemBase {
 
   @Override
   public void periodic() {
-
+    if (mRobotState.getLoggingState() == MyRobotState.LoggingState.Debug) {
+      SmartDashboard.putData(this);
+    }
     SmartDashboard.putBoolean("Is Limited", getBeamBreakTriggered());
-    SmartDashboard.putData(this);
     // This method will be called once per scheduler run
   }
 

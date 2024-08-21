@@ -134,13 +134,15 @@ public class ShooterPivot extends SubsystemBase {
     // moving average
     currentPivotAngle = getPivotAngle();
     // setPivotTarget(SmartDashboard.getNumber("Set Pivot angle", 0.0));
+
+    if (mState.getLoggingState() == MyRobotState.LoggingState.Debug) {
+      SmartDashboard.putString("ShooterPivot State", pivotMode.toString());
+      SmartDashboard.putData(this);
+    }
     SmartDashboard.putNumber("Pivot target angle", getPivotTarget());
-    SmartDashboard.putString("ShooterPivot State", pivotMode.toString());
-
-    SmartDashboard.putData(this);
     SmartDashboard.putNumber("Shooter Pivot Angle (deg)", currentPivotAngle);
-    // This method will be called once per scheduler run
 
+    // This method will be called once per scheduler run
     if (DriverStation.isDisabled()) {
       stopPivotMotor();
       return;

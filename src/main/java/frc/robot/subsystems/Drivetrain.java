@@ -68,9 +68,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.MyRobotState;
 
 public class Drivetrain extends SubsystemBase {
     /** Creates a new Drivetrain. */
+
+    private MyRobotState mRobotState;
     // Motor Contollers
     private TalonFX frontLeftDrive;
     private TalonFX frontLeftTurn;
@@ -176,7 +179,8 @@ public class Drivetrain extends SubsystemBase {
 
     private int dashboardCounter = 0;
 
-    public Drivetrain() {
+    public Drivetrain(MyRobotState state) {
+        mRobotState = state;
 
         driveMotorConfigs = new TalonFXConfiguration();
         turnMotorConfigs = new TalonFXConfiguration();
@@ -465,7 +469,9 @@ public class Drivetrain extends SubsystemBase {
 
         if (dashboardCounter++ >= 5) {
             if (Constants.debugDashboard) {
-                SmartDashboard.putData("Drivetrain", this);
+                if (mRobotState.getLoggingState() == MyRobotState.LoggingState.Debug) {
+                    SmartDashboard.putData("Drivetrain", this);
+                }
 
                 SmartDashboard.putNumber("Odometry Rotation (deg)", latestSwervePose.getRotation().getDegrees());
                 SmartDashboard.putNumber("Odometry X (in)", (latestSwervePose.getX() * (100 / 2.54)));

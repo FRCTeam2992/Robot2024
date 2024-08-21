@@ -52,7 +52,9 @@ public class LEDs extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putString("LED State (in LEDs)", mLEDMode.toString());
+    if (mRobotState.getLoggingState() == MyRobotState.LoggingState.Debug) {
+      SmartDashboard.putString("LED State (in LEDs)", mLEDMode.toString());
+    }
 
     if (mLEDMode == LEDModeState.intaking && noteLocation != RobotNoteLocation.noNote ) {
       mRobotState.setLEDMode(LEDModeState.idle);

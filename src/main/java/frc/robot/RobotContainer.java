@@ -95,7 +95,7 @@ public class RobotContainer {
 
     initNoteInterp();
 
-    mDrivetrain = new Drivetrain();
+    mDrivetrain = new Drivetrain(mRobotState);
     if (Constants.DrivetrainConstants.odometryThread) {
       mOdometryThread = new OdometryThread(mDrivetrain);
       mOdometryThread.setFastMode();
@@ -103,13 +103,13 @@ public class RobotContainer {
     }
     mDrivetrain.setDefaultCommand(new DriveSticks(mDrivetrain, mRobotState));
 
-    mShooter = new Shooter();
+    mShooter = new Shooter(mRobotState);
     // mShooter.setDefaultCommand(new StopShooter(mShooter));
 
-    mIntake = new Intake();
+    mIntake = new Intake(mRobotState);
     mIntake.setDefaultCommand(new StopIntake(mIntake));
 
-    mFeeder = new Feeder();
+    mFeeder = new Feeder(mRobotState);
     mFeeder.setDefaultCommand(new MoveFeeder(mFeeder, 0.0, false));
 
     mShooterPivot = new ShooterPivot(mRobotState);

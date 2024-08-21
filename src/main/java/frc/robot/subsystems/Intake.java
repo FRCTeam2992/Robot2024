@@ -15,9 +15,12 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.MyRobotState;
 
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
+  private MyRobotState mRobotState;
+
   private TalonFX intakeLeadMotor;
   private TalonFX intakeFollowMotor;
 
@@ -26,7 +29,9 @@ public class Intake extends SubsystemBase {
   private TalonFXConfiguration intakeMotorConfigs;
   private DutyCycleOut percentOutControlRequest;
 
-  public Intake() {
+  public Intake(MyRobotState state) {
+    mRobotState = state;
+
     intakeLeadMotor = new TalonFX(Constants.Intake.intakeLeadMotorID, "CanBus2");
     intakeFollowMotor = new TalonFX(Constants.Intake.intakeFollowMotorID, "CanBus2");
     intakeMotorConfigs = new TalonFXConfiguration();
@@ -47,7 +52,9 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putData(this);
+    if (mRobotState.getLoggingState() == MyRobotState.LoggingState.Debug) {
+      SmartDashboard.putData(this);
+    }
     SmartDashboard.putBoolean("Intake Beam Break", isBeamBreakLimited());
     // This method will be called once per scheduler run
   }

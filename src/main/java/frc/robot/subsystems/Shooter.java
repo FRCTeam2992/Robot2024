@@ -18,8 +18,11 @@ import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.MyRobotState;
 
 public class Shooter extends SubsystemBase {
+  private MyRobotState mState;
+
   private TalonFX shooterMotor;
   private TalonFX followMotor;
 
@@ -36,7 +39,9 @@ public class Shooter extends SubsystemBase {
   private MedianFilter medianFilter;
 
   /** Creates a new Shooter. */
-  public Shooter() {
+  public Shooter(MyRobotState state) {
+    mState = state;
+
     shooterMotor = new TalonFX(Constants.Shooter.DeviceIDs.shooterMotorID);
     followMotor = new TalonFX(Constants.Shooter.DeviceIDs.followMotorID);
     shooterMotorConfigs = new TalonFXConfiguration();
@@ -96,7 +101,9 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putData(this);
+    if (mState.getLoggingState() == MyRobotState.LoggingState.Debug) {
+      SmartDashboard.putData(this);
+    }
     // setShooterTargetRPM(SmartDashboard.getNumber("Set Shooter RPM", shooterTargetRPM));
     SmartDashboard.putNumber("Shooter Target RPM", getShooterTargetRPM());
     SmartDashboard.putNumber("Shooter RPM", medianFilter.calculate(getShooterRPM()));
