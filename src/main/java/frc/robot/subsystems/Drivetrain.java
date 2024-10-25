@@ -117,8 +117,8 @@ public class Drivetrain extends SubsystemBase {
     // Limelights
     public final LimeLight limeLightCameraFront;
     public final LimeLight limeLightCameraBack;
-    public final LimeLight limeLightCameraLeft;
-    public final LimeLight limeLightCameraRight;
+    // public final LimeLight limeLightCameraLeft;
+    // public final LimeLight limeLightCameraRight;
     public final ArrayList<LimeLight> limelightList;
     public double limeLightBlendedLatency = 0.0;
     private MedianFilter limelightXMedianFilter;
@@ -303,15 +303,15 @@ public class Drivetrain extends SubsystemBase {
         // Limelight
         limeLightCameraFront = new LimeLight("limelight-front", LimeLightModel.LL3);
         limeLightCameraBack = new LimeLight("limelight-back", LimeLightModel.LL3);
-        limeLightCameraLeft = new LimeLight("limelight-left", LimeLightModel.LL2);
-        limeLightCameraLeft.setStreamMode(StreamMode.PiPSecondary);
-        limeLightCameraRight = new LimeLight("limelight-right", LimeLightModel.LL2);
+        //limeLightCameraLeft = new LimeLight("limelight-left", LimeLightModel.LL2);
+        //limeLightCameraLeft.setStreamMode(StreamMode.PiPSecondary);
+        //limeLightCameraRight = new LimeLight("limelight-right", LimeLightModel.LL2);
 
         limelightList = new ArrayList<LimeLight>();
         limelightList.add(limeLightCameraFront);
         limelightList.add(limeLightCameraBack);
-        limelightList.add(limeLightCameraLeft);
-        limelightList.add(limeLightCameraRight);
+        // limelightList.add(limeLightCameraLeft);
+        // limelightList.add(limeLightCameraRight);
 
         limelightXMedianFilter = new MedianFilter(1);
         limelightYMedianFilter = new MedianFilter(1);
@@ -421,13 +421,14 @@ public class Drivetrain extends SubsystemBase {
                             } else if (limelight.networkTableName == limeLightCameraFront.networkTableName) {
                                 fieldForFrontPosePublishing.setRobotPose(tempPoseEstimate.pose);
                                 SmartDashboard.putData("LL Field " + limelight.networkTableName, fieldForFrontPosePublishing);
-                            } else if (limelight.networkTableName == limeLightCameraLeft.networkTableName) {
-                                fieldForLeftPosePublishing.setRobotPose(tempPoseEstimate.pose);
-                                SmartDashboard.putData("LL Field " + limelight.networkTableName, fieldForLeftPosePublishing);
-                            } else if (limelight.networkTableName == limeLightCameraRight.networkTableName) {
-                                fieldForRightPosePublishing.setRobotPose(tempPoseEstimate.pose);
-                                SmartDashboard.putData("LL Field " + limelight.networkTableName, fieldForRightPosePublishing);
                             }
+                            //    else if (limelight.networkTableName == limeLightCameraLeft.networkTableName) {
+                            //     fieldForLeftPosePublishing.setRobotPose(tempPoseEstimate.pose);
+                            //     SmartDashboard.putData("LL Field " + limelight.networkTableName, fieldForLeftPosePublishing);
+                            // } else if (limelight.networkTableName == limeLightCameraRight.networkTableName) {
+                            //     fieldForRightPosePublishing.setRobotPose(tempPoseEstimate.pose);
+                            //     SmartDashboard.putData("LL Field " + limelight.networkTableName, fieldForRightPosePublishing);
+                            // }
                             SmartDashboard.putNumber("LL #Tags " + limelight.networkTableName,
                                     tempPoseEstimate.tagCount);
                             SmartDashboard.putNumber("LL Dist " + limelight.networkTableName, tempPoseEstimate.avgTagDist);
