@@ -42,7 +42,7 @@ public class Robot extends TimedRobot {
 
     mRobotContainer.mRobotState.setRobotMode(RobotModeState.Auto);
 
-    mRobotContainer.mDrivetrain.limeLightCameraLeft.setStreamMode(StreamMode.PiPSecondary);
+    // mRobotContainer.mDrivetrain.limeLightCameraLeft.setStreamMode(StreamMode.PiPSecondary);
 
     if (Constants.dataLogging) {
       DataLogManager.start();

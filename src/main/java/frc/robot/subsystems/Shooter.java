@@ -35,8 +35,11 @@ public class Shooter extends SubsystemBase {
 
   private MedianFilter medianFilter;
 
+  public double manualRPM;
+
   /** Creates a new Shooter. */
   public Shooter() {
+    manualRPM = 0.0;
     shooterMotor = new TalonFX(Constants.Shooter.DeviceIDs.shooterMotorID);
     followMotor = new TalonFX(Constants.Shooter.DeviceIDs.followMotorID);
     shooterMotorConfigs = new TalonFXConfiguration();
@@ -101,6 +104,21 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Shooter Target RPM", getShooterTargetRPM());
     SmartDashboard.putNumber("Shooter RPM", medianFilter.calculate(getShooterRPM()));
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Manual RPM (Shooter)", manualRPM);
+  }
+
+  public void incManRPM() {
+    manualRPM += 0.05;
+    manualRPM = Math.min(manualRPM, 1.0);
+  }
+  public void decManRPM() {
+    manualRPM -= 0.05;
+    manualRPM = Math.max(manualRPM, 0.0);
+  }
+
+  public void shootManRPM() {
+    percentOutControlRequest.Output = manualRPM;
+    shooterMotor.setControl(percentOutControlRequest);
   }
 
   public void setShooterSpeed(double percentSpeed) {

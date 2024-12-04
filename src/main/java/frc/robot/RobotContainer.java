@@ -145,9 +145,13 @@ public class RobotContainer {
     controller0.leftTrigger(0.3).whileTrue(new AutoAim(mElevator, mShooterPivot,
         mShooter, mRobotState, mNoteInterpolator, mDrivetrain));
     // controller0.leftTrigger(0.3).whileTrue(new AutoRotateBot(mDrivetrain, true));
+    // controller0.rightTrigger(0.3)
+    //     .whileTrue(new AutoShoot(mIntake, mFeeder, mRobotState, mElevator, mShooterPivot,
+    //         mShooter, 1.0));
     controller0.rightTrigger(0.3)
-        .whileTrue(new AutoShoot(mIntake, mFeeder, mRobotState, mElevator, mShooterPivot,
-            mShooter, 1.0));
+        .whileTrue(new InstantCommand(() -> {mShooter.shootManRPM();}));
+      controller0.rightTrigger(0.3)
+        .whileTrue(new MoveFeeder(mFeeder, Constants.Feeder.Speeds.speekerShootingSpeed, false));
     // Bumpers
     controller0.leftBumper().onTrue(new InstantCommand(
         () -> {
@@ -179,6 +183,10 @@ public class RobotContainer {
     // POV
     controller0.povUp().whileTrue(new MoveElevator(mElevator, mShooterPivot, 0.15));
     controller0.povDown().whileTrue(new MoveElevator(mElevator, mShooterPivot, -0.05));
+
+    controller0.povRight().onTrue(new InstantCommand(() -> {mShooter.incManRPM();}));
+    controller0.povLeft().onTrue(new InstantCommand(() -> {mShooter.decManRPM();}));
+
 
     // Start/Back
     controller0.start().onTrue(new ResetGyro(mDrivetrain));
@@ -214,7 +222,7 @@ public class RobotContainer {
             .andThen(new SetPivotToTargetAngle(mShooterPivot)));
     controller1.povUp().whileTrue(new MoveFeeder(mFeeder, 0.3, false));
     controller1.povUp().whileTrue(new MoveIntake(mIntake, 0.45, false));
-    controller1.povRight().onTrue(new InstantCommand(() -> {mRobotState.setRobotMode(RobotModeState.Endgame); }));
+    // controller1.povRight().onTrue(new InstantCommand(() -> {mRobotState.setRobotMode(RobotModeState.Endgame); }));
 
     // ABXY
     controller1.a().onTrue(new InstantCommand(() -> {
